@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F3B33">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Трекер</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Golos+Text:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri&text=%DB%9E">
+<style>
+:root{
+  --bg:#EEF2EE; --surface:#FBFCF9; --surface-2:#E3EAE4; --ink:#13201B; --muted:#5E7069; --line:#D5DED8;
+  --emerald:#0F3B33; --brass:#B08436; --brass-soft:#EFE4CB;
+  --accent:#1F6F5C; --on-accent:#FFFFFF;
+  --st-jamaat:#C79A45; --st-ontime:#3F9A62; --st-late:#D9832A; --st-qada:#C0573F;
+  --serif:'Alegreya', Georgia, 'Times New Roman', serif;
+  --sans:'Golos Text', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#08120F; --surface:#0F1E1A; --surface-2:#182A25; --ink:#E2EBE6; --muted:#8FA49C; --line:#22362F;
+    --accent:#41A688; --on-accent:#04110D; --brass:#D4AB62; --brass-soft:#2E2819; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08120F; --surface:#0F1E1A; --surface-2:#182A25; --ink:#E2EBE6; --muted:#8FA49C; --line:#22362F;
+  --accent:#41A688; --on-accent:#04110D; --brass:#D4AB62; --brass-soft:#2E2819; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:400 16px/1.5 var(--sans)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.num{font-variant-numeric:tabular-nums}
+.grow{flex:1;min-width:0}
+main{max-width:560px;margin:0 auto;padding:6px 16px calc(100px + env(safe-area-inset-bottom,0px))}
+
+/* ---------- шапка ---------- */
+.top{display:flex;align-items:center;gap:12px;padding:16px 2px 10px}
+.top h1{font:500 33px/1.05 var(--serif);margin:0;letter-spacing:-.01em}
+.top .sub{margin:5px 0 0;color:var(--muted);font-size:14px}
+.top .streak{display:flex;align-items:center;gap:5px;margin:4px 0 0;font-size:13.5px;color:var(--muted)}
+.top .streak .ic{width:16px;height:16px;color:var(--brass)}
+.top.page h1{font-size:25px}
+.top-tools{display:flex;align-items:center;gap:8px;align-self:flex-start;margin-top:4px}
+.icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);flex:none}
+.icon-btn.accent{background:var(--emerald);color:#FFFDF6;border:0}
+.link{color:var(--accent);font-size:14px;font-weight:500;padding:4px 0}
+.ring{position:relative;display:inline-block;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg);display:block}
+.ring circle{transition:stroke-dasharray .35s ease}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ---------- хадис в рамке-арке ---------- */
+.arch{position:relative;margin:22px 4px 14px;padding:24px 22px 12px;text-align:center;
+  background:
+    radial-gradient(70% 60% at 50% 0%, color-mix(in srgb,var(--brass-soft) 85%,transparent) 0%, transparent 100%),
+    var(--surface);
+  border:1.5px solid color-mix(in srgb,var(--brass) 75%,transparent);
+  border-radius:50% 50% 20px 20px / 52px 52px 20px 20px}
+.arch::before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in srgb,var(--brass) 32%,transparent);border-radius:50% 50% 15px 15px / 47px 47px 15px 15px;pointer-events:none}
+.arch .orn{position:absolute;top:-17px;left:50%;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;
+  background:var(--bg);display:grid;place-items:center;color:var(--brass);font:23px/1 'Amiri',serif}
+.arch blockquote{margin:0 auto;max-width:34ch;font:500 18.5px/1.42 var(--serif);text-wrap:balance}
+.arch .isnad{margin:0 auto 8px;max-width:40ch;font-size:13px;line-height:1.45;color:var(--muted)}
+.arch .after{margin:10px auto 0;max-width:38ch;font:italic 400 15.5px/1.5 var(--serif);color:var(--muted)}
+.arch-foot{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:8px}
+.arch cite{font-style:normal;font-size:12.5px;color:var(--brass)}
+.arch .link{font-size:13px;color:var(--muted)}
+
+.banner{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;margin:0 0 12px;border-radius:16px;background:var(--brass-soft);font-size:14px}
+.banner span span{color:var(--muted)}
+
+/* ---------- карточка намазов ---------- */
+.pc{position:relative;border-radius:26px;padding:14px 10px 12px;color:#F5F2E8;overflow:hidden;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23D4AB62' stroke-opacity='.09' stroke-width='1'%3E%3Crect x='18' y='18' width='28' height='28'/%3E%3Crect x='18' y='18' width='28' height='28' transform='rotate(45 32 32)'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(120% 100% at 100% 0%, #1F7A63 0%, #0F3B33 58%, #0A2D27 100%)}
+.pc-head{display:flex;align-items:center;gap:10px;margin:0 8px 10px;font-size:14px}
+.pc-next{flex:1;color:rgba(245,242,232,.78)}
+.pc-next b{color:#FFFDF6;font-weight:600}
+.pc-count{font-size:13px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.1);color:#E9CF98;font-weight:600}
+.pc-city{display:inline-flex;align-items:center;gap:6px;color:#E9CF98;font-weight:500}
+.mx{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.col{display:flex;flex-direction:column;align-items:center;gap:6px;padding:9px 0 10px;border-radius:18px}
+.col.now{background:rgba(255,255,255,.08);box-shadow:inset 0 2px 0 #D4AB62}
+.col .nm{font-size:12px;color:rgba(245,242,232,.7)}
+.col.now .nm{color:#E9CF98}
+.col .tm{font-size:15.5px;font-weight:700;margin-top:-4px}
+.rb{width:34px;height:24px;border-radius:8px;border:1px solid rgba(255,255,255,.24);font-size:12.5px;font-weight:600;color:rgba(245,242,232,.7);display:grid;place-items:center}
+.rb.on{background:#F5F2E8;border-color:#F5F2E8;color:#0F3B33}
+.rb.none{visibility:hidden}
+.fd{width:46px;height:46px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.34);display:grid;place-items:center;color:rgba(255,255,255,.55);transition:transform .15s}
+.fd:active{transform:scale(.94)}
+.fd.is-set{border:0;background:var(--c);color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.1)}
+.fd.is-set .ic{stroke-width:2.3}
+.col .sf{font-size:10.5px;color:#E9CF98;margin-top:-2px}
+.pc-legend{margin:6px 8px 0;font-size:11.5px;color:rgba(245,242,232,.5);text-align:center}
+.pc-foot{display:flex;justify-content:space-between;gap:10px;margin:10px 8px 0;font-size:13px;color:rgba(245,242,232,.72)}
+.pc-foot span{display:inline-flex;align-items:center;gap:6px}
+.pc-foot .ic{width:16px;height:16px;color:#E9CF98}
+.pc-chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 8px 2px}
+.pc .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.2);font-size:13.5px;color:rgba(245,242,232,.82)}
+.pc .chip .ic{width:16px;height:16px}
+.pc .chip.on{background:#D4AB62;border-color:#D4AB62;color:#0F3B33;font-weight:600}
+.pc-exc{display:flex;gap:10px;align-items:center;margin:6px 8px;padding:14px;border-radius:16px;background:rgba(255,255,255,.07);font-size:14.5px}
+.pc-exc .ic{color:#E9CF98}
+
+/* ---------- блоки дел ---------- */
+.block{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:14px 14px 10px;margin-top:12px}
+.block-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 2px 8px}
+.block-h h3{margin:0;font:500 20px/1.2 var(--serif)}
+.block-h span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.lib-h{margin:22px 4px 10px}
+.line{display:flex;gap:10px;align-items:flex-start;padding:7px 0}
+.line + .line{border-top:1px dashed var(--line)}
+.line .lb{width:64px;flex:none;font-size:12.5px;color:var(--muted);padding-top:7px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 7px;border-radius:999px;background:var(--surface-2);font-size:14px;line-height:1.3;transition:background .15s}
+.pill .ck{width:20px;height:20px;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--muted) 45%,transparent);display:grid;place-items:center;color:transparent;flex:none}
+.pill .ck .ic{width:13px;height:13px;stroke-width:2.6}
+.pill.on{background:color-mix(in srgb,var(--accent) 15%,var(--surface))}
+.pill.on .ck{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.rd{display:flex;align-items:center;gap:10px;padding:8px 0}
+.rd + .rd{border-top:1px solid var(--line)}
+.rd-main{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.rd .t{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd .s{display:block;font-size:13px;color:var(--muted);line-height:1.35}
+.stepper{display:flex;gap:6px;flex:none;align-items:center}
+.stepper button{width:38px;height:38px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center}
+.stepper.sm button{width:34px;height:34px;border-radius:11px}
+.step-v{min-width:22px;text-align:center;font-weight:600}
+
+/* ---------- библиотека ---------- */
+.quran{display:flex;align-items:center;gap:14px;width:100%;padding:18px 16px;border-radius:22px;color:#F5F2E8;
+  background:radial-gradient(120% 100% at 0% 0%, #1F7A63 0%, #0F3B33 60%, #0A2D27 100%)}
+.q-orn{font:30px/1 'Amiri',serif;color:#D4AB62;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.07);flex:none}
+.q-t{display:block;font:500 21px/1.2 var(--serif)}
+.q-s{display:block;font-size:13.5px;color:rgba(245,242,232,.75);margin-top:3px}
+.meter{display:block;height:5px;border-radius:3px;background:var(--surface-2);margin:8px 0 2px;overflow:hidden}
+.meter i{display:block;height:100%;border-radius:3px;background:var(--accent)}
+.meter.light{background:rgba(255,255,255,.14)}
+.meter.light i{background:#D4AB62}
+.shelf{display:flex;flex-direction:column;gap:10px}
+.bk{display:flex;align-items:center;gap:14px;width:100%;padding:14px 14px 14px 0;border-radius:18px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
+.bk .spine{width:7px;align-self:stretch;margin:-14px 0;background:var(--bc);flex:none}
+.bk-t{display:block;font:500 18px/1.25 var(--serif)}
+.bk-s{display:block;font-size:13px;color:var(--muted)}
+.empty-btn{display:flex;align-items:center;gap:12px;width:100%;padding:18px;border-radius:18px;border:1.5px dashed var(--line);color:var(--muted);font-size:14.5px;margin:10px 0}
+.empty-btn .ic{color:var(--accent)}
+.notes{display:flex;flex-direction:column;gap:10px}
+.nt{margin:0;padding:14px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--bc)}
+.nt blockquote{margin:0;font:400 16.5px/1.5 var(--serif);white-space:pre-wrap}
+.nt figcaption{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12.5px;color:var(--muted)}
+.nt .link{font-size:12.5px;color:var(--muted)}
+
+/* ---------- статистика ---------- */
+.sc{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0}
+.sc-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.sc-h h2{margin:0;font:500 21px/1.2 var(--serif)}
+.sc-badge{font-size:13.5px;font-weight:600;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);padding:4px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+.sc-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}
+.vleg{flex:1;display:flex;flex-direction:column;gap:5px;font-size:13.5px}
+.vleg span{display:flex;align-items:center;gap:8px}
+.vleg i{width:10px;height:10px;border-radius:3px;flex:none}
+.vleg b{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600}
+.donut .dn-c{font:600 20px var(--serif);fill:var(--ink)}
+.donut .dn-s{font:500 10.5px var(--sans);fill:var(--muted)}
+.sc-badge .ic{width:15px;height:15px;margin-right:4px;vertical-align:-2px}
+.chart{width:100%;height:auto;display:block;margin:6px 0 4px;overflow:visible}
+.chart .ax{font:500 10px var(--sans);fill:var(--muted)}
+.chart .ax.lbl{font-size:11.5px;fill:var(--ink)}
+.chart .ax.goal{fill:var(--brass);font-weight:600}
+.donut{flex:none}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 8px}
+.metric{padding:8px 10px;border-radius:12px;background:var(--surface-2)}
+.metric b{display:block;font:600 18px/1.2 var(--serif);font-variant-numeric:tabular-nums;white-space:nowrap}
+.metric span{font-size:11.5px;color:var(--muted);line-height:1.2;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.sc-note{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.bk-prog{margin-top:8px}
+.sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:1px}
+
+/* ---------- общие ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0}
+.card h2{margin:0 0 6px;font:500 20px/1.25 var(--serif)}
+.card .s{margin:0;font-size:13.5px;color:var(--muted)}
+.goal-h{display:flex;gap:14px;align-items:center}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:15px}
+.kv b{font-weight:600;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;flex:1;display:block}
+.bar i{display:block;height:100%;border-radius:4px;background:var(--c,var(--accent))}
+.barrow{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:14px}
+.barrow .l{width:130px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.barrow .r{width:40px;text-align:right;font-variant-numeric:tabular-nums}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:10px 0}
+.item{display:flex;align-items:center;gap:14px;padding:14px 16px;width:100%}
+.item + .item{border-top:1px solid var(--line)}
+.item .t{font-weight:500}
+.item .s{font-size:13.5px;color:var(--muted)}
+.item > .ic:first-child{color:var(--accent)}
+.mark{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;border:1.5px dashed var(--line);color:var(--muted)}
+.mark.is-set{border:0;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
+.empty{padding:28px 18px;text-align:center;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:14px;font-weight:600;font-size:15px}
+.btn.primary{background:var(--emerald);color:#FFFDF6}
+:root[data-theme="dark"] .btn.primary,:root[data-theme="dark"] .icon-btn.accent{background:var(--accent);color:var(--on-accent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary,:root:not([data-theme="light"]) .icon-btn.accent{background:var(--accent);color:var(--on-accent)}}
+.btn.ghost{background:var(--surface-2)}
+.btn.danger{background:var(--st-qada);color:#fff}
+.btn.wide{width:100%}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;align-items:center}
+.big{font:500 30px/1.15 var(--serif);margin:0}
+.prose{font-size:14.5px;color:var(--muted);margin:6px 4px 12px;max-width:62ch}
+
+/* ---------- календарь ---------- */
+.cal-head{display:flex;align-items:center;gap:8px;margin:4px 0 12px}
+.cal-head h2{flex:1;text-align:center;margin:0;font:500 22px/1.2 var(--serif)}
+.cal-head .icon-btn[disabled]{opacity:.35}
+.wd{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cell{aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;
+  background:color-mix(in srgb,var(--accent) var(--p,0%),var(--surface));border:1px solid var(--line)}
+.cell .dn{font-size:15px;font-variant-numeric:tabular-nums;font-weight:500}
+.cell .fdots{display:flex;gap:2px}
+.cell .fdots i{width:4px;height:4px;border-radius:50%;background:color-mix(in srgb,var(--ink) 18%,transparent)}
+.cell .fdots i.on{background:var(--brass)}
+.cell.hi .dn{color:var(--on-accent)}
+.cell.hi .fdots i{background:rgba(255,255,255,.35)}
+.cell.hi .fdots i.on{background:#F1D7A0}
+.cell.future{background:none;border-color:transparent;color:var(--muted);opacity:.45}
+.cell.today{border:2px solid var(--brass)}
+.cell .dot{width:5px;height:5px;border-radius:50%;background:#D88BA0;position:absolute;top:5px;right:5px}
+
+/* ---------- настройки ---------- */
+.set-title{font:500 20px/1.2 var(--serif);margin:24px 4px 8px}
+.set{display:flex;align-items:center;gap:12px;padding:13px 16px;width:100%}
+.set + .set{border-top:1px solid var(--line)}
+.set .s{font-size:13.5px;color:var(--muted)}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:12px;padding:3px;gap:2px;flex:none}
+.seg button{padding:7px 12px;border-radius:9px;font-size:14px;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(15,59,51,.15)}
+.seg.sm button{padding:5px 10px;font-size:13px}
+.seg.full{display:flex;width:100%}
+.seg.full button{flex:1;text-align:center}
+.switch{width:46px;height:28px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch[aria-checked="true"]{background:var(--accent)}
+.switch[aria-checked="true"]::after{transform:translateX(18px)}
+
+/* ---------- навигация ---------- */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 9px;font-size:12px;color:var(--muted);position:relative}
+nav.tabs button.on{color:var(--ink);font-weight:600}
+nav.tabs button.on .ic{color:var(--accent)}
+nav.tabs button.on::before{content:"";position:absolute;top:0;width:28px;height:2.5px;border-radius:2px;background:var(--brass)}
+
+/* ---------- модальные окна ---------- */
+#modal-root{position:fixed;inset:0;z-index:50;display:none}
+#modal-root.open{display:block}
+.scrim{position:absolute;inset:0;background:rgba(6,20,16,.45)}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--surface);border-radius:24px 24px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:up .22s ease-out}
+.sheet::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 12px}
+@media (min-width:640px){.sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:440px;border-radius:22px;animation:none}.sheet::before{display:none}}
+@keyframes up{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
+.sheet h2{font:500 22px/1.2 var(--serif);margin:4px 0 12px}
+.sheet .opt{display:flex;align-items:center;gap:14px;width:100%;padding:13px 6px;border-radius:12px}
+.sheet .opt.sel{background:var(--surface-2)}
+.sheet .opt .ic{color:var(--c,var(--muted))}
+.field{display:block;margin:0 0 12px}
+.field span{display:block;font-size:13.5px;color:var(--muted);margin:0 0 5px}
+.field input,.field textarea,.field select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.field textarea{min-height:110px;resize:vertical}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--emerald);color:#FFFDF6;padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;max-width:90vw}
+
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:370px){
+  main{padding-left:12px;padding-right:12px}
+  .col .tm{font-size:14px}.fd{width:42px;height:42px}.rb{width:30px}
+  .top h1{font-size:29px}.line .lb{width:56px}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav class="tabs" id="nav" aria-label="Разделы"></nav>
+<div id="modal-root"></div>
+<script>
+'use strict';
+// =====================================================================
+//  УТИЛИТЫ
+// =====================================================================
+const $ = s => document.querySelector(s);
+const two = n => String(n).padStart(2, '0');
+const hm = d => `${two(d.getHours())}:${two(d.getMinutes())}`;
+const dkey = d => `${d.getFullYear()}-${two(d.getMonth() + 1)}-${two(d.getDate())}`;
+const parseKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const dateOnly = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const daysBetween = (a, b) => Math.round((Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) - Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())) / 864e5);
+const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const WD = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const WDF = ['понедельник','вторник','среда','четверг','пятница','суббота','воскресенье'];
+const wdi = d => (d.getDay() + 6) % 7;
+const human = d => `${d.getDate()} ${MONTHS_GEN[d.getMonth()]}`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; if (m10 === 1 && m100 !== 11) return a; if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return b; return c; };
+const daysW = n => `${n} ${plural(n, 'день', 'дня', 'дней')}`;
+const dur = ms => { const m = Math.max(0, Math.round(ms / 60000)); const h = Math.floor(m / 60); return h ? `${h} ч ${m % 60} мин` : `${m} мин`; };
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const iv = v => (typeof v === 'number' && isFinite(v)) ? v : 0;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+function hijri(d) {
+  try {
+    return new Intl.DateTimeFormat('ru-RU-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' })
+      .format(d).replace(/\s*(AH|х\.)\s*$/i, '').replace(/\s*г\.\s*$/i, '');
+  } catch (e) { return ''; }
+}
+
+// =====================================================================
+//  ИКОНКИ
+// =====================================================================
+const ICONS = {
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  users: '<circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6"/><circle cx="16.5" cy="8.5" r="2.6"/><path d="M15.5 13.8c2.4 0 4.3 1.4 4.9 4.2"/>',
+  replay: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3.8h3.8"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  minus: '<path d="M5 12h14"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  chev: '<path d="M9 5l7 7-7 7"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>',
+  moon: '<path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10z"/>',
+  home: '<path d="M4 11l8-6.5 8 6.5V20H4z"/><path d="M10 20v-5h4v5"/>',
+  cal: '<rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/>',
+  chart: '<path d="M5 19V11M12 19V5M19 19v-6"/>',
+  more: '<path d="M5 7h14M5 12h14M5 17h14"/>',
+  book: '<path d="M5 4.5h5.5a2 2 0 0 1 2 2V20a1.8 1.8 0 0 0-1.8-1.8H5z"/><path d="M19 4.5h-5a2 2 0 0 0-2 2V20a1.8 1.8 0 0 1 1.8-1.8H19z"/>',
+  shield: '<path d="M12 3.5l7 2.8v5.4c0 4.3-3 7.6-7 8.8-4-1.2-7-4.5-7-8.8V6.3z"/>',
+  flag: '<path d="M6 21V4M6 4.5h11l-2 4 2 4H6"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>',
+  heart: '<path d="M12 19.5s-7-4.3-7-9.3A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.2c0 5-7 9.3-7 9.3z"/>',
+  bag: '<rect x="4.5" y="7.5" width="15" height="12" rx="2"/><path d="M9 7.5V5.5h6v2"/>',
+  pin: '<path d="M12 21s6-5.6 6-10.5A6 6 0 0 0 6 10.5C6 15.4 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.2"/>',
+  list: '<path d="M9 7h11M9 12h11M9 17h11"/><path d="M4.5 7h.01M4.5 12h.01M4.5 17h.01"/>',
+  fire: '<path d="M12 21c3.6 0 6-2.4 6-5.8 0-3.5-2.6-5.4-3.4-8.7-1.9 1.4-2.6 3.5-2.6 5.1-1-.6-1.7-1.8-1.8-3.2C8.3 10 6 12.5 6 15.3 6 18.6 8.4 21 12 21z"/>',
+  bell: '<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/>',
+  edit: '<path d="M5 19l1-4L16 5l3 3L9 18z"/>',
+  trash: '<path d="M5.5 7h13M10 7V5h4v2M7 7l1 12.5h8L17 7"/>',
+  hands: '<path d="M8 20v-5.5L5.5 11V6.5a1.5 1.5 0 0 1 3 0V11M16 20v-5.5l2.5-3.5V6.5a1.5 1.5 0 0 0-3 0V11M8.5 9.5l2 2V15M15.5 9.5l-2 2V15"/>',
+  save: '<path d="M12 4v10M7.5 9.5L12 14l4.5-4.5M5 19h14"/>',
+};
+const icon = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+
+// =====================================================================
+//  СПРАВОЧНИКИ
+// =====================================================================
+const STATUS = {
+  jamaat: { label: 'В джамаате', icon: 'users', color: 'var(--st-jamaat)' },
+  ontime: { label: 'Вовремя', icon: 'check', color: 'var(--st-ontime)' },
+  late: { label: 'С опозданием', icon: 'clock', color: 'var(--st-late)' },
+  qada: { label: 'Каза', icon: 'replay', color: 'var(--st-qada)' },
+};
+const FARD = ['fajr', 'zuhr', 'asr', 'maghrib', 'isha'];
+const FARD_NAMES = { fajr: 'Фаджр', zuhr: 'Зухр', asr: 'Аср', maghrib: 'Магриб', isha: 'Иша' };
+const OPTIONAL = [
+  ['r_fajr', '2 ракаата до Фаджра'], ['r_zuhr_b', '4 ракаата до Зухра'], ['r_zuhr_a', 'Ракааты после Зухра'],
+  ['r_asr', '4 ракаата до Асра'], ['r_maghrib', '2 ракаата после Магриба'], ['r_isha', '2 ракаата после Иша'],
+  ['duha', 'Духа'], ['tahajjud', 'Тахаджуд'], ['witr', 'Витр'], ['quran', 'Коран'],
+  ['azkar_m', 'Утренние азкары'], ['azkar_e', 'Вечерние азкары'],
+];
+const CITIES = [
+  ['Москва', 55.7558, 37.6173], ['Санкт-Петербург', 59.9343, 30.3351], ['Казань', 55.7963, 49.1088],
+  ['Уфа', 54.7388, 55.9721], ['Махачкала', 42.9849, 47.5047], ['Грозный', 43.3178, 45.6949],
+  ['Нальчик', 43.4853, 43.6071], ['Душанбе', 38.5598, 68.7870], ['Ташкент', 41.2995, 69.2401],
+  ['Алматы', 43.2220, 76.8512], ['Бишкек', 42.8746, 74.5698], ['Баку', 40.4093, 49.8671], ['Стамбул', 41.0082, 28.9784],
+];
+const METHODS = {
+  mwl: { name: 'Всемирная исламская лига', fajr: 18, isha: 17 },
+  russia: { name: 'Россия (16° и 15°)', fajr: 16, isha: 15 },
+  karachi: { name: 'Карачи', fajr: 18, isha: 18 },
+  egypt: { name: 'Египетское управление', fajr: 19.5, isha: 17.5 },
+  makkah: { name: 'Умм аль-Кура (Мекка)', fajr: 18.5, ishaMin: 90 },
+  isna: { name: 'ISNA (Северная Америка)', fajr: 15, isha: 15 },
+};
+
+// =====================================================================
+//  РАСЧЁТ ВРЕМЕНИ НАМАЗОВ (астрономический алгоритм, работает офлайн)
+// =====================================================================
+const PT = (() => {
+  const dtr = d => d * Math.PI / 180, rtd = r => r * 180 / Math.PI;
+  const sin = d => Math.sin(dtr(d)), cos = d => Math.cos(dtr(d)), tan = d => Math.tan(dtr(d));
+  const arcsin = x => rtd(Math.asin(x)), arccos = x => rtd(Math.acos(x));
+  const arctan2 = (y, x) => rtd(Math.atan2(y, x)), arccot = x => rtd(Math.atan(1 / x));
+  const fix = (a, b) => { a = a - b * Math.floor(a / b); return a < 0 ? a + b : a; };
+  const julian = (y, m, d) => {
+    if (m <= 2) { y -= 1; m += 12; }
+    const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4);
+    return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+  };
+  const sunPos = jd => {
+    const D = jd - 2451545.0;
+    const g = fix(357.529 + 0.98560028 * D, 360);
+    const q = fix(280.459 + 0.98564736 * D, 360);
+    const L = fix(q + 1.915 * sin(g) + 0.020 * sin(2 * g), 360);
+    const e = 23.439 - 0.00000036 * D;
+    const RA = arctan2(cos(e) * sin(L), cos(L)) / 15;
+    return { decl: arcsin(sin(e) * sin(L)), eqt: q / 15 - fix(RA, 24) };
+  };
+  const GUESS = { fajr: 5, sunrise: 6, dhuhr: 12, asr: 13, sunset: 18, isha: 18 };
+
+  return function compute(date, lat, lng, M, hanafi) {
+    const y = date.getFullYear(), mo = date.getMonth(), d = date.getDate();
+    const tz = -new Date(y, mo, d, 12).getTimezoneOffset() / 60;
+    const jDate = julian(y, mo + 1, d) - lng / (15 * 24);
+    const midDay = t => fix(12 - sunPos(jDate + t).eqt, 24);
+    const angleTime = (angle, t, ccw) => {
+      const { decl } = sunPos(jDate + t);
+      const v = (-sin(angle) - sin(decl) * sin(lat)) / (cos(decl) * cos(lat));
+      if (v < -1 || v > 1) return NaN;
+      const h = arccos(v) / 15;
+      return midDay(t) + (ccw ? -h : h);
+    };
+    const asrTime = (f, t) => {
+      const { decl } = sunPos(jDate + t);
+      return angleTime(-arccot(f + tan(Math.abs(lat - decl))), t);
+    };
+
+    let T = { ...GUESS };
+    for (let i = 0; i < 2; i++) {
+      const p = k => (isNaN(T[k]) ? GUESS[k] : T[k]) / 24;
+      T = {
+        fajr: angleTime(M.fajr, p('fajr'), true),
+        sunrise: angleTime(0.833, p('sunrise'), true),
+        dhuhr: midDay(p('dhuhr')),
+        asr: asrTime(hanafi ? 2 : 1, p('asr')),
+        sunset: angleTime(0.833, p('sunset')),
+        isha: M.ishaMin ? NaN : angleTime(M.isha, p('isha')),
+      };
+    }
+    const adj = tz - lng / 15;
+    for (const k in T) T[k] += adj;
+
+    // высокие широты: ограничиваем Фаджр и Иша долей ночи
+    const diff = (a, b) => fix(b - a, 24);
+    const night = diff(T.sunset, T.sunrise);
+    const fp = night * M.fajr / 60;
+    if (isNaN(T.fajr) || diff(T.fajr, T.sunrise) > fp) T.fajr = T.sunrise - fp;
+    if (M.ishaMin) T.isha = T.sunset + M.ishaMin / 60;
+    else {
+      const ip = night * M.isha / 60;
+      if (isNaN(T.isha) || diff(T.sunset, T.isha) > ip) T.isha = T.sunset + ip;
+    }
+    const at = h => new Date(y, mo, d, 0, Math.round(h * 60));
+    return {
+      fajr: at(T.fajr), sunrise: at(T.sunrise), dhuhr: at(T.dhuhr + 1 / 60),
+      asr: at(T.asr), maghrib: at(T.sunset), isha: at(T.isha),
+    };
+  };
+})();
+
+// =====================================================================
+//  ДАННЫЕ
+// =====================================================================
+const KEY = 'nurTracker.v1';
+const DEFAULTS = {
+  settings: {
+    disabled: [], female: false, safar: false, zuhrAfter: 2, quranGoal: 5, dayStartHour: 3, fridayMode: true,
+    cityName: null, lat: null, lng: null, method: 'mwl', hanafiAsr: false,
+    remindFard: true, remindMinutes: 15, tahajjudAlarm: false, sleepReminder: false, sleepAfterIsha: 60,
+    khatmActive: false, khatmPage: 0, khatmEnd: '', hadithFolded: false, theme: 'auto',
+  },
+  books: [], customs: [], avoids: [], goals: [], duas: [], logs: {},
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      return { ...structuredClone(DEFAULTS), ...d, settings: { ...DEFAULTS.settings, ...(d.settings || {}) } };
+    }
+  } catch (e) { /* хранилище недоступно — начинаем с чистого листа */ }
+  return structuredClone(DEFAULTS);
+}
+let S = load();
+let ptCache = {};
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch (e) { toast('Не удалось сохранить: хранилище браузера недоступно'); }
+}
+function commit(reschedule = false) {
+  ptCache = {};
+  save();
+  render();
+  if (reschedule) scheduleWeb();
+}
+
+// ---------- время ----------
+function prayerTimes(date) {
+  const st = S.settings;
+  if (st.lat == null || st.lng == null) return null;
+  const k = dkey(date);
+  if (!ptCache[k]) ptCache[k] = PT(date, st.lat, st.lng, METHODS[st.method] || METHODS.mwl, st.hanafiAsr);
+  return ptCache[k];
+}
+function nightWindow() {
+  const now = new Date(), t = prayerTimes(now);
+  if (!t) return null;
+  if (now < t.fajr) return [prayerTimes(addDays(dateOnly(now), -1)).maghrib, t.fajr];
+  return [t.maghrib, prayerTimes(addDays(dateOnly(now), 1)).fajr];
+}
+const lastThird = (m, f) => new Date(f.getTime() - (f - m) / 3);
+
+/** День трекера начинается с Фаджра (если выбран город). */
+function todayDate() {
+  const now = new Date(), pt = prayerTimes(now);
+  if (pt) return now < pt.fajr ? addDays(dateOnly(now), -1) : dateOnly(now);
+  return dateOnly(new Date(now.getTime() - S.settings.dayStartHour * 3600e3));
+}
+const isToday = d => dkey(d) === dkey(todayDate());
+const peek = d => S.logs[dkey(d)] || {};
+const logOf = d => (S.logs[dkey(d)] ||= {});
+function isSafar(d) {
+  const l = peek(d);
+  if ('_safar' in l) return l._safar === true;
+  return isToday(d) && S.settings.safar;
+}
+const isExcused = d => S.settings.female && peek(d)._excused === true;
+
+// ---------- задачи ----------
+function tasksFor(d) {
+  const st = S.settings, safar = isSafar(d), exc = isExcused(d);
+  const rak = n => (safar && n === 4) ? '2 ракаата, сокращённо' : `${n} ракаата`;
+  const T = (id, title, group, o = {}) => ({ id, title, group, kind: 'check', goal: 1, unit: '', note: '', ...o });
+  const L = [];
+  if (!exc) {
+    L.push(T('fajr', 'Фаджр', 'Фард', { kind: 'fard', note: rak(2) }), T('zuhr', 'Зухр', 'Фард', { kind: 'fard', note: rak(4) }),
+      T('asr', 'Аср', 'Фард', { kind: 'fard', note: rak(4) }), T('maghrib', 'Магриб', 'Фард', { kind: 'fard', note: rak(3) }),
+      T('isha', 'Иша', 'Фард', { kind: 'fard', note: rak(4) }));
+    L.push(T('r_fajr', '2 ракаата до Фаджра', 'Ратибат'));
+    if (!safar) L.push(T('r_zuhr_b', '4 ракаата до Зухра', 'Ратибат'), T('r_zuhr_a', `${st.zuhrAfter} ракаата после Зухра`, 'Ратибат'),
+      T('r_asr', '4 ракаата до Асра', 'Ратибат'), T('r_maghrib', '2 ракаата после Магриба', 'Ратибат'), T('r_isha', '2 ракаата после Иша', 'Ратибат'));
+    L.push(T('duha', 'Духа', 'Нафиль'), T('tahajjud', 'Тахаджуд', 'Нафиль'), T('witr', 'Витр', 'Нафиль'));
+  }
+  L.push(T('quran', 'Коран', 'Чтение', { kind: 'counter', goal: quranGoalFor(d), unit: 'стр.' }));
+  S.books.forEach(b => L.push(T('book_' + b.id, b.title, 'Чтение', { kind: 'counter', goal: b.dailyGoal, unit: 'стр.' })));
+  if (st.fridayMode && d.getDay() === 5) L.push(T('fr_kahf', 'Сура аль-Кахф', 'Пятница'),
+    T('fr_salawat', 'Салават на Пророка ﷺ', 'Пятница'), T('fr_ghusl', 'Гусль', 'Пятница'));
+  S.customs.forEach(c => L.push(T('c_' + c.id, c.title, 'Мои дела', c.counter ? { kind: 'counter', goal: c.target, unit: c.unit } : {})));
+  L.push(T('azkar_m', 'Утренние азкары', 'Азкары'), T('azkar_e', 'Вечерние азкары', 'Азкары'));
+  S.avoids.forEach(a => L.push(T('a_' + a.id, a.title, 'Удержался от', { kind: 'avoid' })));
+  return L.filter(t => !st.disabled.includes(t.id));
+}
+const findTask = (d, id) => tasksFor(d).find(t => t.id === id);
+function isDone(t, log) {
+  const v = log[t.id];
+  if (t.kind === 'fard') return v in STATUS;
+  if (t.kind === 'counter') return iv(v) >= t.goal;
+  return v === true;
+}
+function progress(d) {
+  const ts = tasksFor(d); if (!ts.length) return 0;
+  const l = peek(d);
+  return ts.filter(t => isDone(t, l)).length / ts.length;
+}
+const bookFor = id => S.books.find(b => 'book_' + b.id === id);
+
+// ---------- хатм ----------
+function khatmTodayGoal() {
+  const t = todayDate(), st = S.settings;
+  const read = iv(peek(t).quran);
+  const remaining = 604 - (st.khatmPage - read);
+  const end = st.khatmEnd ? parseKey(st.khatmEnd) : t;
+  const left = Math.max(1, daysBetween(t, end) + 1);
+  return Math.max(1, Math.ceil(remaining / left));
+}
+function quranGoalFor(d) {
+  const st = S.settings;
+  if (!st.khatmActive) return st.quranGoal;
+  if (isToday(d)) return khatmTodayGoal();
+  const saved = iv(peek(d)._qgoal);
+  return saved > 0 ? saved : st.quranGoal;
+}
+
+// ---------- действия с данными ----------
+function setFard(d, id, status) {
+  const l = logOf(d);
+  if (status) l[id] = status; else delete l[id];
+  commit(true);
+}
+function toggleTask(d, id) { const l = logOf(d); l[id] = !(l[id] === true); commit(); }
+function addCount(d, t, delta) {
+  const l = logOf(d), cur = iv(l[t.id]), next = Math.max(0, cur + delta), diff = next - cur;
+  l[t.id] = next;
+  if (t.id === 'quran' && S.settings.khatmActive) {
+    S.settings.khatmPage = clamp(S.settings.khatmPage + diff, 0, 604);
+    if (isToday(d)) l._qgoal = khatmTodayGoal();
+  }
+  const b = bookFor(t.id);
+  if (b) b.currentPage = clamp(b.currentPage + diff, 0, b.totalPages);
+  commit();
+}
+function setSafar(d, v) { logOf(d)._safar = v; if (isToday(d)) S.settings.safar = v; commit(true); }
+function setExcused(d, v) { logOf(d)._excused = v; commit(true); }
+
+// ---------- статистика ----------
+function fardStreak() {
+  const ok = x => FARD.every(id => peek(x)[id] in STATUS);
+  let d = todayDate();
+  if (!ok(d) && !isExcused(d)) d = addDays(d, -1);
+  let n = 0;
+  for (let g = 0; g < 5000; g++) {
+    if (isExcused(d)) { d = addDays(d, -1); continue; }
+    if (!ok(d)) break;
+    n++; d = addDays(d, -1);
+  }
+  return n;
+}
+function weekReport() {
+  const r = { ontime: 0, jamaat: 0, late: 0, qada: 0, none: 0, quran: 0, books: 0, best: null, bestP: 0 };
+  for (let i = 6; i >= 0; i--) {
+    const d = addDays(todayDate(), -i), l = peek(d);
+    if (!isExcused(d)) FARD.forEach(id => { const v = l[id]; r[v in STATUS ? v : 'none']++; });
+    r.quran += iv(l.quran);
+    for (const k in l) if (k.startsWith('book_')) r.books += iv(l[k]);
+    const p = progress(d);
+    if (p > r.bestP) { r.bestP = p; r.best = d; }
+  }
+  r.total = r.ontime + r.jamaat + r.late + r.qada + r.none;
+  return r;
+}
+
+// =====================================================================
+//  УВЕДОМЛЕНИЯ (работают, пока приложение открыто или свёрнуто)
+// =====================================================================
+let timers = [];
+const canNotify = () => 'Notification' in window;
+async function askNotify() {
+  try { if (canNotify() && Notification.permission === 'default') await Notification.requestPermission(); } catch (e) {}
+}
+function notify(title, body) {
+  try {
+    if (!canNotify() || Notification.permission !== 'granted') return;
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then(r => r.showNotification(title, { body, icon: 'icon-192.png', tag: title }));
+    } else new Notification(title, { body });
+  } catch (e) {}
+}
+function scheduleWeb() {
+  timers.forEach(clearTimeout); timers = [];
+  const st = S.settings;
+  if (st.lat == null) return;
+  const now = new Date(), today = dateOnly(now);
+  const at = (when, fn) => { const ms = when - now; if (ms > 0 && ms < 36 * 3600e3) timers.push(setTimeout(fn, ms)); };
+
+  if (st.remindFard) {
+    for (const off of [0, 1]) {
+      const date = addDays(today, off), pt = prayerTimes(date), pn = prayerTimes(addDays(date, 1));
+      const ends = { fajr: pt.sunrise, zuhr: pt.asr, asr: pt.maghrib, maghrib: pt.isha, isha: pn.fajr };
+      for (const [id, end] of Object.entries(ends)) {
+        at(new Date(end - st.remindMinutes * 60000), () => {
+          if (isExcused(date) || peek(date)[id] in STATUS) return;
+          notify(`Скоро выйдет время: ${FARD_NAMES[id]}`, `Осталось ${st.remindMinutes} мин. Если уже помолились, отметьте намаз.`);
+        });
+      }
+    }
+  }
+  if (st.tahajjudAlarm) {
+    const w = nightWindow();
+    let third = lastThird(w[0], w[1]);
+    if (third <= now) third = lastThird(prayerTimes(today).maghrib, prayerTimes(addDays(today, 1)).fajr);
+    at(third, () => notify('Последняя треть ночи', 'Время для тахаджуда и дуа'));
+  }
+  if (st.sleepReminder) {
+    let t = new Date(prayerTimes(today).isha.getTime() + st.sleepAfterIsha * 60000);
+    if (t <= now) t = new Date(prayerTimes(addDays(today, 1)).isha.getTime() + st.sleepAfterIsha * 60000);
+    at(t, () => notify('Пора готовиться ко сну', 'Ложитесь пораньше, чтобы встать на Фаджр'));
+  }
+}
+
+// =====================================================================
+//  МОДАЛЬНЫЕ ОКНА
+// =====================================================================
+const root = $('#modal-root');
+let modalResolve = null;
+function openModal(html) {
+  root.innerHTML = `<div class="scrim"></div><div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+  root.classList.add('open');
+  root.querySelector('.scrim').onclick = () => closeModal(null);
+}
+function closeModal(v) {
+  root.classList.remove('open'); root.innerHTML = '';
+  const r = modalResolve; modalResolve = null; if (r) r(v);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && root.classList.contains('open')) closeModal(null); });
+
+function fieldHtml(f) {
+  const v = esc(f.value ?? '');
+  let input;
+  if (f.type === 'textarea') input = `<textarea name="${f.name}" placeholder="${esc(f.placeholder || '')}">${v}</textarea>`;
+  else if (f.type === 'select') input = `<select name="${f.name}">${f.options.map(([k, l]) => `<option value="${esc(k)}" ${k === f.value ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`;
+  else input = `<input name="${f.name}" type="${f.type === 'number' ? 'text' : (f.type || 'text')}" ${f.type === 'number' ? 'inputmode="decimal"' : ''} value="${v}" placeholder="${esc(f.placeholder || '')}" autocomplete="off">`;
+  return `<label class="field"><span>${esc(f.label || '')}</span>${input}</label>`;
+}
+function form({ title, text, fields = [], submit = 'Сохранить', danger = false }) {
+  return new Promise(res => {
+    modalResolve = res;
+    openModal(`<form novalidate><h2>${esc(title)}</h2>${text ? `<p class="prose">${esc(text)}</p>` : ''}
+      ${fields.map(fieldHtml).join('')}
+      <div class="actions"><button type="button" class="btn ghost" data-cancel>Отмена</button>
+      <button class="btn ${danger ? 'danger' : 'primary'}">${esc(submit)}</button></div></form>`);
+    const f = root.querySelector('form');
+    root.querySelector('[data-cancel]').onclick = () => closeModal(null);
+    f.onsubmit = e => {
+      e.preventDefault();
+      const out = {};
+      fields.forEach(fd => {
+        const raw = f.elements[fd.name].value.trim();
+        out[fd.name] = fd.type === 'number' ? (raw === '' ? null : Number(raw.replace(',', '.'))) : raw;
+      });
+      closeModal(out);
+    };
+    setTimeout(() => f.querySelector('input,textarea,select')?.focus(), 60);
+  });
+}
+const confirmBox = (title, ok = 'Удалить') => form({ title, submit: ok, danger: true }).then(r => r !== null);
+const ask = (title, value, label = '') => form({ title, fields: [{ name: 'n', type: 'number', value, label }], submit: 'Готово' }).then(r => r && r.n != null && isFinite(r.n) ? Math.round(r.n) : null);
+const askText = (title, placeholder = '', multiline = false) => form({ title, fields: [{ name: 't', type: multiline ? 'textarea' : 'text', placeholder }] }).then(r => r && r.t ? r.t : null);
+
+function sheet(title, opts) {
+  return new Promise(res => {
+    modalResolve = res;
+    openModal(`<h2>${esc(title)}</h2>${opts.map((o, i) => `<button class="opt ${o.sel ? 'sel' : ''}" data-i="${i}" style="--c:${o.color || 'var(--muted)'}">${o.icon ? icon(o.icon) : ''}<span>${esc(o.label)}</span></button>`).join('')}`);
+    root.querySelectorAll('.opt').forEach(b => b.onclick = () => closeModal(opts[+b.dataset.i].v));
+  });
+}
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg; t.setAttribute('role', 'status');
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+
+// =====================================================================
+//  ОТРИСОВКА
+// =====================================================================
+Object.assign(ICONS, {
+  lib: '<path d="M5 4.5v15M9 4.5v15"/><path d="M13 5.2l3.6-.9 3.4 14.3-3.6.9z"/>',
+  sunrise: '<path d="M4 18h16M7 14.5a5 5 0 0 1 10 0"/><path d="M12 4v4M9.5 6.5L12 4l2.5 2.5"/>',
+});
+
+const ui = { tab: 'today', stack: [], cal: null, range: 7, prayChart: 'fard' };
+const app = $('#app'), nav = $('#nav');
+const BOOK_COLORS = ['#1F6F5C', '#B48638', '#5B7DB1', '#C0573F', '#7A9E91', '#9B6FA8'];
+const bookColor = id => BOOK_COLORS[Math.max(0, S.books.findIndex(b => b.id === id)) % BOOK_COLORS.length];
+
+function render() {
+  applyTheme();
+  const top = ui.stack[ui.stack.length - 1];
+  app.innerHTML = top ? page(top) : tab(ui.tab);
+  const tabs = [['today', 'home', 'Сегодня'], ['lib', 'lib', 'Библиотека'], ['stats', 'chart', 'Статистика'], ['more', 'more', 'Ещё']];
+  nav.innerHTML = `<div class="in">${tabs.map(([k, i, l]) => {
+    const on = !top && ui.tab === k;
+    return `<button data-a="tab" data-v="${k}" class="${on ? 'on' : ''}" aria-current="${on ? 'page' : 'false'}">${icon(i)}<span>${l}</span></button>`;
+  }).join('')}</div>`;
+}
+function applyTheme() {
+  const t = S.settings.theme;
+  if (t === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+}
+function go(view, param) { ui.stack.push({ view, param }); render(); window.scrollTo(0, 0); }
+function back() { ui.stack.pop(); render(); }
+const pageTop = (title, extra = '') => `<header class="top page"><button class="icon-btn" data-a="back" aria-label="Назад">${icon('back')}</button><h1 class="grow">${esc(title)}</h1>${extra}</header>`;
+
+function tab(t) {
+  if (t === 'lib') return viewLibrary();
+  if (t === 'stats') return viewStats();
+  if (t === 'more') return viewMore();
+  return viewToday();
+}
+function page({ view, param }) {
+  switch (view) {
+    case 'day': { const d = parseKey(param); return pageTop(`${human(d)}, ${WDF[wdi(d)]}`) + dayBody(d); }
+    case 'calendar': return pageTop('Календарь') + viewCalendar();
+    case 'khatm': return viewKhatm();
+    case 'book': return viewBook(param);
+    case 'goals': return viewGoals();
+    case 'duas': return viewDuas();
+    case 'items': return viewItems();
+    case 'settings': return viewSettings();
+  }
+  return '';
+}
+
+// ---------- маленькие элементы ----------
+function ring(p, size = 46, stroke = 4.5, label = '') {
+  const r = (size - stroke) / 2, c = 2 * Math.PI * r;
+  return `<span class="ring" style="width:${size}px;height:${size}px"><svg viewBox="0 0 ${size} ${size}" aria-hidden="true">
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="${stroke}"/>
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${p >= 1 ? 'var(--st-ontime)' : 'var(--accent)'}" stroke-width="${stroke}" stroke-linecap="round"
+      stroke-dasharray="${(c * clamp(p, 0, 1)).toFixed(2)} ${c.toFixed(2)}"/></svg>${label ? `<b>${label}</b>` : ''}</span>`;
+}
+
+// =====================================================================
+//  СЕГОДНЯ
+// =====================================================================
+function viewToday() {
+  const d = todayDate(), h = hijri(d), p = progress(d), streak = fardStreak();
+  return `<header class="top">
+      <div class="grow"><h1>${human(d)}</h1>
+        <p class="sub">${WDF[wdi(d)]}${h ? `, ${esc(h)}` : ''}</p>
+        ${streak > 0 ? `<p class="streak">${icon('fire')}Все фард подряд: ${daysW(streak)}</p>` : ''}</div>
+      <div class="top-tools">
+        <span title="Выполнено за день">${ring(p, 48, 4.5, Math.round(p * 100) + '%')}</span>
+        <button class="icon-btn" data-a="calendar" aria-label="Календарь">${icon('cal')}</button>
+      </div>
+    </header>
+    ${hadithArch()}
+    ${d.getDay() === 5 ? fridayBanner() : ''}
+    ${dayBody(d)}`;
+}
+
+function hadithArch() {
+  const open = !!S.settings.hadithOpen;
+  return `<section class="arch" aria-label="Хадис">
+    <span class="orn" aria-hidden="true">۞</span>
+    ${open ? '<p class="isnad">Передают со слов Айши (да будет доволен ею Аллагь), что Пророк ﷺ сказал:</p>' : ''}
+    <blockquote>«Самые любимые дела перед Аллахом — это те, которые совершаются постоянно, даже если их мало»</blockquote>
+    ${open ? '<p class="after">Когда в семье Пророка ﷺ начинали совершать какое-нибудь дело, они делали это постоянно.</p>' : ''}
+    <div class="arch-foot"><cite>аль-Бухари, 6465; Муслим, 783</cite>
+      <button class="link" data-a="hadith" aria-expanded="${open}">${open ? 'Свернуть' : 'Полностью'}</button></div>
+  </section>`;
+}
+
+function fridayBanner() {
+  const r = weekReport();
+  return `<button class="banner" data-a="tab" data-v="stats">${icon('chart')}<span class="grow"><b>Отчёт недели</b><br>
+    <span>Фард вовремя ${r.ontime + r.jamaat} из ${r.total}, Коран ${r.quran} стр.</span></span>${icon('chev')}</button>`;
+}
+
+/** Тело дня: карточка намазов + блоки дел. Используется и для прошлых дней. */
+function dayBody(d) {
+  const log = peek(d), k = dkey(d), tasks = tasksFor(d);
+  const by = g => tasks.filter(t => t.group === g);
+  const pillLine = (label, ts) => ts.length ? `<div class="line"><span class="lb">${label}</span><div class="pills">${ts.map(t => pill(t, log, k)).join('')}</div></div>` : '';
+
+  const nafl = by('Нафиль'), azkar = by('Азкары'), fri = by('Пятница');
+  const myChecks = by('Мои дела').filter(t => t.kind !== 'counter');
+  const sunnaTasks = [...nafl, ...azkar, ...fri, ...myChecks];
+  const reading = [...by('Чтение'), ...by('Мои дела').filter(t => t.kind === 'counter')];
+  const avoid = by('Удержался от');
+  const cnt = ts => `${ts.filter(t => isDone(t, log)).length} из ${ts.length}`;
+
+  return `${prayerCard(d)}
+    ${sunnaTasks.length ? `<section class="block"><div class="block-h"><h3>Сунна и зикр</h3><span>${cnt(sunnaTasks)}</span></div>
+      ${pillLine('Нафиль', nafl)}${pillLine('Азкары', azkar)}${pillLine('Пятница', fri)}${pillLine('Мои дела', myChecks)}</section>` : ''}
+    ${reading.length ? `<section class="block"><div class="block-h"><h3>Чтение</h3><span>${cnt(reading)}</span></div>
+      ${reading.map(t => readRow(t, log, k)).join('')}</section>` : ''}
+    ${avoid.length ? `<section class="block"><div class="block-h"><h3>Удержался от</h3><span>${cnt(avoid)}</span></div>
+      <div class="pills">${avoid.map(t => pill(t, log, k, 'shield')).join('')}</div></section>` : ''}`;
+}
+
+const SHORT = { azkar_m: 'Утренние', azkar_e: 'Вечерние', fr_kahf: 'Аль-Кахф', fr_salawat: 'Салават', fr_ghusl: 'Гусль' };
+function pill(t, log, k, ic = 'check') {
+  const on = log[t.id] === true;
+  return `<button class="pill ${on ? 'on' : ''}" data-a="toggle" data-id="${t.id}" data-d="${k}" role="checkbox" aria-checked="${on}">
+    <span class="ck">${icon(ic)}</span>${esc(SHORT[t.id] || t.title)}</button>`;
+}
+
+function readRow(t, log, k) {
+  const n = iv(log[t.id]), p = n / t.goal, b = bookFor(t.id);
+  let sub = `${n} из ${t.goal} ${esc(t.unit)}`;
+  if (t.id === 'quran' && S.settings.khatmActive && isToday(parseKey(k))) sub += `, хатм ${Math.round(S.settings.khatmPage / 604 * 100)}%`;
+  else if (b) sub += `, книга ${Math.round(b.currentPage / Math.max(1, b.totalPages) * 100)}%`;
+  return `<div class="rd">
+    <button class="rd-main" data-a="countInput" data-id="${t.id}" data-d="${k}">
+      ${ring(p, 34, 3.5)}<span class="grow"><span class="t">${esc(t.title)}</span><span class="s">${sub}</span></span></button>
+    <div class="stepper sm"><button data-a="count" data-v="-1" data-id="${t.id}" data-d="${k}" aria-label="Минус">${icon('minus')}</button>
+      <button data-a="count" data-v="1" data-id="${t.id}" data-d="${k}" aria-label="Плюс">${icon('plus')}</button></div>
+  </div>`;
+}
+
+/** Матрица намазов: колонки = 5 намазов; сверху сунна до, в центре фард, снизу сунна после. */
+function prayerCard(d) {
+  const k = dkey(d), log = peek(d), today = isToday(d), st = S.settings;
+  const safar = isSafar(d), exc = isExcused(d);
+  const pt = prayerTimes(d);
+  const enabled = new Set(tasksFor(d).map(t => t.id));
+  const cols = [
+    { id: 'fajr', b: 'r_fajr', bn: 2, a: null },
+    { id: 'zuhr', b: 'r_zuhr_b', bn: 4, a: 'r_zuhr_a', an: st.zuhrAfter },
+    { id: 'asr', b: 'r_asr', bn: 4, a: null },
+    { id: 'maghrib', b: null, a: 'r_maghrib', an: 2 },
+    { id: 'isha', b: null, a: 'r_isha', an: 2 },
+  ];
+  const times = pt ? { fajr: pt.fajr, zuhr: pt.dhuhr, asr: pt.asr, maghrib: pt.maghrib, isha: pt.isha } : null;
+
+  // текущий намаз (только для сегодняшнего дня)
+  let cur = -1, headLine = '';
+  if (today && times) {
+    const now = new Date();
+    const order = ['fajr', 'zuhr', 'asr', 'maghrib', 'isha'];
+    order.forEach((id, i) => { if (now >= times[id]) cur = i; });
+    if (now < pt.fajr || now >= addDays(d, 1)) cur = 4;
+    if (now >= pt.sunrise && now < pt.dhuhr) cur = -1; // время духа: обязательного намаза нет
+    const slots = [['Фаджр', pt.fajr], ['Восход', pt.sunrise], ['Зухр', pt.dhuhr], ['Аср', pt.asr], ['Магриб', pt.maghrib], ['Иша', pt.isha]];
+    let next = slots.find(s => s[1] > now);
+    if (!next) next = ['Фаджр', prayerTimes(addDays(d, 1)).fajr];
+    headLine = `Далее <b>${next[0]}</b> в <b class="num">${hm(next[1])}</b>, через ${dur(next[1] - now)}`;
+  } else if (!times) {
+    headLine = `<button class="pc-city" data-a="city">${icon('pin')}Выбрать город для времени намазов</button>`;
+  } else {
+    headLine = 'Отметки за этот день';
+  }
+
+  const chipBtns = `<button class="chip ${safar ? 'on' : ''}" data-a="safar" data-d="${k}" aria-pressed="${safar}">${icon('bag')}Сафар</button>
+    ${st.female ? `<button class="chip ${exc ? 'on' : ''}" data-a="excused" data-d="${k}" aria-pressed="${exc}">${icon('heart')}Без намаза</button>` : ''}`;
+
+  if (exc) {
+    return `<section class="pc"><div class="pc-head"><span class="pc-next">${headLine}</span></div>
+      <p class="pc-exc">${icon('heart')}<span>Намаз в эти дни не совершается. Серия сохраняется.</span></p>
+      <div class="pc-chips">${chipBtns}</div></section>`;
+  }
+
+  const rb = (id, n, label) => {
+    if (!id || !enabled.has(id)) return '<span class="rb none" aria-hidden="true"></span>';
+    const on = log[id] === true;
+    return `<button class="rb ${on ? 'on' : ''}" data-a="toggle" data-id="${id}" data-d="${k}" role="checkbox" aria-checked="${on}" aria-label="${label}" title="${label}">${n}</button>`;
+  };
+
+  const fardDone = FARD.filter(id => log[id] in STATUS).length;
+  return `<section class="pc" aria-label="Намазы">
+    <div class="pc-head"><span class="pc-next">${headLine}</span><span class="pc-count num">${fardDone}/5</span></div>
+    <div class="mx">${cols.map((c, i) => {
+      const s = STATUS[log[c.id]];
+      const note = (safar && ['zuhr', 'asr', 'isha'].includes(c.id)) ? 'сокращённо' : '';
+      return `<div class="col ${i === cur ? 'now' : ''}">
+        <span class="nm">${FARD_NAMES[c.id]}</span>
+        <span class="tm num">${times ? hm(times[c.id]) : '—'}</span>
+        ${rb(c.b, c.bn, `${c.bn} ракаата до ${FARD_NAMES[c.id]}`)}
+        <button class="fd ${s ? 'is-set' : ''}" style="--c:${s ? s.color : 'transparent'}" data-a="fard" data-id="${c.id}" data-d="${k}"
+          aria-label="${FARD_NAMES[c.id]}: ${s ? s.label : 'не отмечен'}">${icon(s ? s.icon : 'plus')}</button>
+        ${rb(c.a, c.an, `${c.an} ракаата после ${FARD_NAMES[c.id]}`)}
+        ${note ? `<span class="sf">${note}</span>` : ''}
+      </div>`;
+    }).join('')}</div>
+    <p class="pc-legend">Кружок — фард, плашки — сунна до и после</p>
+    <div class="pc-foot">
+      ${pt ? `<span>${icon('sunrise')}Восход ${hm(pt.sunrise)}</span>` : '<span></span>'}
+      ${today && pt ? (() => { const w = nightWindow(); return `<span>${icon('moon')}Треть ночи с ${hm(lastThird(w[0], w[1]))}</span>`; })() : ''}
+    </div>
+    <div class="pc-chips">${chipBtns}</div>
+  </section>`;
+}
+
+// =====================================================================
+//  КАЛЕНДАРЬ
+// =====================================================================
+function viewCalendar() {
+  const today = todayDate();
+  if (!ui.cal) ui.cal = new Date(today.getFullYear(), today.getMonth(), 1);
+  const m = ui.cal, days = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate(), lead = wdi(m);
+  const canNext = m.getFullYear() < today.getFullYear() || (m.getFullYear() === today.getFullYear() && m.getMonth() < today.getMonth());
+  let cells = '';
+  for (let i = 0; i < lead; i++) cells += '<span></span>';
+  for (let n = 1; n <= days; n++) {
+    const d = new Date(m.getFullYear(), m.getMonth(), n), future = d > today, p = future ? 0 : progress(d);
+    const isT = dkey(d) === dkey(today);
+    const fard = FARD.filter(id => peek(d)[id] in STATUS).length;
+    cells += future
+      ? `<span class="cell future">${n}</span>`
+      : `<button class="cell ${isT ? 'today' : ''} ${p > .55 ? 'hi' : ''}" style="--p:${Math.round(p * 100)}%" data-a="day" data-d="${dkey(d)}" aria-label="${human(d)}, выполнено ${Math.round(p * 100)}%">
+          <span class="dn">${n}</span><span class="fdots">${FARD.map((_, i) => `<i class="${i < fard ? 'on' : ''}"></i>`).join('')}</span>
+          ${isExcused(d) ? '<i class="dot"></i>' : ''}</button>`;
+  }
+  return `<div class="cal-head"><button class="icon-btn" data-a="calMove" data-v="-1" aria-label="Предыдущий месяц">${icon('back')}</button>
+      <h2>${MONTHS[m.getMonth()]} ${m.getFullYear()}</h2>
+      <button class="icon-btn" data-a="calMove" data-v="1" ${canNext ? '' : 'disabled'} aria-label="Следующий месяц">${icon('chev')}</button></div>
+    <div class="wd">${WD.map(w => `<span>${w}</span>`).join('')}</div>
+    <div class="grid">${cells}</div>
+    <p class="prose">Заливка показывает, сколько сделано за день, точки внизу — совершённые фард. Нажмите на день, чтобы исправить отметки.</p>`;
+}
+
+// =====================================================================
+//  БИБЛИОТЕКА
+// =====================================================================
+function viewLibrary() {
+  const s = S.settings, t = todayDate(), log = peek(t);
+  const quranToday = iv(log.quran), qGoal = quranGoalFor(t);
+  const khatm = s.khatmActive
+    ? `<button class="quran" data-a="open" data-v="khatm">
+        <span class="q-orn" aria-hidden="true">۞</span>
+        <span class="grow"><span class="q-t">Коран, хатм</span>
+          <span class="q-s">Прочитано ${s.khatmPage} из 604 стр., до ${human(parseKey(s.khatmEnd))}</span>
+          <span class="meter light"><i style="width:${(s.khatmPage / 604 * 100).toFixed(1)}%"></i></span>
+          <span class="q-s">Сегодня ${quranToday} из ${qGoal} стр.</span></span>${icon('chev')}</button>`
+    : `<button class="quran" data-a="open" data-v="khatm">
+        <span class="q-orn" aria-hidden="true">۞</span>
+        <span class="grow"><span class="q-t">Коран</span>
+          <span class="q-s">Сегодня ${quranToday} из ${qGoal} стр. Спланируйте хатм, и норма будет считаться сама.</span></span>${icon('chev')}</button>`;
+
+  const books = S.books.map(b => {
+    const today = iv(log['book_' + b.id]), p = b.currentPage / Math.max(1, b.totalPages);
+    return `<button class="bk" data-a="open" data-v="book" data-id="${b.id}" style="--bc:${bookColor(b.id)}">
+      <span class="spine" aria-hidden="true"></span>
+      <span class="grow"><span class="bk-t">${esc(b.title)}</span>
+        <span class="meter"><i style="width:${(p * 100).toFixed(1)}%;background:var(--bc)"></i></span>
+        <span class="bk-s">${b.currentPage} из ${b.totalPages} стр., сегодня ${today} из ${b.dailyGoal}${b.notes.length ? `, выписок: ${b.notes.length}` : ''}</span></span>
+      ${icon('chev')}</button>`;
+  }).join('');
+
+  return `<header class="top"><h1 class="grow">Библиотека</h1>
+      <button class="icon-btn accent" data-a="addBook" aria-label="Добавить книгу">${icon('plus')}</button></header>
+    ${khatm}
+    <div class="block-h lib-h"><h3>Книги</h3><span>${S.books.length}</span></div>
+    ${S.books.length ? `<div class="shelf">${books}</div>`
+      : `<button class="empty-btn" data-a="addBook">${icon('plus')}<span>Добавьте книгу, которую читаете, и задайте норму страниц в день</span></button>`}`;
+}
+
+function viewKhatm() {
+  const s = S.settings;
+  if (!s.khatmActive) {
+    return pageTop('Хатм Корана') + `<p class="prose">Укажите, за сколько дней хотите прочитать Коран. Норма пересчитывается каждый день с учётом прочитанного: если отстанете, она немного вырастет, если опередите, уменьшится.</p>
+      <button class="btn primary wide" data-a="khatmStart">Начать хатм</button>`;
+  }
+  const t = todayDate(), end = parseKey(s.khatmEnd), left = daysBetween(t, end) + 1, fin = s.khatmPage >= 604;
+  return pageTop('Хатм Корана') + `<section class="card">
+      <p class="big">${s.khatmPage} из 604 стр.</p>
+      <div class="bar" style="margin:12px 0"><i style="width:${(s.khatmPage / 604 * 100).toFixed(1)}%"></i></div>
+      ${fin ? '<p>Хатм завершён, альхамдулиллях! Пусть Аллах примет.</p>' : `
+      <div class="kv"><span>Срок</span><b>до ${human(end)} ${end.getFullYear()}</b></div>
+      <div class="kv"><span>Осталось</span><b>${left > 0 ? daysW(left) : 'срок прошёл'}</b></div>
+      <div class="kv"><span>Норма на сегодня</span><b>${khatmTodayGoal()} стр.</b></div>
+      <div class="kv"><span>Прочитано сегодня</span><b>${iv(peek(t).quran)} стр.</b></div>`}
+    </section>
+    <div class="btn-row"><button class="btn ghost" data-a="khatmDays">Изменить срок</button><button class="btn ghost" data-a="khatmPage">Исправить прочитанное</button></div>
+    <button class="btn ${fin ? 'primary' : 'ghost'} wide" data-a="khatmStop">${fin ? 'Начать новый хатм' : 'Завершить хатм'}</button>`;
+}
+
+function viewBook(id) {
+  const b = S.books.find(x => x.id === id);
+  if (!b) return pageTop('Книга') + '<p class="empty">Книга удалена.</p>';
+  const p = b.currentPage / Math.max(1, b.totalPages);
+  return pageTop(b.title, `<button class="icon-btn" data-a="delBook" data-id="${b.id}" aria-label="Удалить книгу">${icon('trash')}</button>`) + `
+    <section class="card book-hero" style="--bc:${bookColor(b.id)}">
+      <div class="kv"><span>Прочитано</span><b>${Math.round(p * 100)}%</b></div>
+      <div class="bar" style="margin:8px 0 12px"><i style="width:${(p * 100).toFixed(1)}%;background:var(--bc)"></i></div>
+      <div class="btn-row" style="margin:0"><button class="btn ghost" data-a="bookPage" data-id="${b.id}">Страница ${b.currentPage} из ${b.totalPages}</button>
+        <button class="btn ghost" data-a="bookGoal" data-id="${b.id}">Норма ${b.dailyGoal} стр. в день</button></div>
+    </section>
+    <div class="block-h lib-h"><h3>Выписки и мысли</h3><button class="link" data-a="addNote" data-id="${b.id}">Добавить</button></div>
+    ${b.notes.length ? `<div class="notes">${b.notes.map((n, i) => `<figure class="nt" style="--bc:${bookColor(b.id)}">
+        <blockquote>${esc(n.text)}</blockquote>
+        <figcaption>${human(parseKey(n.date))}${n.page != null ? `, стр. ${n.page}` : ''}
+          <button class="link" data-a="delNote" data-id="${b.id}" data-v="${i}">Удалить</button></figcaption></figure>`).join('')}</div>`
+      : `<button class="empty-btn" data-a="addNote" data-id="${b.id}">${icon('edit')}<span>Записывайте важные мысли из книги, чтобы прочитанное не забывалось</span></button>`}`;
+}
+
+// =====================================================================
+//  СТАТИСТИКА: графики по каждому делу
+// =====================================================================
+const CW = 340;
+function xLabel(days, i) {
+  const d = days[i];
+  if (days.length <= 7) return WD[wdi(d)];
+  return (i % 5 === 0 || i === days.length - 1) ? String(d.getDate()) : '';
+}
+/** Столбики со стопкой: stacks = [{color, vals:[]}] */
+function barChart(days, stacks, { max = 0, goal = 0, h = 132, mark = [] } = {}) {
+  const n = days.length, top = 10, bottom = 20, ph = h - top - bottom, slot = CW / n, bw = Math.min(24, slot * 0.62);
+  const sum = i => stacks.reduce((a, s) => a + (s.vals[i] || 0), 0);
+  max = max || Math.max(1, goal, ...days.map((_, i) => sum(i)));
+  let g = '';
+  days.forEach((_, i) => {
+    const x = i * slot + (slot - bw) / 2;
+    g += `<rect x="${x.toFixed(1)}" y="${top}" width="${bw.toFixed(1)}" height="${ph}" rx="${Math.min(6, bw / 2).toFixed(1)}" fill="var(--surface-2)"/>`;
+    let y = top + ph;
+    stacks.forEach(s => {
+      const v = s.vals[i] || 0;
+      if (v <= 0) return;
+      const hh = ph * Math.min(v, max) / max;
+      y -= hh;
+      g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${hh.toFixed(1)}" rx="${Math.min(3, bw / 3).toFixed(1)}" fill="${s.color}"/>`;
+    });
+    if (mark[i]) g += `<circle cx="${(x + bw / 2).toFixed(1)}" cy="${top + ph - 5}" r="2.6" fill="#D88BA0"/>`;
+    const lab = xLabel(days, i);
+    if (lab) g += `<text x="${(x + bw / 2).toFixed(1)}" y="${h - 5}" text-anchor="middle" class="ax">${lab}</text>`;
+  });
+  if (goal) {
+    const gy = top + ph - ph * Math.min(goal, max) / max;
+    g += `<line x1="0" x2="${CW}" y1="${gy.toFixed(1)}" y2="${gy.toFixed(1)}" stroke="var(--brass)" stroke-width="1.3" stroke-dasharray="5 4"/>`;
+    g += `<text x="${CW - 2}" y="${(gy - 4).toFixed(1)}" text-anchor="end" class="ax goal">цель ${goal}</text>`;
+  }
+  return `<svg class="chart" viewBox="0 0 ${CW} ${h}" role="img">${g}</svg>`;
+}
+/** Точечная матрица: rows = [{label, color, vals:[true|false|null]}] (null = не учитывается) */
+function dotChart(days, rows) {
+  const n = days.length, lw = 78, slot = (CW - lw) / n, r = Math.min(8.5, slot * 0.36), rowH = Math.max(2 * r + 12, 24);
+  const h = rows.length * rowH + 20;
+  let g = '';
+  rows.forEach((row, ri) => {
+    const cy = ri * rowH + rowH / 2;
+    g += `<text x="0" y="${(cy + 4).toFixed(1)}" class="ax lbl">${row.label}</text>`;
+    days.forEach((_, i) => {
+      const cx = lw + i * slot + slot / 2, v = row.vals[i];
+      if (v === null) g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(r * 0.35).toFixed(1)}" fill="#D88BA0"/>`;
+      else if (v) g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" fill="${row.color}"/>`;
+      else g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(r - 0.7).toFixed(1)}" fill="none" stroke="var(--line)" stroke-width="1.4"/>`;
+    });
+  });
+  days.forEach((_, i) => {
+    const lab = xLabel(days, i);
+    if (lab) g += `<text x="${(lw + i * slot + slot / 2).toFixed(1)}" y="${h - 5}" text-anchor="middle" class="ax">${lab}</text>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${CW} ${h}" role="img">${g}</svg>`;
+}
+function donut(parts, size = 92, stroke = 13, center = '', sub = '') {
+  const total = parts.reduce((a, p) => a + p.v, 0), r = (size - stroke) / 2, c = 2 * Math.PI * r;
+  let off = 0, g = `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="${stroke}"/>`;
+  if (total) parts.forEach(p => {
+    if (!p.v) return;
+    const len = c * p.v / total;
+    g += `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${p.color}" stroke-width="${stroke}" stroke-dasharray="${len.toFixed(2)} ${(c - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`;
+    off += len;
+  });
+  const label = center ? `<text x="${size / 2}" y="${size / 2 + 2}" text-anchor="middle" class="dn-c">${center}</text><text x="${size / 2}" y="${size / 2 + 16}" text-anchor="middle" class="dn-s">${sub}</text>` : '';
+  return `<svg class="donut" viewBox="0 0 ${size} ${size}" style="width:${size}px;height:${size}px" aria-hidden="true"><g transform="rotate(-90 ${size / 2} ${size / 2})">${g}</g>${label}</svg>`;
+}
+const metric = (v, l) => `<div class="metric"><b>${v}</b><span>${l}</span></div>`;
+const legend = items => `<div class="legend">${items.map(([c, l]) => `<span><i style="background:${c}"></i>${l}</span>`).join('')}</div>`;
+const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+
+function viewStats() {
+  const n = ui.range, today = todayDate();
+  const days = [...Array(n)].map((_, i) => addDays(today, i - n + 1));
+  const logs = days.map(d => peek(d));
+  const exc = days.map(d => isExcused(d));
+
+  // ---------- намазы ----------
+  const order = ['jamaat', 'ontime', 'late', 'qada'];
+  const fardStacks = order.map(k => ({ color: STATUS[k].color, vals: logs.map((l, i) => exc[i] ? 0 : FARD.filter(id => l[id] === k).length) }));
+  const tot = Object.fromEntries(order.map((k, j) => [k, fardStacks[j].vals.reduce((a, b) => a + b, 0)]));
+  const possible = exc.filter(e => !e).length * 5;
+  const marked = order.reduce((a, k) => a + tot[k], 0);
+  const RAT = ['r_fajr', 'r_zuhr_b', 'r_zuhr_a', 'r_asr', 'r_maghrib', 'r_isha'];
+  const ratPossible = days.map((d, i) => exc[i] ? 0 : tasksFor(d).filter(t => t.group === 'Ратибат').length);
+  const ratDone = logs.map((l, i) => exc[i] ? 0 : RAT.filter(id => l[id] === true).length);
+  const ratSum = ratDone.reduce((a, b) => a + b, 0), ratPos = ratPossible.reduce((a, b) => a + b, 0);
+  const fardView = ui.prayChart === 'fard';
+  const prayers = `<section class="sc">
+    <div class="sc-h"><h2>Намазы</h2><span class="sc-badge">${icon('fire')}${daysW(fardStreak())}</span><span class="grow"></span>
+      <div class="seg sm" role="tablist"><button class="${fardView ? 'on' : ''}" data-a="prayChart" data-v="fard">Фард</button><button class="${!fardView ? 'on' : ''}" data-a="prayChart" data-v="rat">Ратибаты</button></div></div>
+    ${fardView ? `
+      <div class="sc-top">${donut(order.map(k => ({ v: tot[k], color: STATUS[k].color })), 104, 13, pct(tot.ontime + tot.jamaat, possible), 'вовремя')}
+        <div class="vleg">${order.map(k => `<span><i style="background:${STATUS[k].color}"></i>${STATUS[k].label}<b>${tot[k]}</b></span>`).join('')}
+          <span><i style="background:var(--surface-2)"></i>Не отмечено<b>${Math.max(0, possible - marked)}</b></span></div></div>
+      ${barChart(days, fardStacks, { max: 5, mark: exc })}
+      <p class="sc-note">Каждый столбик — пять фард за день${exc.some(Boolean) ? ', розовая точка — день без намаза' : ''}</p>`
+    : `
+      <div class="metrics three">${metric(pct(ratSum, ratPos), 'выполнено')}${metric((ratSum / Math.max(1, n)).toFixed(1).replace('.', ','), 'в среднем в день')}${metric(ratSum, 'всего')}</div>
+      ${barChart(days, [{ color: 'var(--accent)', vals: ratDone }], { max: Math.max(1, ...ratPossible, 6), mark: exc })}
+      <p class="sc-note">Высота столбика — сколько из ${Math.max(...ratPossible, 0) || 6} ратибатов совершено за день</p>`}
+  </section>`;
+
+  // ---------- Коран ----------
+  const qv = logs.map(l => iv(l.quran));
+  const qGoal = S.settings.khatmActive ? khatmTodayGoal() : S.settings.quranGoal;
+  const qMet = days.filter((d, i) => qv[i] >= quranGoalFor(d)).length;
+  const qTotal = qv.reduce((a, b) => a + b, 0);
+  const quran = `<section class="sc">
+    <div class="sc-h"><h2>Коран</h2><span class="sc-badge">${qTotal} стр.</span></div>
+    <div class="metrics three">${metric((qTotal / n).toFixed(1).replace('.', ','), 'стр. в день')}${metric(`${qMet} из ${n}`, 'дней с нормой')}${metric(Math.max(0, ...qv), 'рекорд')}</div>
+    ${barChart(days, [{ color: 'var(--accent)', vals: qv }], { goal: qGoal })}
+    ${S.settings.khatmActive ? `<div class="kv"><span>Хатм</span><b>${S.settings.khatmPage} из 604 стр.</b></div><div class="bar"><i style="width:${(S.settings.khatmPage / 604 * 100).toFixed(1)}%"></i></div>` : ''}
+  </section>`;
+
+  // ---------- книги ----------
+  const bStacks = S.books.map(b => ({ color: bookColor(b.id), vals: logs.map(l => iv(l['book_' + b.id])) }));
+  const bTotal = bStacks.reduce((a, s) => a + s.vals.reduce((x, y) => x + y, 0), 0);
+  const books = `<section class="sc">
+    <div class="sc-h"><h2>Книги</h2><span class="sc-badge">${bTotal} стр.</span></div>
+    ${S.books.length ? `
+      ${barChart(days, bStacks)}
+      <div class="bk-prog">${S.books.map(b => `<div class="barrow"><span class="l"><i class="sw" style="background:${bookColor(b.id)}"></i>${esc(b.title)}</span>
+        <span class="bar"><i style="width:${(b.currentPage / Math.max(1, b.totalPages) * 100).toFixed(1)}%;--c:${bookColor(b.id)}"></i></span>
+        <span class="r">${Math.round(b.currentPage / Math.max(1, b.totalPages) * 100)}%</span></div>`).join('')}</div>`
+      : '<p class="sc-note">Добавьте книги во вкладке «Библиотека», и здесь появится график чтения.</p>'}
+  </section>`;
+
+  // ---------- азкары ----------
+  const am = logs.map(l => l.azkar_m === true), ae = logs.map(l => l.azkar_e === true);
+  const azkar = `<section class="sc">
+    <div class="sc-h"><h2>Азкары</h2><span class="sc-badge">${pct(am.filter(Boolean).length + ae.filter(Boolean).length, n * 2)}</span></div>
+    ${dotChart(days, [{ label: 'Утренние', color: 'var(--brass)', vals: am }, { label: 'Вечерние', color: '#5B7DB1', vals: ae }])}
+    <div class="metrics three">${metric(pct(am.filter(Boolean).length, n), 'утренние')}${metric(pct(ae.filter(Boolean).length, n), 'вечерние')}${metric(days.filter((_, i) => am[i] && ae[i]).length, 'дней с обоими')}</div>
+  </section>`;
+
+  // ---------- тахаджуд, духа, витр ----------
+  const nf = id => logs.map((l, i) => exc[i] ? null : l[id] === true);
+  const cntT = arr => arr.filter(v => v === true).length;
+  const tah = nf('tahajjud'), duha = nf('duha'), witr = nf('witr');
+  const nafl = `<section class="sc">
+    <div class="sc-h"><h2>Тахаджуд, духа и витр</h2></div>
+    ${dotChart(days, [{ label: 'Тахаджуд', color: '#3E5C9A', vals: tah }, { label: 'Духа', color: 'var(--brass)', vals: duha }, { label: 'Витр', color: 'var(--accent)', vals: witr }])}
+    <div class="metrics three">${metric(cntT(tah), 'тахаджуд')}${metric(cntT(duha), 'духа')}${metric(cntT(witr), 'витр')}</div>
+    ${exc.some(Boolean) ? '<p class="sc-note">Розовые точки — дни без намаза, они не считаются пропуском.</p>' : ''}
+  </section>`;
+
+  return `<header class="top"><h1 class="grow">Статистика</h1>
+      <div class="seg" role="tablist">${[7, 30].map(v => `<button class="${n === v ? 'on' : ''}" data-a="range" data-v="${v}">${v} дней</button>`).join('')}</div></header>
+    ${prayers}${quran}${books}${azkar}${nafl}`;
+}
+
+// =====================================================================
+//  ЕЩЁ
+// =====================================================================
+function viewMore() {
+  const it = (view, ic, t, sub) => `<button class="item" data-a="open" data-v="${view}">${icon(ic)}<span class="grow"><span class="t">${t}</span><br><span class="s">${sub}</span></span>${icon('chev')}</button>`;
+  return `<header class="top"><h1>Ещё</h1></header>
+    <div class="list">
+      ${it('goals', 'flag', 'Цели', `Активных: ${S.goals.filter(g => g.current < g.target).length}`)}
+      ${it('duas', 'hands', 'Журнал дуа', `Принято ${S.duas.filter(d => d.accepted).length} из ${S.duas.length}`)}
+      ${it('items', 'shield', 'Мои пункты', 'Свои дела и то, от чего удерживаюсь')}
+      ${it('settings', 'gear', 'Настройки', 'Город, уведомления, что отслеживать')}
+    </div>
+    <p class="prose" style="text-align:center;margin:20px auto">Без рекламы и регистрации. Все записи хранятся только в этом браузере на вашем устройстве.</p>`;
+}
+
+function viewGoals() {
+  const t = todayDate();
+  return pageTop('Цели', `<button class="icon-btn accent" data-a="addGoal" aria-label="Поставить цель">${icon('plus')}</button>`) + `
+    ${S.goals.length ? S.goals.map(g => {
+      const dl = parseKey(g.deadline), left = daysBetween(t, dl), done = g.current >= g.target;
+      const when = done ? 'Выполнено, альхамдулиллях!' : left >= 0 ? `До ${human(dl)}, осталось ${daysW(left)}` : `Срок прошёл ${human(dl)}`;
+      return `<section class="card goal">
+        <div class="goal-h">${ring(g.current / g.target, 52, 5, Math.round(g.current / g.target * 100) + '%')}
+          <div class="grow"><h2>${esc(g.title)}</h2><p class="s">${g.current} из ${g.target} ${esc(g.unit)}. ${when}</p></div></div>
+        <div class="btn-row" style="margin-bottom:0">
+          <div class="stepper"><button data-a="goalStep" data-id="${g.id}" data-v="-1" aria-label="Минус">${icon('minus')}</button><button data-a="goalStep" data-id="${g.id}" data-v="1" aria-label="Плюс">${icon('plus')}</button></div>
+          <button class="btn ghost" data-a="goalSet" data-id="${g.id}">Ввести прогресс</button>
+          <button class="btn ghost" data-a="delGoal" data-id="${g.id}">Удалить</button></div>
+      </section>`;
+    }).join('') : `<button class="empty-btn" data-a="addGoal">${icon('flag')}<span>Поставьте цель на месяц или год: например, выучить суру аль-Мульк или прочитать 5 книг</span></button>`}`;
+}
+
+function viewDuas() {
+  const w = S.duas.filter(d => !d.accepted), a = S.duas.filter(d => d.accepted);
+  const item = d => `<div class="item"><button class="mark ${d.accepted ? 'is-set' : ''}" style="--c:var(--st-ontime)" data-a="duaToggle" data-id="${d.id}" aria-label="${d.accepted ? 'Снять отметку' : 'Отметить как принятое'}">${icon('check')}</button>
+    <span class="grow"><span class="t" style="white-space:pre-wrap;font-weight:400">${esc(d.text)}</span><br>
+    <span class="s">Записано ${human(parseKey(d.created))}${d.accepted ? `, принято ${human(parseKey(d.accepted))}` : ''}</span></span>
+    <button class="icon-btn" data-a="delDua" data-id="${d.id}" aria-label="Удалить">${icon('close')}</button></div>`;
+  return pageTop('Журнал дуа', `<button class="icon-btn accent" data-a="addDua" aria-label="Записать дуа">${icon('plus')}</button>`) + `
+    ${!S.duas.length ? `<button class="empty-btn" data-a="addDua">${icon('hands')}<span>Записывайте свои просьбы к Аллаху и отмечайте, когда дуа исполнилось</span></button>` : ''}
+    ${w.length ? `<div class="block-h lib-h"><h3>Жду ответа</h3><span>${w.length}</span></div><div class="list" style="margin-top:0">${w.map(item).join('')}</div>` : ''}
+    ${a.length ? `<div class="block-h lib-h"><h3>Приняты, альхамдулиллях</h3><span>${a.length}</span></div><div class="list" style="margin-top:0">${a.map(item).join('')}</div>` : ''}`;
+}
+
+function viewItems() {
+  return pageTop('Мои пункты') + `
+    <div class="block-h lib-h"><h3>Свои дела</h3><button class="link" data-a="addCustom">Добавить</button></div>
+    <p class="prose">Садака, конкретное дуа, зикр с числом повторений.</p>
+    ${S.customs.length ? `<div class="list">${S.customs.map(c => `<div class="item"><span class="grow"><span class="t">${esc(c.title)}</span><br><span class="s">${c.counter ? `${c.target} ${esc(c.unit)} в день` : 'Галочка'}</span></span>
+      <button class="icon-btn" data-a="delCustom" data-id="${c.id}" aria-label="Удалить">${icon('trash')}</button></div>`).join('')}</div>` : ''}
+    <div class="block-h lib-h"><h3>Удержался от</h3><button class="link" data-a="addAvoid">Добавить</button></div>
+    <p class="prose">Сплетни, лишнее время в телефоне, сон после Фаджра. Эти пункты видите только вы.</p>
+    ${S.avoids.length ? `<div class="list">${S.avoids.map(a => `<div class="item">${icon('shield')}<span class="grow t">${esc(a.title)}</span>
+      <button class="icon-btn" data-a="delAvoid" data-id="${a.id}" aria-label="Удалить">${icon('trash')}</button></div>`).join('')}</div>` : ''}`;
+}
+
+function viewSettings() {
+  const s = S.settings;
+  const seg = (k, opts, full = false) => `<div class="seg ${full ? 'full' : ''}" role="radiogroup">${opts.map(([v, l]) => `<button role="radio" aria-checked="${s[k] === v}" class="${s[k] === v ? 'on' : ''}" data-a="set" data-k="${k}" data-v='${JSON.stringify(v)}'>${l}</button>`).join('')}</div>`;
+  const sw = (k, t, sub = '') => `<div class="set"><span class="grow">${t}${sub ? `<br><span class="s">${sub}</span>` : ''}</span><button class="switch" role="switch" aria-checked="${!!s[k]}" aria-label="${esc(t)}" data-a="flip" data-k="${k}"></button></div>`;
+  const perm = canNotify() ? Notification.permission : 'unsupported';
+  const permText = { granted: 'Уведомления разрешены', denied: 'Уведомления запрещены в настройках браузера', default: 'Нажмите, чтобы разрешить уведомления', unsupported: 'Этот браузер не поддерживает уведомления' }[perm];
+  return pageTop('Настройки') + `
+    <h2 class="set-title">Профиль</h2>
+    ${seg('female', [[false, 'Мужчина'], [true, 'Женщина']], true)}
+    ${s.female ? '<p class="prose">В карточке намазов появится кнопка «Без намаза». В такие дни серия не прерывается, а напоминания о намазах не приходят.</p>' : ''}
+
+    <h2 class="set-title">Время намазов</h2>
+    <div class="list">
+      <button class="set" data-a="city">${icon('pin')}<span class="grow">Город<br><span class="s">${esc(s.cityName || 'Не выбран')}</span></span>${icon('chev')}</button>
+      <button class="set" data-a="method"><span class="grow">Метод расчёта<br><span class="s">${METHODS[s.method]?.name || ''}</span></span>${icon('chev')}</button>
+      <div class="set"><span class="grow">Время Асра</span>${seg('hanafiAsr', [[false, 'Большинство'], [true, 'Ханафиты']])}</div>
+    </div>
+    <p class="prose">Сверьте время с расписанием вашей мечети и при необходимости выберите другой метод.</p>
+
+    <h2 class="set-title">День и намазы</h2>
+    <div class="list">
+      ${s.lat != null ? '<div class="set"><span class="grow">Новый день начинается с Фаджра<br><span class="s">Ночной тахаджуд и витр засчитываются в прошедший день</span></span></div>'
+        : `<div class="set"><span class="grow">Новый день начинается в<br><span class="s">Пока не выбран город</span></span>${seg('dayStartHour', [[0, '0:00'], [3, '3:00'], [5, '5:00']])}</div>`}
+      <div class="set"><span class="grow">Ракаатов после Зухра</span>${seg('zuhrAfter', [[2, '2'], [4, '4']])}</div>
+      ${sw('fridayMode', 'Пятничный режим', 'Сура аль-Кахф, салават и гусль по пятницам')}
+      <div class="set"><span class="grow">Коран, страниц в день${s.khatmActive ? '<br><span class="s">Сейчас норму считает хатм-планер</span>' : ''}</span>
+        <div class="stepper sm"><button data-a="step" data-k="quranGoal" data-v="-1" aria-label="Минус">${icon('minus')}</button><span class="num step-v">${s.quranGoal}</span><button data-a="step" data-k="quranGoal" data-v="1" aria-label="Плюс">${icon('plus')}</button></div></div>
+    </div>
+
+    <h2 class="set-title">Что отслеживать</h2>
+    <div class="list">${OPTIONAL.map(([id, t]) => `<div class="set"><span class="grow">${t}</span><button class="switch" role="switch" aria-checked="${!s.disabled.includes(id)}" aria-label="${t}" data-a="track" data-id="${id}"></button></div>`).join('')}</div>
+
+    <h2 class="set-title">Уведомления</h2>
+    <div class="list">
+      <button class="set" data-a="perm">${icon('bell')}<span class="grow">${permText}</span></button>
+      ${sw('remindFard', 'Напоминать о конце времени намаза', 'Только если намаз ещё не отмечен')}
+      ${s.remindFard ? `<div class="set"><span class="grow">За сколько минут</span>${seg('remindMinutes', [[10, '10'], [15, '15'], [20, '20']])}</div>` : ''}
+      ${sw('tahajjudAlarm', 'Напоминание о тахаджуде', 'В начале последней трети ночи')}
+      ${sw('sleepReminder', 'Напоминание лечь спать', 'После Иша, чтобы встать на Фаджр')}
+      ${s.sleepReminder ? `<div class="set"><span class="grow">Через сколько после Иша</span>${seg('sleepAfterIsha', [[30, '30 мин'], [60, '1 ч'], [90, '1,5 ч']])}</div>` : ''}
+    </div>
+    <p class="prose">Уведомления приходят, пока приложение открыто или свёрнуто. Если браузер полностью закрыт, напоминания не сработают.</p>
+
+    <h2 class="set-title">Оформление</h2>
+    ${seg('theme', [['auto', 'Как в системе'], ['light', 'Светлое'], ['dark', 'Тёмное']], true)}
+
+    <h2 class="set-title">Резервная копия</h2>
+    <p class="prose">Данные хранятся в браузере. Перед сменой телефона или очисткой браузера сохраните копию.</p>
+    <div class="btn-row"><button class="btn ghost" data-a="exportData">${icon('save')}Сохранить копию</button><button class="btn ghost" data-a="importData">Восстановить из копии</button></div>`;
+}
+
+// =====================================================================
+//  ОБРАБОТЧИКИ
+// =====================================================================
+const A = {
+  tab: ds => { ui.tab = ds.v; ui.stack = []; render(); window.scrollTo(0, 0); },
+  open: ds => go(ds.v, ds.id),
+  back: () => back(),
+  day: ds => go('day', ds.d),
+  calMove: ds => { ui.cal = new Date(ui.cal.getFullYear(), ui.cal.getMonth() + Number(ds.v), 1); render(); },
+  calendar: () => { ui.cal = null; go('calendar'); },
+  hadith: () => { S.settings.hadithOpen = !S.settings.hadithOpen; commit(); },
+  range: ds => { ui.range = Number(ds.v); render(); },
+  prayChart: ds => { ui.prayChart = ds.v; render(); },
+
+  async fard(ds) {
+    const d = parseKey(ds.d), cur = peek(d)[ds.id];
+    const v = await sheet(FARD_NAMES[ds.id], [
+      ...Object.entries(STATUS).map(([k, s]) => ({ v: k, label: s.label, icon: s.icon, color: s.color, sel: cur === k })),
+      { v: '__clear', label: 'Снять отметку', icon: 'close' },
+    ]);
+    if (v != null) setFard(d, ds.id, v === '__clear' ? null : v);
+  },
+  fardQuick: ds => setFard(parseKey(ds.d), ds.id, 'ontime'),
+  toggle: ds => toggleTask(parseKey(ds.d), ds.id),
+  count: ds => { const d = parseKey(ds.d), t = findTask(d, ds.id); if (t) addCount(d, t, Number(ds.v)); },
+  async countInput(ds) {
+    const d = parseKey(ds.d), t = findTask(d, ds.id); if (!t) return;
+    const n = await ask(`${t.title}: сколько добавить?`, '', t.unit);
+    if (n && n > 0) addCount(d, t, n);
+  },
+  safar: ds => { const d = parseKey(ds.d); setSafar(d, !isSafar(d)); },
+  excused: ds => { const d = parseKey(ds.d); setExcused(d, !isExcused(d)); },
+
+  set: ds => { S.settings[ds.k] = JSON.parse(ds.v); commit(true); },
+  async flip(ds) {
+    S.settings[ds.k] = !S.settings[ds.k];
+    if (S.settings[ds.k] && ['remindFard', 'tahajjudAlarm', 'sleepReminder'].includes(ds.k)) await askNotify();
+    commit(true);
+  },
+  step: ds => { S.settings[ds.k] = Math.max(1, S.settings[ds.k] + Number(ds.v)); commit(); },
+  track: ds => { const a = S.settings.disabled, i = a.indexOf(ds.id); i >= 0 ? a.splice(i, 1) : a.push(ds.id); commit(); },
+  async perm() { await askNotify(); commit(true); },
+
+  async city() {
+    const v = await sheet('Город', [
+      { v: '__geo', label: 'Определить автоматически', icon: 'pin', color: 'var(--accent)' },
+      ...CITIES.map((c, i) => ({ v: i, label: c[0], sel: S.settings.cityName === c[0] })),
+      { v: '__custom', label: 'Другой город: ввести координаты', icon: 'edit' },
+    ]);
+    if (v == null) return;
+    const st = S.settings;
+    if (v === '__geo') {
+      if (!navigator.geolocation) return toast('Браузер не умеет определять местоположение');
+      navigator.geolocation.getCurrentPosition(
+        p => { st.cityName = 'Моё местоположение'; st.lat = +p.coords.latitude.toFixed(4); st.lng = +p.coords.longitude.toFixed(4); commit(true); },
+        () => toast('Не удалось определить место. Выберите город из списка'),
+        { timeout: 10000 });
+      return;
+    }
+    if (v === '__custom') {
+      const r = await form({ title: 'Свой город', text: 'Координаты можно посмотреть в Google Картах: зажмите точку на карте.', fields: [
+        { name: 'name', label: 'Название' }, { name: 'lat', type: 'number', label: 'Широта, например 55.75' }, { name: 'lng', type: 'number', label: 'Долгота, например 37.62' }] });
+      if (!r) return;
+      if (r.lat == null || r.lng == null || !isFinite(r.lat) || !isFinite(r.lng) || Math.abs(r.lat) > 90 || Math.abs(r.lng) > 180) return toast('Проверьте координаты: широта от −90 до 90, долгота от −180 до 180');
+      st.cityName = r.name || 'Свои координаты'; st.lat = r.lat; st.lng = r.lng;
+      return commit(true);
+    }
+    const c = CITIES[v];
+    st.cityName = c[0]; st.lat = c[1]; st.lng = c[2];
+    commit(true);
+  },
+  async method() {
+    const v = await sheet('Метод расчёта', Object.entries(METHODS).map(([k, m]) => ({ v: k, label: m.name, sel: S.settings.method === k })));
+    if (v) { S.settings.method = v; commit(true); }
+  },
+
+  async khatmStart() {
+    const days = await ask('За сколько дней прочитать Коран?', 30);
+    if (!days || days < 1) return;
+    const read = await ask('Сколько страниц уже прочитано?', 0, 'Если начинаете с начала, оставьте 0');
+    if (read == null) return;
+    Object.assign(S.settings, { khatmActive: true, khatmPage: clamp(read, 0, 604), khatmEnd: dkey(addDays(todayDate(), days - 1)) });
+    commit();
+  },
+  async khatmDays() {
+    const d = await ask('Сколько дней осталось, включая сегодня?', '');
+    if (d && d >= 1) { S.settings.khatmEnd = dkey(addDays(todayDate(), d - 1)); commit(); }
+  },
+  async khatmPage() {
+    const p = await ask('Сколько страниц уже прочитано?', S.settings.khatmPage);
+    if (p != null) { S.settings.khatmPage = clamp(p, 0, 604); commit(); }
+  },
+  async khatmStop() {
+    const fin = S.settings.khatmPage >= 604;
+    if (!await confirmBox(fin ? 'Начать новый хатм?' : 'Завершить хатм?', fin ? 'Начать' : 'Завершить')) return;
+    Object.assign(S.settings, { khatmActive: false, khatmPage: 0, khatmEnd: '' });
+    commit();
+  },
+
+  async addBook() {
+    const r = await form({ title: 'Новая книга', fields: [
+      { name: 'title', label: 'Название' }, { name: 'total', type: 'number', label: 'Всего страниц' },
+      { name: 'goal', type: 'number', label: 'Страниц в день', value: 10 }], submit: 'Добавить' });
+    if (!r) return;
+    if (!r.title || !(r.total > 0) || !(r.goal > 0)) return toast('Заполните название, число страниц и норму');
+    S.books.push({ id: uid(), title: r.title, totalPages: Math.round(r.total), currentPage: 0, dailyGoal: Math.round(r.goal), notes: [] });
+    commit();
+  },
+  async bookPage(ds) {
+    const b = S.books.find(x => x.id === ds.id);
+    const n = await ask('На какой вы странице?', b.currentPage);
+    if (n != null) { b.currentPage = clamp(n, 0, b.totalPages); commit(); }
+  },
+  async bookGoal(ds) {
+    const b = S.books.find(x => x.id === ds.id);
+    const n = await ask('Страниц в день', b.dailyGoal);
+    if (n && n > 0) { b.dailyGoal = n; commit(); }
+  },
+  async addNote(ds) {
+    const b = S.books.find(x => x.id === ds.id);
+    const r = await form({ title: 'Выписка или мысль', fields: [
+      { name: 't', type: 'textarea', placeholder: 'Что важно запомнить' }, { name: 'p', type: 'number', label: 'Страница, необязательно', value: b.currentPage || '' }] });
+    if (!r || !r.t) return;
+    b.notes.unshift({ text: r.t, page: r.p == null || !isFinite(r.p) ? null : Math.round(r.p), date: dkey(new Date()) });
+    commit();
+  },
+  async delNote(ds) {
+    if (!await confirmBox('Удалить выписку?')) return;
+    S.books.find(x => x.id === ds.id).notes.splice(Number(ds.v), 1); commit();
+  },
+  async delBook(ds) {
+    if (!await confirmBox('Удалить книгу вместе с выписками?')) return;
+    S.books = S.books.filter(x => x.id !== ds.id); ui.stack.pop(); commit();
+  },
+
+  async addGoal() {
+    const now = new Date(), eom = dkey(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+    const r = await form({ title: 'Новая цель', fields: [
+      { name: 'title', label: 'Цель', placeholder: 'Например, выучить суру аль-Мульк' },
+      { name: 'target', type: 'number', label: 'Сколько всего, числом' },
+      { name: 'unit', label: 'Единица', value: 'аятов', placeholder: 'аятов, книг, раз' },
+      { name: 'deadline', type: 'date', label: 'Срок', value: eom }], submit: 'Добавить' });
+    if (!r) return;
+    if (!r.title || !(r.target > 0) || !r.deadline) return toast('Заполните цель, число и срок');
+    S.goals.push({ id: uid(), title: r.title, target: Math.round(r.target), current: 0, unit: r.unit, deadline: r.deadline });
+    commit();
+  },
+  goalStep: ds => { const g = S.goals.find(x => x.id === ds.id); g.current = clamp(g.current + Number(ds.v), 0, g.target); commit(); },
+  async goalSet(ds) {
+    const g = S.goals.find(x => x.id === ds.id);
+    const n = await ask('Сколько уже сделано?', g.current, g.unit);
+    if (n != null) { g.current = clamp(n, 0, g.target); commit(); }
+  },
+  async delGoal(ds) {
+    if (!await confirmBox('Удалить цель?')) return;
+    S.goals = S.goals.filter(x => x.id !== ds.id); commit();
+  },
+
+  async addDua() {
+    const t = await askText('О чём вы просите?', '', true);
+    if (t) { S.duas.unshift({ id: uid(), text: t, created: dkey(new Date()), accepted: null }); commit(); }
+  },
+  duaToggle: ds => { const d = S.duas.find(x => x.id === ds.id); d.accepted = d.accepted ? null : dkey(new Date()); commit(); },
+  async delDua(ds) {
+    if (!await confirmBox('Удалить запись?')) return;
+    S.duas = S.duas.filter(x => x.id !== ds.id); commit();
+  },
+
+  async addCustom() {
+    const r = await form({ title: 'Своё дело', fields: [
+      { name: 'title', label: 'Название', placeholder: 'Садака, «СубханАллах»…' },
+      { name: 'type', type: 'select', label: 'Как отмечать', value: 'check', options: [['check', 'Галочка'], ['counter', 'Счётчик']] },
+      { name: 'target', type: 'number', label: 'Сколько в день (для счётчика)', value: 100 },
+      { name: 'unit', label: 'Единица (для счётчика)', value: 'раз' }], submit: 'Добавить' });
+    if (!r || !r.title) return;
+    const counter = r.type === 'counter';
+    S.customs.push({ id: uid(), title: r.title, counter, target: counter ? Math.max(1, Math.round(r.target || 1)) : 1, unit: counter ? r.unit : '' });
+    commit();
+  },
+  async delCustom(ds) { if (await confirmBox('Удалить пункт?')) { S.customs = S.customs.filter(x => x.id !== ds.id); commit(); } },
+  async addAvoid() {
+    const t = await askText('От чего хотите удерживаться?', 'Например, от сплетен');
+    if (t) { S.avoids.push({ id: uid(), title: t }); commit(); }
+  },
+  async delAvoid(ds) { if (await confirmBox('Удалить пункт?')) { S.avoids = S.avoids.filter(x => x.id !== ds.id); commit(); } },
+
+  async exportData() {
+    const text = JSON.stringify(S);
+    let copied = false;
+    try { await navigator.clipboard.writeText(text); copied = true; } catch (e) {}
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+      a.download = `tracker-backup-${dkey(new Date())}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) {}
+    toast(copied ? 'Копия скопирована в буфер обмена и сохранена файлом' : 'Копия сохранена файлом');
+  },
+  async importData() {
+    const r = await form({ title: 'Восстановить из копии', text: 'Вставьте текст резервной копии. Текущие данные будут заменены.', fields: [{ name: 't', type: 'textarea', placeholder: '{"settings":…}' }], submit: 'Восстановить', danger: true });
+    if (!r || !r.t) return;
+    try {
+      const d = JSON.parse(r.t);
+      if (!d || typeof d !== 'object' || !d.settings || !d.logs) throw new Error();
+      S = { ...structuredClone(DEFAULTS), ...d, settings: { ...DEFAULTS.settings, ...d.settings } };
+      ui.stack = []; ui.tab = 'today'; commit(true); toast('Данные восстановлены');
+    } catch (e) { toast('Это не похоже на резервную копию трекера. Проверьте, что текст вставлен полностью'); }
+  },
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]');
+  if (!el || el.disabled || !A[el.dataset.a]) return;
+  e.preventDefault();
+  A[el.dataset.a](el.dataset, el);
+});
+
+// обновление: каждую минуту и при возвращении в приложение
+let lastDay = dkey(todayDate());
+setInterval(() => {
+  const d = dkey(todayDate());
+  if (d !== lastDay) { lastDay = d; scheduleWeb(); }
+  if (!ui.stack.length && ui.tab === 'today' && !root.classList.contains('open')) render();
+}, 60000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && !root.classList.contains('open')) { render(); scheduleWeb(); }
+});
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+render();
+scheduleWeb();
+</script>
+</body>
+</html>
