@@ -3,14 +3,79 @@
   "short_name": "Трекер",
   "description": "Намазы, Коран, книги и азкары каждый день",
   "lang": "ru",
+  "dir": "auto",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#EDF1EC",
+  "background_color": "#ECF0EB",
   "theme_color": "#0F3B33",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Отметить намаз",
+      "short_name": "Намаз",
+      "url": "./?go=pray",
+      "icons": [
+        {
+          "src": "sc-pray.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Закладка в Коране",
+      "short_name": "Коран",
+      "url": "./?go=quran",
+      "icons": [
+        {
+          "src": "sc-quran.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Статистика",
+      "short_name": "Статистика",
+      "url": "./?tab=stats",
+      "icons": [
+        {
+          "src": "sc-stats.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Библиотека",
+      "short_name": "Библиотека",
+      "url": "./?tab=lib",
+      "icons": [
+        {
+          "src": "sc-lib.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }
