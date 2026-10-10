@@ -361,6 +361,8 @@ nav.tabs button.on::before{content:"";position:absolute;top:0;width:26px;height:
 .check{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin:2px 0 6px}
 .check input{width:20px;height:20px;accent-color:var(--accent)}
 .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.item .ic.pen{width:14px;height:14px;opacity:.4;flex:none}
+.actions .info-del{margin-inline-end:auto;color:var(--danger)}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--emerald);color:#FFFDF6;padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;max-width:90vw;text-align:center;box-shadow:0 8px 24px -10px rgba(0,0,0,.4)}
 :root[data-theme="night"] .toast{background:#24303D}
 
@@ -612,13 +614,18 @@ body.rd-open{overflow:hidden}
 .rd[hidden]{display:none}
 .rd.t-sepia{--rd-bg:#F2E6CF;--rd-ink:#3A2C1A;--rd-bar:rgba(248,239,222,.92);--rd-muted:#7A6648}
 .rd.t-night{--rd-bg:#0C0F13;--rd-ink:#E6E1D6;--rd-bar:rgba(18,23,29,.9);--rd-muted:#8E98A2}
-.rd-stage{position:absolute;inset:0;overflow:hidden;-webkit-user-select:text;user-select:text}
-.rd-stage.paged{display:flex;align-items:center;justify-content:center;touch-action:pan-y pinch-zoom}
-.rd-stage.scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 0 40vh}
-.rd-list{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rd-stage{position:absolute;inset:0;overflow:hidden;direction:ltr;-webkit-user-select:text;user-select:text}
+.rd-stage.paged{display:grid;touch-action:pan-y}
+.rd-stage.paged>.rd-page{margin:auto}
+.rd-stage.paged.zoom{overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+.rd-stage.scroll{overflow:auto;-webkit-overflow-scrolling:touch;padding:6px 0 40vh;touch-action:pan-x pan-y}
+.rd-list{display:flex;flex-direction:column;align-items:center;gap:8px;width:max-content;min-width:100%}
+.rd-zoom{position:absolute;top:calc(64px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:6;padding:4px 11px;border-radius:99px;background:rgba(20,24,28,.62);color:#fff;font-size:12.5px;font-weight:600;letter-spacing:.02em;pointer-events:none;direction:ltr;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.rd-zoom[hidden]{display:none}
 .rd-page{direction:ltr;position:relative;overflow:hidden;background:#fff;box-shadow:0 2px 14px -8px rgba(0,0,0,.35);flex:none}
 .rd-inner{position:absolute;left:0;top:0;transform-origin:0 0}
 .rd-inner canvas{display:block}
+.rd-inner .rd-tile{position:absolute}
 .rd.t-sepia .rd-page{background:#F7EDD9}
 .rd.t-sepia .rd-inner canvas{mix-blend-mode:multiply}
 .rd.t-night .rd-page{background:#111418;box-shadow:none}
@@ -1268,6 +1275,7 @@ function normalize(d) {
   // существующие пользователи не проходят мастер заново
   if (!('onboarded' in (d.settings || {})) && Object.keys(s.logs || {}).length) st.onboarded = true;
   s.milestones = s.milestones || [];
+  if (!Array.isArray(s.msHidden)) s.msHidden = [];
   return s;
 }
 function load() {
@@ -1427,12 +1435,20 @@ function bookForecast(b) {
   if (!(rate > 0)) return null;
   return { date: addDays(todayDate(), Math.ceil(left / rate)), byPace: pace > 0 };
 }
+/** Срок книги: норма в день пересчитывается из оставшихся страниц и дней. */
+function syncDue(b) {
+  if (!b.due || b.status === 'done') return;
+  const td = todayDate(), days = daysBetween(td, parseKey(b.due)) + 1;
+  if (days < 1) return;
+  const left = b.totalPages - b.currentPage + iv(peek(td)['book_' + b.id]);
+  b.dailyGoal = Math.max(1, Math.ceil(left / days));
+}
 function setBookStatus(b, status, silent) {
   const td = dkey(todayDate());
   if (status === 'reading' && !b.startedAt) b.startedAt = td;
   if (status === 'done') {
     b.currentPage = b.totalPages;
-    b.finishedAt = td;
+    b.finishedAt = td; b.due = null;
     if (!b.startedAt) b.startedAt = td;
     addMilestone('book-' + b.id, { type: 'book', title: b.title });
     if (!silent) toast(t('book.finishedToast'));
@@ -1496,7 +1512,7 @@ function fardStreak() {
 // ---------- вехи ----------
 let freshMilestones = [];
 function addMilestone(key, data) {
-  if (S.milestones.some(m => m.key === key)) return;
+  if (S.milestones.some(m => m.key === key) || S.msHidden.includes(key)) return;
   const m = { id: uid(), key, date: dkey(todayDate()), ...data };
   S.milestones.push(m);
   freshMilestones.push(m);
@@ -1643,9 +1659,15 @@ function showInfo(id) {
   const c = id.startsWith('c_') ? S.customs.find(x => 'c_' + x.id === id) : null;
   let body = evs.length ? evs.map(evHtml).join('') : `<p class="prose">${t('info.personal')}</p>`;
   if (c && c.ev) body = `<div class="ev"><blockquote style="white-space:pre-wrap">${esc(c.ev)}</blockquote><cite>${c.evSrc ? esc(c.evSrc) : t('items.noSrc')}</cite></div>`;
+  const own = c ? `<button class="icon-btn info-del" data-del aria-label="${t('b.delete')}">${icon('trash')}</button>
+      <button class="btn ghost" data-edit>${icon('edit')}${t('b.edit')}</button>` : '';
   openModal(`<h2>${esc(title)}</h2>${body}
-    <div class="actions"><button class="btn ghost" data-cancel>${t('b.close')}</button></div>`);
+    <div class="actions">${own}<button class="btn ${c ? 'primary' : 'ghost'}" data-cancel>${t('b.close')}</button></div>`);
   root.querySelector('[data-cancel]').onclick = () => closeModal(null);
+  if (c) {
+    root.querySelector('[data-edit]').onclick = () => { closeModal(null); setTimeout(() => customForm(c), 60); };
+    root.querySelector('[data-del]').onclick = () => { closeModal(null); setTimeout(() => A.delCustom({ id: c.id }), 60); };
+  }
 }
 
 /** Окно закладки Корана: страница, сура, аят. */
@@ -1793,6 +1815,7 @@ I18N.ru = {
   'shelf.reading': 'Читаю', 'shelf.want': 'Хочу', 'shelf.done': 'Прочитано',
   'shelf.empty.reading': 'Добавьте книгу, которую читаете, и задайте норму страниц в день.', 'shelf.empty.want': 'Сюда можно складывать книги, которые хотите прочитать позже.', 'shelf.empty.done': 'Дочитанные книги появятся здесь с датой окончания.',
   'book.add': 'Добавить книгу', 'book.title': 'Книга', 'book.deleted': 'Книга удалена.', 'book.pages': '{n} стр.', 'book.start': 'Начать',
+  'book.due': 'Дочитать к', 'book.dueQ': 'К какой дате дочитать?', 'book.dueHint': 'Норма в день пересчитается сама. Очистите дату, чтобы убрать срок.', 'book.dueNorm': 'Норма: {n} стр. в день', 'book.dueOff': 'Срок убран, норма осталась прежней', 'book.duePast': 'Эта дата уже прошла', 'book.dueLine': 'Дочитаете к {d}', 'book.startQ': 'Когда начали читать?', 'book.finishQ': 'Когда дочитали?', 'book.dateOrder': 'Дата окончания не может быть раньше начала', 'book.dateFuture': 'Эта дата ещё не наступила',
   'book.finishedOn': 'Прочитана {d}', 'book.inDays': 'за {n}', 'book.progressLine': '{a} из {b} стр., сегодня {c} из {g}',
   'book.forecast': 'При вашем темпе дочитаете к {d}', 'book.forecastGoal': 'По норме дочитаете к {d}',
   'book.read': 'Прочитано', 'book.goal': 'Норма в день', 'book.pace': 'Темп за 2 недели', 'book.paceVal': '{n} стр. в день', 'book.eta': 'Дочитаете к', 'book.started': 'Начал', 'book.finished': 'Закончил', 'book.rating': 'Оценка',
@@ -1826,7 +1849,7 @@ I18N.ru = {
   'ms.empty': 'Первые вехи появятся, когда вы завершите хатм, дочитаете книгу или неделю подряд совершите все фард.',
   'ms.streak': '{n} подряд все пять фард', 'ms.khatm1': 'Первый хатм Корана', 'ms.khatmN': 'Хатм Корана № {n}', 'ms.book': 'Дочитана книга «{title}»', 'ms.goal': 'Цель достигнута: {title}',
   'ms.perfect': 'Первый день, когда выполнено всё', 'ms.tahajjud': '{n} тахаджуда', 'ms.new': 'Новая веха: {x}',
-  'ms.fText': 'Что произошло', 'ms.fTextPh': 'Например, выучил суру Йа Син', 'ms.fDate': 'Дата', 'ms.delQ': 'Удалить веху?',
+  'ms.fText': 'Что произошло', 'ms.fTextPh': 'Например, выучил суру Йа Син', 'ms.fDate': 'Дата', 'ms.delQ': 'Удалить веху?', 'ms.delAutoQ': 'Удалить веху? Приложение не запишет её снова.',
   'items.title': 'Мои пункты', 'items.customs': 'Свои дела', 'items.customsHint': 'Садака, конкретное дуа, зикр с числом повторений.', 'items.perDay': '{n} {u} в день', 'items.check': 'Галочка', 'items.counter': 'Счётчик',
   'items.addCustom': 'Добавить дело', 'items.avoidHint': 'Сплетни, лишнее время в телефоне, сон после Фаджра. Эти пункты видите только вы.', 'items.addAvoid': 'Добавить пункт',
   'items.newCustom': 'Своё дело', 'items.fTitle': 'Название', 'items.fTitlePh': 'Садака, «СубханАллах»…', 'items.fType': 'Как отмечать', 'items.fTarget': 'Сколько в день (для счётчика)', 'items.fUnit': 'Единица (для счётчика)', 'items.fUnitDef': 'раз',
@@ -1954,6 +1977,7 @@ I18N.en = {
   'shelf.reading': 'Reading', 'shelf.want': 'To read', 'shelf.done': 'Finished',
   'shelf.empty.reading': 'Add a book you are reading and set a daily page goal.', 'shelf.empty.want': 'Keep books you want to read later here.', 'shelf.empty.done': 'Finished books will appear here with the date.',
   'book.add': 'Add book', 'book.title': 'Book', 'book.deleted': 'The book was deleted.', 'book.pages': '{n} pages', 'book.start': 'Start',
+  'book.due': 'Finish by', 'book.dueQ': 'By what date do you want to finish?', 'book.dueHint': 'The daily goal will adjust itself. Clear the date to remove the deadline.', 'book.dueNorm': 'Goal: {n} p. a day', 'book.dueOff': 'Deadline removed, the daily goal stays the same', 'book.duePast': 'This date has already passed', 'book.dueLine': 'You will finish by {d}', 'book.startQ': 'When did you start reading?', 'book.finishQ': 'When did you finish?', 'book.dateOrder': 'The finish date cannot be before the start', 'book.dateFuture': 'This date has not come yet',
   'book.finishedOn': 'Finished {d}', 'book.inDays': 'in {n}', 'book.progressLine': '{a} of {b} p., today {c} of {g}',
   'book.forecast': 'At your pace you will finish by {d}', 'book.forecastGoal': 'At your goal you will finish by {d}',
   'book.read': 'Read', 'book.goal': 'Daily goal', 'book.pace': 'Pace over 2 weeks', 'book.paceVal': '{n} p. a day', 'book.eta': 'Finish by', 'book.started': 'Started', 'book.finished': 'Finished', 'book.rating': 'Rating',
@@ -1987,7 +2011,7 @@ I18N.en = {
   'ms.empty': 'Your first milestones will appear when you complete a khatm, finish a book or pray all five fard for a week straight.',
   'ms.streak': 'All five fard for {n} in a row', 'ms.khatm1': 'First Quran khatm', 'ms.khatmN': 'Quran khatm no. {n}', 'ms.book': 'Finished the book “{title}”', 'ms.goal': 'Goal achieved: {title}',
   'ms.perfect': 'First day with everything done', 'ms.tahajjud': '{n} of tahajjud', 'ms.new': 'New milestone: {x}',
-  'ms.fText': 'What happened', 'ms.fTextPh': 'For example, memorised Surah Ya-Sin', 'ms.fDate': 'Date', 'ms.delQ': 'Delete this milestone?',
+  'ms.fText': 'What happened', 'ms.fTextPh': 'For example, memorised Surah Ya-Sin', 'ms.fDate': 'Date', 'ms.delQ': 'Delete this milestone?', 'ms.delAutoQ': 'Delete this milestone? The app will not record it again.',
   'items.title': 'My items', 'items.customs': 'My deeds', 'items.customsHint': 'Sadaqah, a specific dua, dhikr with a count.', 'items.perDay': '{n} {u} a day', 'items.check': 'Checkbox', 'items.counter': 'Counter',
   'items.addCustom': 'Add a deed', 'items.avoidHint': 'Gossip, excess phone time, sleeping after Fajr. Only you can see these.', 'items.addAvoid': 'Add an item',
   'items.newCustom': 'My deed', 'items.fTitle': 'Name', 'items.fTitlePh': 'Sadaqah, SubhanAllah…', 'items.fType': 'How to mark', 'items.fTarget': 'How many a day (for a counter)', 'items.fUnit': 'Unit (for a counter)', 'items.fUnitDef': 'times',
@@ -2114,6 +2138,7 @@ I18N.ar = {
   'shelf.reading': 'أقرأ', 'shelf.want': 'سأقرأ', 'shelf.done': 'قرأت',
   'shelf.empty.reading': 'أضف كتابًا تقرؤه وحدّد وردًا يوميًا من الصفحات.', 'shelf.empty.want': 'ضع هنا الكتب التي تريد قراءتها لاحقًا.', 'shelf.empty.done': 'ستظهر هنا الكتب المكتملة مع تاريخ الإنهاء.',
   'book.add': 'إضافة كتاب', 'book.title': 'كتاب', 'book.deleted': 'حُذف الكتاب.', 'book.pages': '{n} صفحة', 'book.start': 'ابدأ',
+  'book.due': 'الإنهاء بحلول', 'book.dueQ': 'بحلول أي تاريخ تريد إنهاءه؟', 'book.dueHint': 'سيُعاد حساب الورد اليومي تلقائيًا. امسح التاريخ لإلغاء الموعد.', 'book.dueNorm': 'الورد: {n} ص يوميًا', 'book.dueOff': 'أُلغي الموعد وبقي الورد كما هو', 'book.duePast': 'هذا التاريخ قد مضى', 'book.dueLine': 'ستنهيه بحلول {d}', 'book.startQ': 'متى بدأت القراءة؟', 'book.finishQ': 'متى أنهيته؟', 'book.dateOrder': 'لا يمكن أن يسبق تاريخُ الإنهاء تاريخَ البدء', 'book.dateFuture': 'هذا التاريخ لم يأتِ بعد',
   'book.finishedOn': 'أُنهي في {d}', 'book.inDays': 'في {n}', 'book.progressLine': '{a} من {b} ص، اليوم {c} من {g}',
   'book.forecast': 'بوتيرتك ستنهيه بحلول {d}', 'book.forecastGoal': 'بحسب وردك ستنهيه بحلول {d}',
   'book.read': 'المقروء', 'book.goal': 'الورد اليومي', 'book.pace': 'الوتيرة خلال أسبوعين', 'book.paceVal': '{n} ص يوميًا', 'book.eta': 'الإنهاء المتوقع', 'book.started': 'البدء', 'book.finished': 'الإنهاء', 'book.rating': 'التقييم',
@@ -2147,7 +2172,7 @@ I18N.ar = {
   'ms.empty': 'ستظهر أولى المحطات عند إتمام ختمة أو كتاب، أو أداء الفرائض الخمس أسبوعًا متتاليًا.',
   'ms.streak': 'الفرائض الخمس {n} متتالية', 'ms.khatm1': 'أول ختمة للقرآن', 'ms.khatmN': 'ختمة القرآن رقم {n}', 'ms.book': 'تمّ كتاب «{title}»', 'ms.goal': 'تحقق الهدف: {title}',
   'ms.perfect': 'أول يوم أُنجز فيه كل شيء', 'ms.tahajjud': 'التهجد {n}', 'ms.new': 'محطة جديدة: {x}',
-  'ms.fText': 'ماذا حدث', 'ms.fTextPh': 'مثلًا: حفظت سورة يس', 'ms.fDate': 'التاريخ', 'ms.delQ': 'حذف المحطة؟',
+  'ms.fText': 'ماذا حدث', 'ms.fTextPh': 'مثلًا: حفظت سورة يس', 'ms.fDate': 'التاريخ', 'ms.delQ': 'حذف المحطة؟', 'ms.delAutoQ': 'حذف المحطة؟ لن يسجّلها التطبيق مرة أخرى.',
   'items.title': 'بنودي', 'items.customs': 'أعمالي', 'items.customsHint': 'صدقة، دعاء معيّن، ذكر بعدد محدّد.', 'items.perDay': '{n} {u} يوميًا', 'items.check': 'علامة', 'items.counter': 'عدّاد',
   'items.addCustom': 'إضافة عمل', 'items.avoidHint': 'الغيبة، الإفراط في الهاتف، النوم بعد الفجر. هذه البنود تراها أنت فقط.', 'items.addAvoid': 'إضافة بند',
   'items.newCustom': 'عمل خاص', 'items.fTitle': 'الاسم', 'items.fTitlePh': 'صدقة، سبحان الله…', 'items.fType': 'طريقة التسجيل', 'items.fTarget': 'كم يوميًا (للعدّاد)', 'items.fUnit': 'الوحدة (للعدّاد)', 'items.fUnitDef': 'مرة',
@@ -2206,6 +2231,7 @@ function applyTheme() {
 }
 
 function render() {
+  S.books.forEach(syncDue);
   applyLang();
   applyTheme();
   if (!S.settings.onboarded) { nav.hidden = true; app.innerHTML = viewWizard(); return; }
@@ -2521,7 +2547,7 @@ function viewLibrary() {
     return `<div class="book-wrap"><button class="book" data-a="open" data-v="book" data-id="${b.id}">${coverHtml(b, 'sm')}
       <span class="grow"><span class="t">${esc(b.title)}</span>${b.author ? `<span class="au">${esc(b.author)}</span>` : ''}
         <span class="meter" style="margin-top:9px"><i style="width:${pct.toFixed(0)}%"></i></span>
-        <span class="s">${t('book.progressLine', { a: b.currentPage, b: b.totalPages, c: today, g: b.dailyGoal })}${fc ? `<br>${t(fc.byPace ? 'book.forecast' : 'book.forecastGoal', { d: human(fc.date) })}` : ''}</span></span></button>
+        <span class="s">${t('book.progressLine', { a: b.currentPage, b: b.totalPages, c: today, g: b.dailyGoal })}${b.due ? `<br>${t('book.dueLine', { d: human(parseKey(b.due)) })}` : fc ? `<br>${t(fc.byPace ? 'book.forecast' : 'book.forecastGoal', { d: human(fc.date) })}` : ''}</span></span></button>
       ${mf ? `<button class="cont" data-a="readOpen" data-id="${b.id}">${icon('book')}<span>${t('rd.continue', { n: mf.lastPage || 1 })}</span>${icon('chev', 'dir')}</button>` : ''}</div>`;
   };
   const gridItem = b => `<button class="shelf-item" data-a="open" data-v="book" data-id="${b.id}">${coverHtml(b)}
@@ -2591,9 +2617,10 @@ function viewBook(id) {
       <button class="item" data-a="bookPage" data-id="${b.id}"><span class="grow"><span class="t">${t('book.read')}</span><span class="meter" style="margin-top:8px"><i style="width:${pct.toFixed(0)}%"></i></span></span><b class="num">${b.currentPage} / ${b.totalPages}</b></button>
       ${b.status !== 'done' ? `<button class="item" data-a="bookGoal" data-id="${b.id}"><span class="grow t">${t('book.goal')}</span><b>${b.dailyGoal} ${t('u.p')}</b></button>` : ''}
       ${b.status === 'reading' ? `<div class="item"><span class="grow t">${t('book.pace')}</span><b>${t('book.paceVal', { n: pace.toFixed(1) })}</b></div>` : ''}
-      ${b.status === 'reading' && fc ? `<div class="item"><span class="grow t">${t('book.eta')}</span><b>${humanY(fc.date)}</b></div>` : ''}
-      ${b.startedAt ? `<div class="item"><span class="grow t">${t('book.started')}</span><b>${humanY(parseKey(b.startedAt))}</b></div>` : ''}
-      ${b.finishedAt ? `<div class="item"><span class="grow t">${t('book.finished')}</span><b>${humanY(parseKey(b.finishedAt))}</b></div>` : ''}
+      ${b.status !== 'done' && b.due ? `<button class="item" data-a="bookDue" data-id="${b.id}"><span class="grow t">${t('book.due')}</span><b>${humanY(parseKey(b.due))}</b>${icon('edit', 'pen')}</button>`
+        : b.status === 'reading' ? `<button class="item" data-a="bookDue" data-id="${b.id}"><span class="grow t">${t('book.eta')}</span><b>${fc ? humanY(fc.date) : '—'}</b>${icon('edit', 'pen')}</button>` : ''}
+      ${b.startedAt ? `<button class="item" data-a="bookDate" data-id="${b.id}" data-v="startedAt"><span class="grow t">${t('book.started')}</span><b>${humanY(parseKey(b.startedAt))}</b>${icon('edit', 'pen')}</button>` : ''}
+      ${b.finishedAt ? `<button class="item" data-a="bookDate" data-id="${b.id}" data-v="finishedAt"><span class="grow t">${t('book.finished')}</span><b>${humanY(parseKey(b.finishedAt))}</b>${icon('edit', 'pen')}</button>` : ''}
       ${b.status === 'done' ? `<div class="item"><span class="grow t">${t('book.rating')}</span><span class="stars">${[1, 2, 3, 4, 5].map(n => `<button class="${n <= b.rating ? 'on' : ''}" data-a="rate" data-id="${b.id}" data-v="${n}" aria-label="${n}/5">${icon('star')}</button>`).join('')}</span></div>` : ''}
     </div>
     ${filesSection(b)}
@@ -2857,7 +2884,7 @@ function viewMilestones() {
   return pageTop(t('ms.title'), `<button class="icon-btn" data-a="addMs" aria-label="${t('ms.add')}">${icon('plus')}</button>`) + `
     <p class="prose">${t('ms.intro')}</p>
     ${list.length ? `<div class="list">${list.map(m => `<div class="ms"><span class="dt">${humanY(parseKey(m.date))}</span>${icon(m.type === 'custom' ? 'flag' : 'milestone')}<span class="grow">${msText(m)}</span>
-      ${m.type === 'custom' ? `<button class="icon-btn" data-a="delMs" data-id="${m.id}" aria-label="${t('b.delete')}">${icon('close')}</button>` : ''}</div>`).join('')}</div>`
+      <button class="icon-btn" data-a="delMs" data-id="${m.id}" aria-label="${t('b.delete')}">${icon('close')}</button></div>`).join('')}</div>`
       : `<div class="empty-art">${ART.crescent}<p>${t('ms.empty')}</p></div>`}`;
 }
 
@@ -3242,7 +3269,33 @@ const A = {
   async bookGoal(ds) {
     const b = S.books.find(x => x.id === ds.id);
     const n = await ask(t('book.fGoal'), b.dailyGoal);
-    if (n && n > 0) { b.dailyGoal = n; commit(); }
+    if (n && n > 0) { b.dailyGoal = n; b.due = null; commit(); }
+  },
+  async bookDue(ds) {
+    const b = S.books.find(x => x.id === ds.id);
+    const fc = bookForecast(b);
+    const r = await form({ title: t('book.dueQ'), text: t('book.dueHint'), fields: [
+      { name: 'd', type: 'date', label: t('book.due'), value: b.due || (fc ? dkey(fc.date) : dkey(addDays(todayDate(), 30))) }] });
+    if (!r) return;
+    if (!r.d) { if (b.due) { b.due = null; toast(t('book.dueOff')); commit(); } return; }
+    if (daysBetween(todayDate(), parseKey(r.d)) < 0) return toast(t('book.duePast'));
+    b.due = r.d;
+    if (b.status === 'want') setBookStatus(b, 'reading', true);
+    syncDue(b);
+    toast(t('book.dueNorm', { n: b.dailyGoal }));
+    commit();
+  },
+  async bookDate(ds) {
+    const b = S.books.find(x => x.id === ds.id), k = ds.v === 'finishedAt' ? 'finishedAt' : 'startedAt';
+    const r = await form({ title: t(k === 'finishedAt' ? 'book.finishQ' : 'book.startQ'), fields: [
+      { name: 'd', type: 'date', label: t(k === 'finishedAt' ? 'book.finished' : 'book.started'), value: b[k] }] });
+    if (!r || !r.d) return;
+    if (daysBetween(todayDate(), parseKey(r.d)) > 0) return toast(t('book.dateFuture'));
+    const st = k === 'startedAt' ? r.d : b.startedAt, fin = k === 'finishedAt' ? r.d : b.finishedAt;
+    if (st && fin && st > fin) return toast(t('book.dateOrder'));
+    b[k] = r.d;
+    if (k === 'finishedAt') { const m = S.milestones.find(x => x.key === 'book-' + b.id); if (m) m.date = r.d; }
+    commit();
   },
   async addNote(ds) {
     const b = S.books.find(x => x.id === ds.id);
@@ -3306,7 +3359,13 @@ const A = {
     S.milestones.push({ id: uid(), key: 'custom-' + uid(), type: 'custom', text: r.x, date: r.date });
     commit();
   },
-  async delMs(ds) { if (await confirmBox(t('ms.delQ'))) { S.milestones = S.milestones.filter(x => x.id !== ds.id); commit(); } },
+  async delMs(ds) {
+    const m = S.milestones.find(x => x.id === ds.id);
+    if (!m || !(await confirmBox(t(m.type === 'custom' ? 'ms.delQ' : 'ms.delAutoQ')))) return;
+    if (m.type !== 'custom' && m.key && !S.msHidden.includes(m.key)) S.msHidden.push(m.key);
+    S.milestones = S.milestones.filter(x => x.id !== ds.id);
+    commit();
+  },
 
   // ---------- резервная копия ----------
   async exportData() {
@@ -3470,7 +3529,7 @@ async function attachPdf(b, file, asCounts) {
 // ---------------------------------------------------------------------
 //  Читалка
 // ---------------------------------------------------------------------
-const RD = { el: null, b: null, f: null, doc: null, page: 1, n: 0, chrome: true, crop: {}, uniCrop: null, task: null, obs: null, saveT: 0, gen: 0 };
+const RD = { el: null, b: null, f: null, doc: null, page: 1, n: 0, chrome: true, crop: {}, uniCrop: null, obs: null, saveT: 0, gen: 0, z: 1, g: null };
 
 function readerTheme() {
   const v = S.settings.reader.theme;
@@ -3510,27 +3569,78 @@ function readerShell() {
   const rng = el.querySelector('.rd-range');
   rng.addEventListener('input', () => { el.querySelector('.rd-num').textContent = `${rng.value} / ${RD.n}`; });
   rng.addEventListener('change', () => goPage(Number(rng.value), 'jump'));
-  // жесты на странице
+  // жесты на странице: тапы, свайпы, двойной тап и своё увеличение пальцами
   const st = el.querySelector('#rdStage');
-  let pd = null;
-  st.addEventListener('pointerdown', e => { if (e.isPrimary) pd = { x: e.clientX, y: e.clientY, t: Date.now() }; });
-  st.addEventListener('pointerup', e => {
-    if (!pd || !e.isPrimary) return;
-    const dx = e.clientX - pd.x, dy = e.clientY - pd.y, dt = Date.now() - pd.t;
-    pd = null;
+  const zl = document.createElement('div');
+  zl.className = 'rd-zoom'; zl.hidden = true;
+  el.appendChild(zl);
+  let pd = null, tap = null, tapT = 0, pinch = null, wz = null;
+  const begin = (x, y) => { pd = { x, y, t: Date.now(), sl: st.scrollLeft, max: st.scrollWidth - st.clientWidth }; };
+  const finish = (x, y) => {
+    if (!pd) return;
+    const s = pd; pd = null;
+    const dx = x - s.x, dy = y - s.y, dt = Date.now() - s.t;
     const sel = (window.getSelection && String(window.getSelection())) || '';
     if (sel.trim()) return;
-    const paged = S.settings.reader.mode === 'page', rtl = LANG === 'ar';
+    const paged = S.settings.reader.mode === 'page', rtl = LANG === 'ar', zoomed = RD.z > 1.01;
     if (paged && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4 && dt < 700) {
+      // в увеличении листаем, только если страницу уже дотянули до края
+      if (zoomed && (Math.abs(st.scrollLeft - s.sl) > 2 || (dx < 0 ? s.sl < s.max - 2 : s.sl > 2))) return;
       return goPage(RD.page + ((dx < 0) !== rtl ? 1 : -1), 'flip');
     }
     if (Math.abs(dx) > 10 || Math.abs(dy) > 10 || dt > 450) return;
-    const z = e.clientX / window.innerWidth;
-    if (paged && z < 0.28) return goPage(RD.page + (rtl ? 1 : -1), 'flip');
-    if (paged && z > 0.72) return goPage(RD.page + (rtl ? -1 : 1), 'flip');
-    setChrome(!RD.chrome);
-  });
-  st.addEventListener('scroll', () => { if (S.settings.reader.mode === 'scroll') requestAnimationFrame(trackScroll); }, { passive: true });
+    const z = x / window.innerWidth;
+    if (paged && !zoomed && z < 0.28) return goPage(RD.page + (rtl ? 1 : -1), 'flip');
+    if (paged && !zoomed && z > 0.72) return goPage(RD.page + (rtl ? -1 : 1), 'flip');
+    if (tap && Date.now() - tap.t < 320 && Math.hypot(x - tap.x, y - tap.y) < 40) {
+      clearTimeout(tapT); tap = null;
+      return zoomTo(RD.z > 1.05 ? 1 : 2, x, y);
+    }
+    tap = { x, y, t: Date.now() };
+    clearTimeout(tapT);
+    tapT = setTimeout(() => { tap = null; setChrome(!RD.chrome); }, 280);
+  };
+  st.addEventListener('pointerdown', e => { if (e.pointerType !== 'touch' && e.isPrimary) begin(e.clientX, e.clientY); });
+  st.addEventListener('pointerup', e => { if (e.pointerType !== 'touch' && e.isPrimary) finish(e.clientX, e.clientY); });
+  const dist = ts => Math.hypot(ts[0].clientX - ts[1].clientX, ts[0].clientY - ts[1].clientY);
+  const mid = ts => ({ x: (ts[0].clientX + ts[1].clientX) / 2, y: (ts[0].clientY + ts[1].clientY) / 2 });
+  st.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      pd = null; tap = null; clearTimeout(tapT);
+      const c = mid(e.touches);
+      pinch = { d0: Math.max(10, dist(e.touches)), c0: c, c, s: 1, z0: RD.z };
+      pinchStart(pinch);
+    } else if (e.touches.length === 1 && !pinch) begin(e.touches[0].clientX, e.touches[0].clientY);
+    else pd = null;
+  }, { passive: false });
+  st.addEventListener('touchmove', e => {
+    if (!pinch || e.touches.length < 2) return;
+    e.preventDefault();
+    pinch.c = mid(e.touches);
+    pinch.s = clamp(pinch.z0 * dist(e.touches) / pinch.d0, 0.85, 3.2) / pinch.z0;
+    pinchMove(pinch);
+  }, { passive: false });
+  const tend = e => {
+    if (pinch) { if (e.touches.length < 2) { const p = pinch; pinch = null; pinchEnd(p); } pd = null; return; }
+    if (e.touches.length === 0 && pd && e.type === 'touchend') { const t0 = e.changedTouches[0]; finish(t0.clientX, t0.clientY); }
+    else if (e.type === 'touchcancel') pd = null;
+  };
+  st.addEventListener('touchend', tend);
+  st.addEventListener('touchcancel', tend);
+  // трекпад / Ctrl + колесо на компьютере
+  st.addEventListener('wheel', e => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    if (!wz) { const c = { x: e.clientX, y: e.clientY }; wz = { c0: c, c, s: 1, z0: RD.z, t: 0 }; pinchStart(wz); }
+    wz.s = clamp(wz.z0 * wz.s * Math.exp(-e.deltaY * 0.01), 1, 3) / wz.z0;
+    pinchMove(wz);
+    clearTimeout(wz.t);
+    wz.t = setTimeout(() => { const p = wz; wz = null; pinchEnd(p); }, 220);
+  }, { passive: false });
+  // штатное увеличение браузера в читалке выключено — у нас своё, с перерисовкой
+  el.addEventListener('gesturestart', e => e.preventDefault());
+  st.addEventListener('scroll', () => { if (S.settings.reader.mode === 'scroll') requestAnimationFrame(trackScroll); if (RD.z > 1.01) scheduleDetail(); }, { passive: true });
   document.addEventListener('keydown', e => {
     if (el.hidden || root.classList.contains('open')) return;
     if (e.key === 'Escape') RA.close();
@@ -3588,7 +3698,8 @@ function closeReader(doCommit = true) {
   if (!RD.el) return;
   RD.gen++;
   if (RD.obs) { RD.obs.disconnect(); RD.obs = null; }
-  if (RD.task) { try { RD.task.cancel(); } catch (e) {} RD.task = null; }
+  clearTimeout(RD.detT);
+  RD.el.querySelectorAll('canvas').forEach(freeCanvas);
   RD.el.hidden = true;
   RD.el.querySelector('.rd-stage').innerHTML = '';
   document.body.classList.remove('rd-open');
@@ -3608,6 +3719,7 @@ async function detectCrop(n) {
     ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
     await page.render({ canvasContext: ctx, viewport: vp }).promise;
     const { data, width: W, height: H } = ctx.getImageData(0, 0, c.width, c.height);
+    freeCanvas(c);
     const dark = (x, y) => { const i = (y * W + x) * 4; return data[i] * 0.3 + data[i + 1] * 0.59 + data[i + 2] * 0.11 < 215; };
     const rowHas = y => { let k = 0; for (let x = 0; x < W; x++) if (dark(x, y) && ++k > 1) return true; return false; };
     const colHas = x => { let k = 0; for (let y = 0; y < H; y++) if (dark(x, y) && ++k > 1) return true; return false; };
@@ -3627,11 +3739,16 @@ async function detectCrop(n) {
 }
 
 async function layout(keep) {
-  const st = RD.el.querySelector('.rd-stage');
+  const st = rdStage(), mode = S.settings.reader.mode;
   if (RD.obs) { RD.obs.disconnect(); RD.obs = null; }
+  st.querySelectorAll('canvas').forEach(freeCanvas);
   st.innerHTML = '';
-  st.className = 'rd-stage ' + (S.settings.reader.mode === 'scroll' ? 'scroll' : 'paged');
-  if (S.settings.reader.mode === 'scroll') await layoutScroll();
+  st.scrollTop = 0; st.scrollLeft = 0;
+  if (mode === 'scroll') RD.z = clamp(Number(RD.b.rz) || 1, 1, 3);
+  else if (!keep || RD.mode !== 'page') RD.z = 1;
+  RD.mode = mode; RD.g = null;
+  st.className = 'rd-stage ' + (mode === 'scroll' ? 'scroll' : 'paged');
+  if (mode === 'scroll') await layoutScroll();
   else await showPage(RD.page);
   updateBars();
 }
@@ -3641,52 +3758,97 @@ function pageMarkHtml(n) {
   return m ? `<i class="rd-flag" style="--c:${MARKS[m.c]}"></i>` : '';
 }
 
-/** Отрисовка одной страницы в контейнер нужного размера (с обрезкой полей и текстовым слоем). */
-async function drawPage(n, box, scale, cr) {
-  const gen = RD.gen;
+// ---- Чёткость: рисуем в настоящем разрешении экрана, ровно по пикселям ----
+const MAXPX_PAGE = 16e6, MAXPX_SCROLL = 8e6;   // предел холста iOS ≈ 16,7 млн точек
+const rdStage = () => RD.el.querySelector('.rd-stage');
+const freeCanvas = c => { c.width = 0; c.height = 0; };   // iOS сразу отдаёт память
+
+/** Размер коробки страницы (синхронно) и временное растяжение старого рисунка до готовности нового. */
+function geom(box, g, scale, sw) {
+  const st = rdStage(), cr = g.cr;
+  const W = g.w * scale, H = g.h * scale;
+  let bw = Math.round(W * (1 - cr.l - cr.r)), bh = Math.round(H * (1 - cr.t - cr.b));
+  // чётность как у экрана — страница встаёт по центру без полупикселей
+  if (((sw ?? st.clientWidth) - bw) & 1) bw--;
+  if (box.dataset.single && (st.clientHeight - bh) & 1) bh--;
+  box.style.width = `${bw}px`; box.style.height = `${bh}px`;
+  const old = box.querySelector('.rd-inner');
+  if (old && old._s && old._n === Number(box.dataset.n)) {
+    old.style.transform = `translate(${-cr.l * W}px,${-cr.t * H}px) scale(${scale / old._s})`;
+  }
+  return { W, H };
+}
+
+/** Отрисовка страницы в коробку: старый рисунок остаётся, пока новый не готов. */
+async function paint(box, n, g, scale) {
+  const tok = (box._tok = {}), gen = RD.gen;
+  if (box._task) { try { box._task.cancel(); } catch (e) {} box._task = null; }
+  let { W, H } = geom(box, g, scale);
   const page = await RD.doc.getPage(n);
-  if (gen !== RD.gen) return;
-  const vp1 = page.getViewport({ scale: 1 });
-  const W = vp1.width * scale, H = vp1.height * scale;
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
-  box.style.width = `${Math.round(W * (1 - cr.l - cr.r))}px`;
-  box.style.height = `${Math.round(H * (1 - cr.t - cr.b))}px`;
+  if (gen !== RD.gen || box._tok !== tok) return;
+  const v = page.getViewport({ scale: 1 });
+  if (Math.abs(v.width - g.w) > 0.5 || Math.abs(v.height - g.h) > 0.5) {   // страница другого формата
+    g = box._g = { ...g, w: v.width, h: v.height };
+    ({ W, H } = geom(box, g, scale));
+  }
+  const cr = g.cr;
+  let d = window.devicePixelRatio || 1;
+  const lim = S.settings.reader.mode === 'scroll' ? MAXPX_SCROLL : MAXPX_PAGE;
+  if (W * H * d * d > lim) d = Math.sqrt(lim / (W * H));
+  const cw = Math.round(W * d), ch = Math.round(H * d);
   const inner = document.createElement('div');
   inner.className = 'rd-inner';
-  inner.style.cssText = `width:${W}px;height:${H}px;transform:translate(${-cr.l * W}px,${-cr.t * H}px)`;
+  const D = window.devicePixelRatio || 1, tx = Math.round(cr.l * W * D) / D, ty = Math.round(cr.t * H * D) / D;
+  inner.style.cssText = `width:${cw / d}px;height:${ch / d}px;transform:translate(${-tx}px,${-ty}px)`;
+  inner._s = scale; inner._n = n; inner._d = d;
   const canvas = document.createElement('canvas');
-  canvas.width = Math.floor(W * dpr); canvas.height = Math.floor(H * dpr);
-  canvas.style.width = `${W}px`; canvas.style.height = `${H}px`;
+  canvas.width = cw; canvas.height = ch;
+  canvas.style.width = `${cw / d}px`; canvas.style.height = `${ch / d}px`;
   const tl = document.createElement('div');
   tl.className = 'textLayer';
-  const vp = page.getViewport({ scale });
   tl.style.setProperty('--scale-factor', String(scale));
   inner.append(canvas, tl);
-  box.innerHTML = pageMarkHtml(n);
-  box.appendChild(inner);
-  const task = page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport({ scale: scale * dpr }) });
-  if (box.dataset.single) RD.task = task;
-  try { await task.promise; } catch (e) { return; }
-  if (gen !== RD.gen) return;
-  try { await new PDFJS.TextLayer({ textContentSource: page.streamTextContent(), container: tl, viewport: vp }).render(); } catch (e) {}
+  const task = page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport({ scale: scale * d }) });
+  box._task = task;
+  try { await task.promise; } catch (e) { freeCanvas(canvas); return; }
+  if (box._task === task) box._task = null;
+  if (gen !== RD.gen || box._tok !== tok) { freeCanvas(canvas); return; }
+  box.querySelectorAll('canvas').forEach(freeCanvas);
+  box.replaceChildren(inner);
+  box.insertAdjacentHTML('afterbegin', pageMarkHtml(n));
   box.dataset.done = '1';
+  if (d < D - 0.05) scheduleDetail();
+  try { await new PDFJS.TextLayer({ textContentSource: page.streamTextContent(), container: tl, viewport: page.getViewport({ scale }) }).render(); } catch (e) {}
 }
 
 async function showPage(n) {
-  const st = RD.el.querySelector('.rd-stage');
+  const st = rdStage(), my = (RD.showTok = {});
   const page = await RD.doc.getPage(n), vp1 = page.getViewport({ scale: 1 });
   const cr = S.settings.reader.crop ? await detectCrop(n) : { l: 0, t: 0, r: 0, b: 0 };
+  if (RD.showTok !== my || !RD.doc) return;
   const AW = st.clientWidth - 12, AH = st.clientHeight - 12;
-  const scale = Math.min(AW / (vp1.width * (1 - cr.l - cr.r)), AH / (vp1.height * (1 - cr.t - cr.b)));
-  if (RD.task) { try { RD.task.cancel(); } catch (e) {} }
-  const box = document.createElement('div');
-  box.className = 'rd-page'; box.dataset.single = '1'; box.dataset.n = String(n);
-  st.innerHTML = ''; st.appendChild(box);
-  await drawPage(n, box, scale, cr);
+  const fit = Math.min(AW / (vp1.width * (1 - cr.l - cr.r)), AH / (vp1.height * (1 - cr.t - cr.b)));
+  let box = st.querySelector('.rd-page');
+  if (!box) {
+    box = document.createElement('div');
+    box.className = 'rd-page'; box.dataset.single = '1';
+    st.appendChild(box);
+  }
+  const prev = Number(box.dataset.n) || 0;
+  box.dataset.n = String(n);
+  box._g = { w: vp1.width, h: vp1.height, cr, fit };
+  st.classList.toggle('zoom', RD.z > 1.01);
+  const p = paint(box, n, box._g, fit * RD.z);
+  if (RD.z > 1.01 && prev && prev !== n) {   // листание в увеличении: к началу новой страницы
+    const fwd = n > prev;
+    st.scrollTop = fwd ? 0 : st.scrollHeight;
+    st.scrollLeft = fwd !== (LANG === 'ar') ? 0 : st.scrollWidth;
+  }
+  await p;
 }
 
 async function layoutScroll() {
-  const st = RD.el.querySelector('.rd-stage');
+  const st = rdStage();
   let cr = { l: 0, t: 0, r: 0, b: 0 };
   if (S.settings.reader.crop) {
     // одна общая обрезка для ленты, чтобы страницы не «прыгали»
@@ -3696,26 +3858,138 @@ async function layoutScroll() {
   }
   RD.uniCrop = cr;
   const p1 = (await RD.doc.getPage(1)).getViewport({ scale: 1 });
-  const AW = st.clientWidth - 12, scale = AW / (p1.width * (1 - cr.l - cr.r));
-  RD.scale = scale;
+  const AW = st.clientWidth - 12;
+  RD.g = { w: p1.width, h: p1.height, cr, fit: AW / (p1.width * (1 - cr.l - cr.r)) };
+  const scale = RD.g.fit * RD.z;
   const list = document.createElement('div');
   list.className = 'rd-list';
-  const ph = Math.round(p1.height * scale * (1 - cr.t - cr.b)), pw = Math.round(p1.width * scale * (1 - cr.l - cr.r));
-  for (let i = 1; i <= RD.n; i++) list.insertAdjacentHTML('beforeend', `<div class="rd-page" data-n="${i}" style="width:${pw}px;height:${ph}px"><span class="rd-pn">${i}</span></div>`);
+  let pw = Math.round(p1.width * scale * (1 - cr.l - cr.r));
+  if ((st.clientWidth - pw) & 1) pw--;
+  const ph = Math.round(p1.height * scale * (1 - cr.t - cr.b));
+  const html = [];
+  for (let i = 1; i <= RD.n; i++) html.push(`<div class="rd-page" data-n="${i}" style="width:${pw}px;height:${ph}px"><span class="rd-pn">${i}</span></div>`);
+  list.innerHTML = html.join('');
   st.appendChild(list);
-  RD.obs = new IntersectionObserver(ents => {
-    for (const en of ents) {
-      const box = en.target, n = Number(box.dataset.n);
-      if (en.isIntersecting && !box.dataset.busy) { box.dataset.busy = '1'; drawPage(n, box, scale, cr); }
-      else if (!en.isIntersecting && box.dataset.done && Math.abs(n - RD.page) > 4) {
-        const h = box.style.height; box.innerHTML = `<span class="rd-pn">${n}</span>`; box.style.height = h;
-        delete box.dataset.done; delete box.dataset.busy;
-      }
-    }
-  }, { root: st, rootMargin: '150% 0px' });
-  list.querySelectorAll('.rd-page').forEach(x => RD.obs.observe(x));
   const target = list.querySelector(`.rd-page[data-n="${RD.page}"]`);
   if (target) st.scrollTop = target.offsetTop - 6;
+  sweep();
+}
+
+/** Экономия памяти в ленте: рисуем только соседние страницы, дальние освобождаем. */
+function sweep() {
+  if (!RD.el || S.settings.reader.mode !== 'scroll' || !RD.g) return;
+  const big = RD.z > 1.5;
+  const a = RD.page - (big ? 1 : 2), b = RD.page + (big ? 1 : 3);
+  const st = rdStage();
+  for (const box of st.querySelectorAll('.rd-page[data-busy]')) {
+    const n = Number(box.dataset.n);
+    if (n < a - 1 || n > b + 1) freeBox(box);
+  }
+  for (let n = Math.max(1, a); n <= Math.min(RD.n, b); n++) {
+    const box = st.querySelector(`.rd-page[data-n="${n}"]`);
+    if (box && !box.dataset.busy) { box.dataset.busy = '1'; const g = box._g || RD.g; paint(box, n, g, g.fit * RD.z); }
+  }
+}
+function freeBox(box) {
+  box._tok = null;
+  if (box._task) { try { box._task.cancel(); } catch (e) {} box._task = null; }
+  box.querySelectorAll('canvas').forEach(freeCanvas);
+  box.innerHTML = `<span class="rd-pn">${box.dataset.n}</span>`;
+  delete box.dataset.done; delete box.dataset.busy;
+}
+
+/** В сильном увеличении холст упирается в предел iOS — видимую часть дорисовываем в полном разрешении. */
+function scheduleDetail() { clearTimeout(RD.detT); RD.detT = setTimeout(detail, 160); }
+async function detail() {
+  if (!RD.el || RD.el.hidden || !RD.doc) return;
+  const D = window.devicePixelRatio || 1, st = rdStage(), sr = st.getBoundingClientRect(), gen = RD.gen;
+  for (const box of st.querySelectorAll('.rd-page[data-done]')) {
+    const inner = box.querySelector('.rd-inner');
+    if (box._task || !inner || !inner._d || inner._d >= D - 0.05) continue;
+    const br = box.getBoundingClientRect();
+    if (br.bottom < sr.top || br.top > sr.bottom) continue;
+    const ir = inner.getBoundingClientRect(), mx = sr.width * 0.25, my = sr.height * 0.25;
+    let x0 = Math.max(br.left, sr.left - mx) - ir.left, y0 = Math.max(br.top, sr.top - my) - ir.top;
+    const x1 = Math.min(br.right, sr.right + mx) - ir.left, y1 = Math.min(br.bottom, sr.bottom + my) - ir.top;
+    if (x1 - x0 < 8 || y1 - y0 < 8) continue;
+    x0 = Math.floor(x0 * D) / D; y0 = Math.floor(y0 * D) / D;
+    const old = inner.querySelector('.rd-tile');
+    if (old && old._r[0] <= x0 + 0.5 && old._r[1] <= y0 + 0.5 && old._r[2] >= x1 - 0.5 && old._r[3] >= y1 - 0.5) continue;
+    const cw = Math.ceil((x1 - x0) * D), ch = Math.ceil((y1 - y0) * D);
+    if (cw * ch > MAXPX_PAGE) continue;
+    const c = document.createElement('canvas');
+    c.className = 'rd-tile'; c.width = cw; c.height = ch;
+    c.style.cssText = `left:${x0}px;top:${y0}px;width:${cw / D}px;height:${ch / D}px`;
+    c._r = [x0, y0, x0 + cw / D, y0 + ch / D];
+    const page = await RD.doc.getPage(Number(box.dataset.n));
+    try {
+      await page.render({ canvasContext: c.getContext('2d'), viewport: page.getViewport({ scale: inner._s * D, offsetX: -x0 * D, offsetY: -y0 * D }) }).promise;
+    } catch (e) { freeCanvas(c); continue; }
+    if (gen !== RD.gen || box.querySelector('.rd-inner') !== inner || box._task) { freeCanvas(c); continue; }
+    const o2 = inner.querySelector('.rd-tile');
+    if (o2) { freeCanvas(o2); o2.remove(); }
+    inner.insertBefore(c, inner.querySelector('.textLayer'));
+  }
+}
+
+// ---- Своё увеличение: 1×–3×, перерисовка после жеста ----
+function anchorAt(x, y) {
+  const st = rdStage(), e = document.elementFromPoint(x, y), b = e && e.closest && e.closest('.rd-page');
+  return b && st.contains(b) ? b : st.querySelector(`.rd-page[data-n="${RD.page}"]`) || st.querySelector('.rd-page');
+}
+function zoomLabel(z) {
+  const zl = RD.el.querySelector('.rd-zoom');
+  zl.textContent = `${Math.round(z * 100)}%`;
+  zl.hidden = false;
+  clearTimeout(RD.zlT);
+  RD.zlT = setTimeout(() => { zl.hidden = true; }, 900);
+}
+function pinchStart(p) {
+  p.box = anchorAt(p.c0.x, p.c0.y);
+  p.el = S.settings.reader.mode === 'scroll' ? rdStage().querySelector('.rd-list') : p.box;
+  if (!p.el) return;
+  const r = p.el.getBoundingClientRect();
+  p.el.style.transformOrigin = `${p.c0.x - r.left}px ${p.c0.y - r.top}px`;
+  p.el.style.willChange = 'transform';
+}
+function pinchMove(p) {
+  if (!p.el) return;
+  p.el.style.transform = `translate(${p.c.x - p.c0.x}px,${p.c.y - p.c0.y}px) scale(${p.s})`;
+  zoomLabel(clamp(p.z0 * p.s, 1, 3));
+}
+function pinchEnd(p) {
+  if (!p.el) return;
+  p.el.style.transform = ''; p.el.style.transformOrigin = ''; p.el.style.willChange = '';
+  const z = clamp(p.z0 * p.s, 1, 3);
+  if (Math.abs(z - RD.z) < 0.02 && Math.hypot(p.c.x - p.c0.x, p.c.y - p.c0.y) < 4) return;
+  zoomTo(z, p.c0.x, p.c0.y, p.c.x, p.c.y, p.box);
+}
+/** Новый масштаб: точка (fx,fy) страницы встаёт в (tx,ty) экрана. */
+function zoomTo(z, fx, fy, tx = fx, ty = fy, anchor = null) {
+  z = z < 1.06 ? 1 : clamp(z, 1, 3);
+  const st = rdStage();
+  anchor = anchor && anchor.isConnected ? anchor : anchorAt(fx, fy);
+  if (!anchor) return;
+  const r0 = anchor.getBoundingClientRect();
+  const px = (fx - r0.left) / (r0.width || 1), py = (fy - r0.top) / (r0.height || 1);
+  RD.z = z;
+  if (S.settings.reader.mode === 'scroll') {
+    RD.b.rz = z; scheduleSave();
+    const sw = st.clientWidth;
+    for (const box of st.querySelectorAll('.rd-page')) {
+      const g = box._g || RD.g;
+      if (box.dataset.busy) paint(box, Number(box.dataset.n), g, g.fit * z);
+      else geom(box, g, g.fit * z, sw);
+    }
+  } else {
+    st.classList.toggle('zoom', z > 1.01);
+    if (anchor._g) paint(anchor, Number(anchor.dataset.n), anchor._g, anchor._g.fit * z);
+  }
+  const r1 = anchor.getBoundingClientRect();
+  st.scrollLeft += r1.left + px * r1.width - tx;
+  st.scrollTop += r1.top + py * r1.height - ty;
+  zoomLabel(z);
+  if (S.settings.reader.mode === 'scroll') requestAnimationFrame(trackScroll);
 }
 
 function trackScroll() {
@@ -3751,6 +4025,7 @@ function pageChanged(n, how) {
   }
   scheduleSave();
   updateBars();
+  if (how === 'scroll' || S.settings.reader.mode === 'scroll') sweep();
 }
 
 function countTo(bp) {
