@@ -568,6 +568,112 @@ details.why .ev{margin:8px 0 0}
 .bh-pct small{font-size:18px;color:var(--muted)}
 .link-btn{font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:2px 0}
 .file-in{padding:9px!important;font-size:14px}
+
+/* =====================================================================
+   v6: линия прогресса, точка азкаров, Джума, кнопка «свой пункт»
+   ===================================================================== */
+.sum{display:block;padding:16px 4px 6px}
+.sum-row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:22px}
+.sum-row .t{font-weight:600;font-size:15px}
+.sum-pct{font:500 20px/1 var(--serif);color:var(--accent)}
+.sum .s{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sum-safar{display:inline-flex;align-items:center;gap:4px;margin-inline-start:8px;color:var(--brass)}
+.sum-safar .ic{width:14px;height:14px}
+.pline{position:relative;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin:9px 0 8px}
+.pline i{position:absolute;inset-block:0;inset-inline-start:0;border-radius:3px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 70%,var(--brass)));transition:width .45s cubic-bezier(.2,.7,.2,1)}
+.pline.full i{background:linear-gradient(90deg,var(--accent),var(--brass))}
+
+/* точка «азкары после намаза» */
+.pa{flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;gap:1.5px;
+  border:1px solid rgba(255,255,255,.28);background:transparent;padding:0;align-self:center}
+.pa i{width:2.5px;height:2.5px;border-radius:50%;background:rgba(255,255,255,.6)}
+.pa .ic{width:11px;height:11px;stroke-width:3}
+.pa.on{background:rgba(240,208,143,.92);border-color:transparent;color:#2A1D07}
+.sky.plain .pa{border-color:var(--line)}
+.sky.plain .pa i{background:var(--muted)}
+.sky.plain .pa.on{background:var(--accent);color:var(--on-accent)}
+.rrow{align-items:center}
+
+/* Джума — тонкая золотая черта сверху плашки */
+.slot.jum::before{content:"";position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:0 0 2px 2px;background:#E8C67F}
+.sky.plain .slot.jum::before{background:var(--brass)}
+.sky .slot.jum .n{color:#F6DFA8}
+.sky .slot.jum.done .n{color:#8A6420}
+
+/* кнопка «свой пункт» в блоках */
+.pill.add{border-style:dashed;color:var(--muted);background:transparent}
+.pill.add .ic{width:16px;height:16px;margin-inline:3px}
+
+/* =====================================================================
+   v7: читалка PDF
+   ===================================================================== */
+body.rd-open{overflow:hidden}
+.rd{position:fixed;inset:0;z-index:40;--rd-bg:#EEF0EC;--rd-ink:#14201B;--rd-bar:rgba(251,252,249,.9);--rd-muted:#5E6F68;background:var(--rd-bg);color:var(--rd-ink)}
+.rd[hidden]{display:none}
+.rd.t-sepia{--rd-bg:#F2E6CF;--rd-ink:#3A2C1A;--rd-bar:rgba(248,239,222,.92);--rd-muted:#7A6648}
+.rd.t-night{--rd-bg:#0C0F13;--rd-ink:#E6E1D6;--rd-bar:rgba(18,23,29,.9);--rd-muted:#8E98A2}
+.rd-stage{position:absolute;inset:0;overflow:hidden;-webkit-user-select:text;user-select:text}
+.rd-stage.paged{display:flex;align-items:center;justify-content:center;touch-action:pan-y pinch-zoom}
+.rd-stage.scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 0 40vh}
+.rd-list{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rd-page{direction:ltr;position:relative;overflow:hidden;background:#fff;box-shadow:0 2px 14px -8px rgba(0,0,0,.35);flex:none}
+.rd-inner{position:absolute;left:0;top:0;transform-origin:0 0}
+.rd-inner canvas{display:block}
+.rd.t-sepia .rd-page{background:#F7EDD9}
+.rd.t-sepia .rd-inner canvas{mix-blend-mode:multiply}
+.rd.t-night .rd-page{background:#111418;box-shadow:none}
+.rd.t-night .rd-inner canvas{filter:invert(.88) hue-rotate(180deg) brightness(.95) contrast(.92)}
+.rd-pn{position:absolute;inset:0;display:grid;place-items:center;color:var(--rd-muted);font-size:13px}
+.rd-flag{position:absolute;top:0;inset-inline-end:14px;width:12px;height:20px;background:var(--c);z-index:3;clip-path:polygon(0 0,100% 0,100% 100%,50% 75%,0 100%)}
+.rd-top,.rd-bot{position:absolute;left:0;right:0;z-index:5;background:var(--rd-bar);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:opacity .25s,transform .25s}
+.rd-top{top:0;display:flex;align-items:center;gap:4px;padding:calc(6px + env(safe-area-inset-top,0px)) 8px 6px}
+.rd-bot{bottom:0;padding:8px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.rd.immersive .rd-top{opacity:0;transform:translateY(-100%);pointer-events:none}
+.rd.immersive .rd-bot{opacity:0;transform:translateY(100%);pointer-events:none}
+.rd-ib{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--rd-ink);flex:none}
+.rd-ib .ic{width:21px;height:21px}
+.rd-ib.on{color:var(--c)}
+.rd-ib.on .ic{fill:currentColor}
+.rd-title{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2;padding:0 4px}
+.rd-title b{font:500 16px/1.25 var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-title span{font-size:12px;color:var(--rd-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-title span:empty{display:none}
+.rd-row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--rd-muted);margin-bottom:6px}
+.rd-num{color:var(--rd-ink);font-weight:600;direction:ltr;unicode-bidi:isolate}
+.rd-range{width:100%;accent-color:#B0843A;height:22px;margin:0;direction:ltr}
+[dir="rtl"] .rd-range{direction:rtl}
+.rd-prompt{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:13px;color:var(--rd-ink)}
+.rd-prompt[hidden]{display:none}
+.rd-prompt span{flex:1}
+.rd-prompt button{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#B0843A;color:#fff}
+.rd-prompt .ic{width:17px;height:17px;stroke-width:2.4}
+.rd-load{position:absolute;inset:0;display:grid;place-items:center;color:var(--rd-muted);font-size:14px;z-index:4}
+.rd-load[hidden]{display:none}
+
+/* текстовый слой pdf.js (для выделения фраз) */
+.textLayer{position:absolute;text-align:initial;inset:0;overflow:clip;opacity:1;line-height:1;-webkit-text-size-adjust:none;text-size-adjust:none;forced-color-adjust:none;transform-origin:0 0;caret-color:CanvasText;z-index:2}
+.textLayer :is(span,br){color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0% 0%}
+.textLayer span.markedContent{top:0;height:0}
+.textLayer ::selection{background:rgba(176,132,58,.35)}
+.textLayer br::selection{background:transparent}
+.textLayer .endOfContent{display:block;position:absolute;inset:100% 0 0;z-index:0;cursor:default;user-select:none}
+
+/* библиотека и книга */
+.book-wrap + .book-wrap{border-top:1px solid var(--line)}
+.book-wrap .book + .book{border-top:0}
+.cont{display:flex;align-items:center;gap:8px;width:100%;padding:0 16px 12px calc(16px + 52px + 14px);font-size:13.5px;color:var(--accent);font-weight:500}
+.cont .ic{width:16px;height:16px}
+.cont .ic:last-child{margin-inline-start:auto;color:var(--muted)}
+.read-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;border:1px solid var(--hair);color:var(--accent);font-size:13.5px;font-weight:500;flex:none}
+.read-btn .ic{width:16px;height:16px}
+.file-row > .ic:first-child{color:var(--brass)}
+.file-row .btn.sm{flex:none}
+.pdf-add{margin:10px 0;min-height:52px;justify-content:center}
+.mark-group{align-items:flex-start}
+.mk-dot{width:10px;height:10px;border-radius:50%;background:var(--c);margin-top:6px;flex:none}
+.mk-pages{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.mk-p{padding:4px 10px;border-radius:999px;border:1px solid var(--hair);font-size:13px;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.rd-top,.rd-bot{transition:none}}
 </style>
 </head>
 <body>
@@ -707,6 +813,10 @@ const ICONS = {
   globe: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.5 5.4 3.5 8.5s-1 5.9-3.5 8.5c-2.5-2.6-3.5-5.4-3.5-8.5s1-5.9 3.5-8.5z"/>',
   milestone: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>',
   info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.01"/>',
+  quote: '<path d="M6 17c2.5-1 3.5-3 3.5-6V7H5v4h4M15 17c2.5-1 3.5-3 3.5-6V7H14v4h4"/>',
+  aa: '<path d="M3.5 18l4.5-12 4.5 12M5.2 13.5h5.6M15 18v-6.2a2.6 2.6 0 0 1 5.2 0V18M20.2 14.6c-2.4 0-5.2.2-5.2 1.9 0 1 .8 1.5 1.8 1.5 2 0 3.4-1.4 3.4-3.4"/>',
+  crop: '<path d="M7 3.5V17h13.5M3.5 7H17v13.5"/>',
+  file: '<path d="M7 3.5h7l4.5 4.5V20.5H7z"/><path d="M14 3.5V8h4.5"/>',
 };
 const icon = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
 
@@ -1019,8 +1129,35 @@ const PRAYER_EV = {
 };
 /** Где на плашке стоят ратибаты: сверху — до намаза, снизу — после. */
 const RATIB_POS = { fajr: [['r_fajr'], []], zuhr: [['r_zuhr_b'], ['r_zuhr_a']], asr: [['r_asr'], []], maghrib: [[], ['r_maghrib']], isha: [[], ['r_isha']] };
-const ratibN = id => ({ r_fajr: 2, r_zuhr_b: 4, r_zuhr_a: S.settings.zuhrAfter, r_asr: 4, r_maghrib: 2, r_isha: 2 }[id]);
+const ratibN = (id, d) => (id === 'r_zuhr_a' && d && isJumua(d)) ? 4 : ({ r_fajr: 2, r_zuhr_b: 4, r_zuhr_a: S.settings.zuhrAfter, r_asr: 4, r_maghrib: 2, r_isha: 2 }[id]);
+const EV_JUM = {
+  jumua: [
+    { src: [['quran', '62:9']],
+      ru: '«О те, которые уверовали! Когда призывают на молитву в пятницу, то устремитесь к поминанию Аллаха и оставьте торговлю. Так будет лучше для вас, если бы вы только знали!»',
+      en: '“O you who believe, when the call is made for prayer on Friday, hasten to the remembrance of Allah and leave off trade. That is better for you, if only you knew.”',
+      ar: '﴿يَا أَيُّهَا الَّذِينَ آمَنُوا إِذَا نُودِيَ لِلصَّلَاةِ مِن يَوْمِ الْجُمُعَةِ فَاسْعَوْا إِلَىٰ ذِكْرِ اللَّهِ وَذَرُوا الْبَيْعَ ذَٰلِكُمْ خَيْرٌ لَّكُمْ إِن كُنتُمْ تَعْلَمُونَ﴾' },
+    { src: [['muslim', 857]],
+      ru: '«Тому, кто совершил полное омовение, пришёл на пятничную молитву, помолился, сколько ему было предопределено, молча слушал хутбу до её окончания, а затем помолился вместе с имамом, прощаются грехи между этой пятницей и следующей, и ещё три дня».',
+      en: '“Whoever performs ghusl, then comes to Jumuʿah, prays what was decreed for him, then listens in silence until the imam finishes his khutbah and prays with him, will be forgiven what is between that Friday and the next, and three days more.”',
+      ar: '«مَنِ اغْتَسَلَ ثُمَّ أَتَى الْجُمُعَةَ فَصَلَّى مَا قُدِّرَ لَهُ، ثُمَّ أَنْصَتَ حَتَّى يَفْرُغَ مِنْ خُطْبَتِهِ، ثُمَّ يُصَلِّي مَعَهُ، غُفِرَ لَهُ مَا بَيْنَهُ وَبَيْنَ الْجُمُعَةِ الْأُخْرَى وَفَضْلُ ثَلَاثَةِ أَيَّامٍ»' },
+    { src: [['muslim', 865]],
+      ru: '«Пусть люди перестанут оставлять пятничные намазы, иначе Аллах запечатает их сердца, и тогда они окажутся среди беспечных».',
+      en: '“People must stop neglecting the Friday prayers, or Allah will seal their hearts and they will be among the heedless.”',
+      ar: '«لَيَنْتَهِيَنَّ أَقْوَامٌ عَنْ وَدْعِهِمُ الْجُمُعَاتِ، أَوْ لَيَخْتِمَنَّ اللَّهُ عَلَى قُلُوبِهِمْ، ثُمَّ لَيَكُونُنَّ مِنَ الْغَافِلِينَ»' },
+  ],
+  after: { src: [['muslim', 881]],
+    ru: '«Когда кто-нибудь из вас совершит пятничный намаз, пусть помолится после него четыре ракаата».',
+    en: '“When one of you has prayed the Friday prayer, let him pray four rakʿahs after it.”',
+    ar: '«إِذَا صَلَّى أَحَدُكُمُ الْجُمُعَةَ فَلْيُصَلِّ بَعْدَهَا أَرْبَعًا»' },
+};
+EV.pa = { src: [['muslim', 597]],
+  ru: '«Тому, кто после каждого намаза 33 раза скажет «СубханаЛлах», 33 раза «АльхамдулиЛлях», 33 раза «Аллаху акбар», а сотым — «Ля иляха илля Ллаху вахдаху ля шарика лях, ляху-ль-мульку ва ляху-ль-хамду ва хуа ‘аля кулли шайин кадир», будут прощены прегрешения, даже если их столько, сколько пены на море».',
+  en: '“Whoever glorifies Allah after every prayer thirty-three times, praises Him thirty-three times and magnifies Him thirty-three times, and completes the hundred with: La ilaha illa Allah wahdahu la sharika lah, lahu-l-mulku wa lahu-l-hamdu wa huwa ʿala kulli shayʾin qadir — his sins will be forgiven even if they are like the foam of the sea.”',
+  ar: '«مَنْ سَبَّحَ اللَّهَ فِي دُبُرِ كُلِّ صَلَاةٍ ثَلَاثًا وَثَلَاثِينَ، وَحَمِدَ اللَّهَ ثَلَاثًا وَثَلَاثِينَ، وَكَبَّرَ اللَّهَ ثَلَاثًا وَثَلَاثِينَ … وَقَالَ تَمَامَ الْمِائَةِ: لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، غُفِرَتْ خَطَايَاهُ وَإِنْ كَانَتْ مِثْلَ زَبَدِ الْبَحْرِ»' };
 function evidenceFor(id) {
+  if (id === 'zuhr' && isJumua(todayDate())) return EV_JUM.jumua;
+  if (id === 'r_zuhr_a' && isJumua(todayDate())) return [EV_JUM.after];
+  if (id.startsWith('pa_')) return [EV.pa];
   if (FARD.includes(id)) return PRAYER_EV[id].map(k => EV_PRAYER[k]);
   if (['r_zuhr_b', 'r_zuhr_a', 'r_maghrib', 'r_isha'].includes(id)) return [EV.ratib12];
   if (id === 'azkar_m' || id === 'azkar_e') return [EV.azkar];
@@ -1100,7 +1237,7 @@ const DEFAULTS = {
     offsets: { fajr: 0, sunrise: 0, zuhr: 0, asr: 0, maghrib: 0, isha: 0 },
     remindFard: true, remindMinutes: 15, tahajjudAlarm: false, sleepReminder: false, sleepAfterIsha: 60,
     khatmActive: false, khatmPage: 0, khatmEnd: '', hadithOpen: false, theme: 'auto', folded: {},
-    smallSunnas: false, sleepSunnas: true, tipShown: false, tipInfo: false,
+    smallSunnas: false, sleepSunnas: true, tipShown: false, tipInfo: false, postAzkar: true,
   },
   quran: { page: null, sura: 1, ayah: 1 },
   books: [], customs: [], avoids: [], goals: [], duas: [], milestones: [], logs: {},
@@ -1126,7 +1263,8 @@ function normalize(d) {
     if (i >= 0) st.cityId = i;
   }
   // книги: полки и даты
-  s.books = (s.books || []).map(b => ({ status: 'reading', author: '', startedAt: null, finishedAt: null, rating: 0, notes: [], ...b }));
+  s.books = (s.books || []).map(b => ({ status: 'reading', author: '', startedAt: null, finishedAt: null, rating: 0, notes: [], files: [], marks: [], lastFile: null, ...b }));
+  st.reader = { mode: 'page', theme: 'auto', crop: true, ...(st.reader || {}) };
   // существующие пользователи не проходят мастер заново
   if (!('onboarded' in (d.settings || {})) && Object.keys(s.logs || {}).length) st.onboarded = true;
   s.milestones = s.milestones || [];
@@ -1155,7 +1293,8 @@ function prayerTimes(date) {
     const o = st.offsets;
     ptCache[k] = {
       fajr: addMin(raw.fajr, o.fajr), sunrise: addMin(raw.sunrise, o.sunrise), dhuhr: addMin(raw.dhuhr, o.zuhr),
-      asr: addMin(raw.asr, o.asr), maghrib: addMin(raw.maghrib, o.maghrib), isha: addMin(raw.isha, o.isha), raw,
+      asr: addMin(raw.asr, o.asr), maghrib: addMin(raw.maghrib, o.maghrib), isha: addMin(raw.isha, o.isha),
+      zenith: addMin(raw.zenith, o.zuhr), raw,
     };
   }
   return ptCache[k];
@@ -1168,15 +1307,14 @@ function nightWindow(now = new Date()) {
 }
 const lastThird = (m, f) => new Date(f.getTime() - (f - m) / 3);
 const halfNight = (m, f) => new Date(m.getTime() + (f - m) / 2);
-/** Запретные для нафиля отрезки: восход, зенит, закат (по астрономическому времени). */
+/** Запретные для нафиля отрезки: восход, зенит, закат (с учётом поправок пользователя). */
 function forbiddenNow(now) {
   const p = prayerTimes(now);
   if (!p) return null;
-  const r = p.raw;
-  const F = [[r.sunrise, addMin(r.sunrise, 15), 'sunrise'], [addMin(r.zenith, -10), r.zenith, 'zenith'], [addMin(r.maghrib, -15), r.maghrib, 'sunset']];
+  const F = [[p.sunrise, addMin(p.sunrise, 15), 'sunrise'], [addMin(p.zenith, -10), p.zenith, 'zenith'], [addMin(p.maghrib, -15), p.maghrib, 'sunset']];
   return F.find(([a, b]) => now >= a && now < b) || null;
 }
-const duhaWindow = p => [addMin(p.raw.sunrise, 15), addMin(p.raw.zenith, -10)];
+const duhaWindow = p => [addMin(p.sunrise, 15), addMin(p.zenith, -10)];
 
 /** День трекера начинается с Фаджра (если выбран город). */
 function todayDate() {
@@ -1193,6 +1331,17 @@ function isSafar(d) {
   return isToday(d) && S.settings.safar;
 }
 const isExcused = d => S.settings.female && peek(d)._excused === true;
+/** В пятницу вместо Зухра — Джума (для мужчин не в сафаре). Ключ в журнале остаётся 'zuhr'. */
+const isJumua = d => d.getDay() === 5 && !S.settings.female && !isSafar(d);
+const prayerName = (id, d) => (id === 'zuhr' && isJumua(d)) ? t('task.jumua') : t('task.' + id);
+/** С Магриба четверга до Джума-намаза в пятницу. */
+function fridayEveNow() {
+  if (!S.settings.fridayMode) return false;
+  const now = new Date(), wd = now.getDay(), p = prayerTimes(now);
+  if (wd === 4) return p ? now >= p.maghrib : now.getHours() >= 18;
+  if (wd === 5) return p ? now < p.dhuhr : now.getHours() < 13;
+  return false;
+}
 function cityLabel() {
   const st = S.settings;
   if (st.cityId != null && CITIES[st.cityId]) return CITIES[st.cityId][LANG];
@@ -1210,11 +1359,15 @@ function tasksFor(d) {
   };
   const L = [];
   if (!exc) {
-    L.push(T('fajr', 'fard', { kind: 'fard', note: rak(2) }), T('zuhr', 'fard', { kind: 'fard', note: rak(4, safar) }),
+    const jum = isJumua(d);
+    L.push(T('fajr', 'fard', { kind: 'fard', note: rak(2) }),
+      T('zuhr', 'fard', jum ? { kind: 'fard', note: rak(2), title: t('task.jumua'), short: t('task.jumua') } : { kind: 'fard', note: rak(4, safar) }),
       T('asr', 'fard', { kind: 'fard', note: rak(4, safar) }), T('maghrib', 'fard', { kind: 'fard', note: rak(3) }),
       T('isha', 'fard', { kind: 'fard', note: rak(4, safar) }));
     L.push(T('r_fajr', 'ratib'));
-    if (!safar) L.push(T('r_zuhr_b', 'ratib'), T('r_zuhr_a', 'ratib', { p: { n: st.zuhrAfter } }),
+    // в пятницу до Джума ратибата нет, после — 4 ракаата (Муслим, 881)
+    if (!safar) L.push(...(jum ? [] : [T('r_zuhr_b', 'ratib')]),
+      T('r_zuhr_a', 'ratib', jum ? { title: t('task.r_jum_a', { n: 4 }), short: t('short.r_jum_a') } : { p: { n: st.zuhrAfter } }),
       T('r_asr', 'ratib'), T('r_maghrib', 'ratib'), T('r_isha', 'ratib'));
     L.push(T('duha', 'nafl'), T('tahajjud', 'nafl'), T('witr', 'nafl'));
   }
@@ -1222,10 +1375,13 @@ function tasksFor(d) {
   S.books.filter(b => b.status === 'reading').forEach(b =>
     L.push(T('book_' + b.id, 'read', { title: b.title, short: b.title, kind: 'counter', goal: b.dailyGoal, unit: t('u.p') })));
   if (st.fridayMode && d.getDay() === 5) L.push(T('fr_kahf', 'friday'), T('fr_salawat', 'friday'), T('fr_ghusl', 'friday'));
-  S.customs.forEach(c => L.push(T('c_' + c.id, 'custom', { title: c.title, short: c.title, ...(c.counter ? { kind: 'counter', goal: c.target, unit: c.unit } : {}) })));
+  const custom = c => T('c_' + c.id, c.group || 'custom', { title: c.title, short: c.title, ...(c.counter ? { kind: 'counter', goal: c.target, unit: c.unit } : {}) });
+  S.customs.filter(c => !c.group || c.group === 'custom').forEach(c => L.push(custom(c)));
   L.push(T('azkar_m', 'azkar'), T('azkar_e', 'azkar'));
   if (st.smallSunnas) SMALL.forEach(id => L.push(T(id, 'small')));
+  S.customs.filter(c => c.group === 'small').forEach(c => L.push(custom(c)));
   if (st.sleepSunnas) SLEEP.forEach(id => L.push(T(id, 'sleep')));
+  S.customs.filter(c => c.group === 'sleep').forEach(c => L.push(custom(c)));
   S.avoids.forEach(a => L.push(T('a_' + a.id, 'avoid', { title: a.title, short: a.title, kind: 'avoid' })));
   return L.filter(x => !st.disabled.includes(x.id));
 }
@@ -1393,7 +1549,7 @@ function scheduleWeb() {
       for (const [id, end] of Object.entries(ends)) {
         at(addMin(end, -st.remindMinutes), () => {
           if (isExcused(date) || isPrayed(peek(date)[id])) return;
-          notify(t('n.fardTitle', { name: t('task.' + id) }), t('n.fardBody', { m: st.remindMinutes }));
+          notify(t('n.fardTitle', { name: prayerName(id, date) }), t('n.fardBody', { m: st.remindMinutes }));
         });
       }
     }
@@ -1433,7 +1589,7 @@ function fieldHtml(f) {
   let input;
   if (f.type === 'textarea') input = `<textarea name="${f.name}" placeholder="${esc(f.placeholder || '')}">${v}</textarea>`;
   else if (f.type === 'select') input = `<select name="${f.name}">${f.options.map(([k, l]) => `<option value="${esc(k)}" ${String(k) === String(f.value) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`;
-  else if (f.type === 'file') input = `<input name="${f.name}" type="file" accept="image/*" class="file-in">`;
+  else if (f.type === 'file') input = `<input name="${f.name}" type="file" accept="${f.accept || 'image/*'}" class="file-in">`;
   else input = `<input name="${f.name}" type="${f.type === 'number' ? 'text' : (f.type || 'text')}" ${f.type === 'number' ? 'inputmode="decimal"' : ''} value="${v}" placeholder="${esc(f.placeholder || '')}" autocomplete="off">`;
   return `<label class="field"><span>${esc(f.label || '')}</span>${input}</label>`;
 }
@@ -1482,9 +1638,12 @@ const evHtml = ev => `<div class="ev"><blockquote>${ev[LANG] || ev.ru}</blockquo
 function showInfo(id) {
   const d = todayDate();
   const x = findTask(d, id) || findTask(addDays(d, 1), id);
-  const title = x ? x.title : tOr('task.' + id, id);
+  const title = x ? x.title : (id.startsWith('pa_') ? t('task.pa') : tOr('task.' + id, id));
   const evs = evidenceFor(id);
-  openModal(`<h2>${esc(title)}</h2>${evs.length ? evs.map(evHtml).join('') : `<p class="prose">${t('info.personal')}</p>`}
+  const c = id.startsWith('c_') ? S.customs.find(x => 'c_' + x.id === id) : null;
+  let body = evs.length ? evs.map(evHtml).join('') : `<p class="prose">${t('info.personal')}</p>`;
+  if (c && c.ev) body = `<div class="ev"><blockquote style="white-space:pre-wrap">${esc(c.ev)}</blockquote><cite>${c.evSrc ? esc(c.evSrc) : t('items.noSrc')}</cite></div>`;
+  openModal(`<h2>${esc(title)}</h2>${body}
     <div class="actions"><button class="btn ghost" data-cancel>${t('b.close')}</button></div>`);
   root.querySelector('[data-cancel]').onclick = () => closeModal(null);
 }
@@ -1545,6 +1704,30 @@ async function readQuranTo(d, r) {
 //  ПЕРЕВОДЫ
 // =====================================================================
 I18N.ru = {
+  'short.r_jum_a': '4 после Джума',
+  'rd.read': 'Читать', 'rd.continue': 'Продолжить · стр. {n}', 'rd.pageShort': 'стр. {n}', 'rd.files': 'Файлы', 'rd.attach': 'Прикрепить PDF', 'rd.attachHint': 'Прикрепить PDF и читать прямо здесь',
+  'rd.fileLine': '{n} стр. · {s} МБ', 'rd.extraShort': 'дополнительный', 'rd.offsetShort': 'книга с {n}-й', 'rd.fPdf': 'PDF-файл (необязательно)',
+  'rd.loading': 'Открываю файл…', 'rd.notPdf': 'Это не PDF-файл', 'rd.badPdf': 'Не удалось открыть PDF. Возможно, файл повреждён', 'rd.noSpace': 'Не хватает места в памяти браузера',
+  'rd.missing': 'Файла нет на этом устройстве. Прикрепите его снова в карточке книги', 'rd.attached': 'PDF прикреплён',
+  'rd.updTotal': 'В файлах {a} стр., а у книги указано {b}. Обновить число страниц?',
+  'rd.kindQ': 'Как засчитывать этот файл?', 'rd.kindVol': 'Следующий том — в прогресс книги', 'rd.kindExtra': 'Дополнительный (шарх, комментарий) — без прогресса',
+  'rd.fileTitle': 'Файл', 'rd.fName': 'Название', 'rd.fOffset': 'На какой странице файла начинается 1-я страница книги', 'rd.fCounts': 'Прогресс', 'rd.fDel': 'Файл', 'rd.keep': 'Оставить', 'rd.delFile': 'Удалить файл с устройства', 'rd.delQ': 'Удалить PDF с устройства? Прогресс и выписки останутся.',
+  'rd.mark': 'Пометка страницы', 'rd.markTitle': 'Пометка: стр. {n}', 'rd.unmark': 'Снять пометку', 'rd.toNotes': 'В выписки', 'rd.noted': 'Добавлено в выписки', 'rd.opts': 'Вид', 'rd.page': 'Страница',
+  'rd.modePage': 'Постранично, как книга', 'rd.modeScroll': 'Сплошной лентой', 'rd.thAuto': 'Фон: авто (ночной после Иша)', 'rd.thLight': 'Фон: обычный', 'rd.thSepia': 'Фон: сепия', 'rd.thNight': 'Фон: ночной',
+  'rd.cropOn': 'Обрезать поля', 'rd.cropOff': 'Не обрезать поля',
+  'rd.sess': 'Сегодня {a} из {g} стр.', 'rd.extra': 'Дополнительный файл, в прогресс не идёт', 'rd.countQ': 'Засчитать прочитанным до стр. {n}?', 'rd.counted': 'Засчитано до стр. {n}',
+  'rd.marks': 'Пометки страниц', 'mark.imp': 'Важно', 'mark.rev': 'Повторить', 'mark.ask': 'Вопрос учителю',
+  'rd.storage': 'PDF-файлы занимают {s} МБ на этом устройстве. В резервную копию они не входят: при смене телефона прикрепите их снова.',
+  'task.jumua': 'Джума', 'task.r_jum_b': 'Сунна до Джума', 'task.r_jum_a': '{n} ракаата после Джума', 'task.pa': 'Азкары после намаза',
+  'fri.isnad': 'От Ауса ибн Ауса ас-Сакафи (да будет доволен им Аллах), который передал слова Пророка ﷺ:',
+  'fri.text': '«Кто совершит гусль в пятницу, выйдет рано, пойдёт пешком, приблизится к имаму, станет слушать и не будет разговаривать — тому за каждый шаг запишется награда, как за год поста и ночных молитв».',
+  'fri.src': 'Абу Дауд, 345; ат-Тирмизи, 496',
+  'set.safar': 'Режим путника (сафар)', 'set.safarHint': 'Зухр, Аср и Иша сокращаются до 2 ракаатов, ратибаты, кроме сунны Фаджра, скрываются. Отключите, когда вернётесь',
+  'set.paHint': 'Маленькая точка под совершённым намазом. В процент дня не входит',
+  'stats.pa': 'Азкары после намаза',
+  'items.addHere': 'Свой пункт', 'items.newIn': 'Новый пункт: {b}', 'items.editCustom': 'Свой пункт', 'items.fGroup': 'Блок',
+  'items.fEv': 'Довод (необязательно)', 'items.fEvPh': 'Аят или хадис, который напомнит, зачем это дело', 'items.fEvSrc': 'Источник', 'items.fEvSrcPh': 'Например: Муслим, 597',
+  'items.fTitlePhSunna': 'Например: дуа при входе в дом', 'items.noSrc': 'Источник не указан', 'items.hasEv': 'есть довод',
   'book.fCover': 'Обложка (необязательно)', 'book.coverAdd': 'Добавить обложку', 'book.coverChange': 'Сменить обложку', 'book.coverRemove': 'Убрать обложку', 'book.coverRemoveQ': 'Убрать обложку?', 'book.coverErr': 'Не удалось открыть изображение. Попробуйте другое фото', 'err.quota': 'Память браузера заполнена. Уберите часть обложек или сохраните копию',
   'st.how': 'Как вы совершили намаз?', 'st.why': 'Почему это важно', 'tip.ratib': 'Сверху над намазом — сунна до него, снизу — после. Удерживайте, чтобы узнать подробнее',
   'app.title': 'Трекер',
@@ -1659,7 +1842,7 @@ I18N.ru = {
   'off.zero': '0 мин', 'off.val': '{v} мин',
   'set.day': 'День и намазы', 'set.dayFajr': 'Новый день начинается с Фаджра', 'set.dayFajrHint': 'Ночной тахаджуд и витр засчитываются в прошедший день',
   'set.dayStart': 'Новый день начинается в', 'set.dayStartHint': 'Пока не выбран город', 'set.zuhrAfter': 'Ракаатов после Зухра',
-  'set.friday': 'Пятничный режим', 'set.fridayHint': 'Сура аль-Кахф и салават с Магриба четверга, гусль в пятницу', 'set.quranGoal': 'Коран, страниц в день', 'set.quranKhatm': 'Сейчас норму считает хатм-планер',
+  'set.friday': 'Пятничный режим', 'set.fridayHint': 'Сура аль-Кахф и салават с Магриба четверга, гусль и Джума в пятницу, пятничный хадис на главном экране', 'set.quranGoal': 'Коран, страниц в день', 'set.quranKhatm': 'Сейчас норму считает хатм-планер',
   'set.track': 'Что отслеживать', 'set.smallHint': 'Сивак, дуа при выходе, этикет еды и другие', 'set.sleepHint': 'Аят аль-Курси, три последние суры, тасбих',
   'set.notif': 'Уведомления', 'perm.granted': 'Уведомления разрешены', 'perm.denied': 'Уведомления запрещены в настройках браузера', 'perm.default': 'Нажмите, чтобы разрешить уведомления', 'perm.unsupported': 'Этот браузер не поддерживает уведомления',
   'set.remindFard': 'Напоминать о конце времени намаза', 'set.remindFardHint': 'Только если намаз ещё не отмечен', 'set.remindMin': 'За сколько минут',
@@ -1682,6 +1865,30 @@ I18N.ru = {
 };
 
 I18N.en = {
+  'short.r_jum_a': '4 after Jumuʿah',
+  'rd.read': 'Read', 'rd.continue': 'Continue · p. {n}', 'rd.pageShort': 'p. {n}', 'rd.files': 'Files', 'rd.attach': 'Attach PDF', 'rd.attachHint': 'Attach a PDF and read it right here',
+  'rd.fileLine': '{n} p. · {s} MB', 'rd.extraShort': 'extra', 'rd.offsetShort': 'book from p. {n}', 'rd.fPdf': 'PDF file (optional)',
+  'rd.loading': 'Opening the file…', 'rd.notPdf': 'This is not a PDF file', 'rd.badPdf': 'Could not open the PDF. The file may be damaged', 'rd.noSpace': 'Not enough browser storage',
+  'rd.missing': 'The file is not on this device. Attach it again on the book page', 'rd.attached': 'PDF attached',
+  'rd.updTotal': 'The files have {a} pages, but the book says {b}. Update the page count?',
+  'rd.kindQ': 'How should this file count?', 'rd.kindVol': 'Next volume — counts toward progress', 'rd.kindExtra': 'Extra (sharh, commentary) — no progress',
+  'rd.fileTitle': 'File', 'rd.fName': 'Name', 'rd.fOffset': 'Which file page is page 1 of the book', 'rd.fCounts': 'Progress', 'rd.fDel': 'File', 'rd.keep': 'Keep', 'rd.delFile': 'Delete the file from this device', 'rd.delQ': 'Delete the PDF from this device? Progress and notes stay.',
+  'rd.mark': 'Page mark', 'rd.markTitle': 'Mark: p. {n}', 'rd.unmark': 'Remove mark', 'rd.toNotes': 'To notes', 'rd.noted': 'Added to notes', 'rd.opts': 'View', 'rd.page': 'Page',
+  'rd.modePage': 'Page by page, like a book', 'rd.modeScroll': 'Continuous scroll', 'rd.thAuto': 'Background: auto (night after ʿIsha)', 'rd.thLight': 'Background: normal', 'rd.thSepia': 'Background: sepia', 'rd.thNight': 'Background: night',
+  'rd.cropOn': 'Trim margins', 'rd.cropOff': 'Do not trim margins',
+  'rd.sess': 'Today {a} of {g} p.', 'rd.extra': 'Extra file, not counted', 'rd.countQ': 'Count as read up to p. {n}?', 'rd.counted': 'Counted up to p. {n}',
+  'rd.marks': 'Page marks', 'mark.imp': 'Important', 'mark.rev': 'Review', 'mark.ask': 'Ask the teacher',
+  'rd.storage': 'PDF files take {s} MB on this device. They are not in the backup: attach them again on a new phone.',
+  'task.jumua': 'Jumuʿah', 'task.r_jum_b': 'Sunnah before Jumuʿah', 'task.r_jum_a': '{n} rakʿahs after Jumuʿah', 'task.pa': 'Adhkar after prayer',
+  'fri.isnad': 'Aws ibn Aws ath-Thaqafi (may Allah be pleased with him) narrated that the Prophet ﷺ said:',
+  'fri.text': '“Whoever performs ghusl on Friday, sets out early, walks and does not ride, draws near to the imam, listens and does not speak idly, will have for every step the reward of a year of fasting and night prayer.”',
+  'fri.src': 'Abu Dawud, 345; at-Tirmidhi, 496',
+  'set.safar': 'Travel mode (safar)', 'set.safarHint': 'Dhuhr, ʿAsr and ʿIsha are shortened to 2 rakʿahs; rawatib except the sunnah of Fajr are hidden. Turn it off when you return',
+  'set.paHint': 'A small dot under each prayed prayer. Not counted in the daily percentage',
+  'stats.pa': 'Adhkar after prayer',
+  'items.addHere': 'Add item', 'items.newIn': 'New item: {b}', 'items.editCustom': 'My item', 'items.fGroup': 'Block',
+  'items.fEv': 'Evidence (optional)', 'items.fEvPh': 'An ayah or hadith that reminds you why this deed matters', 'items.fEvSrc': 'Source', 'items.fEvSrcPh': 'For example: Muslim, 597',
+  'items.fTitlePhSunna': 'For example: dua when entering home', 'items.noSrc': 'No source given', 'items.hasEv': 'has evidence',
   'book.fCover': 'Cover (optional)', 'book.coverAdd': 'Add cover', 'book.coverChange': 'Change cover', 'book.coverRemove': 'Remove cover', 'book.coverRemoveQ': 'Remove the cover?', 'book.coverErr': 'Could not open the image. Try another photo', 'err.quota': 'Browser storage is full. Remove some covers or save a backup',
   'st.how': 'How did you pray it?', 'st.why': 'Why it matters', 'tip.ratib': 'Above each prayer is the sunnah before it, below is the sunnah after. Press and hold to learn more',
   'app.title': 'Tracker',
@@ -1819,6 +2026,30 @@ I18N.en = {
 };
 
 I18N.ar = {
+  'short.r_jum_a': '4 بعد الجمعة',
+  'rd.read': 'اقرأ', 'rd.continue': 'متابعة · ص {n}', 'rd.pageShort': 'ص {n}', 'rd.files': 'الملفات', 'rd.attach': 'إرفاق PDF', 'rd.attachHint': 'أرفق ملف PDF واقرأه هنا مباشرة',
+  'rd.fileLine': '{n} ص · {s} م.ب', 'rd.extraShort': 'إضافي', 'rd.offsetShort': 'الكتاب من ص {n}', 'rd.fPdf': 'ملف PDF (اختياري)',
+  'rd.loading': 'جارٍ فتح الملف…', 'rd.notPdf': 'هذا ليس ملف PDF', 'rd.badPdf': 'تعذّر فتح ملف PDF، ربما الملف تالف', 'rd.noSpace': 'لا توجد مساحة كافية في المتصفح',
+  'rd.missing': 'الملف غير موجود على هذا الجهاز. أرفقه مجددًا من صفحة الكتاب', 'rd.attached': 'أُرفق الملف',
+  'rd.updTotal': 'في الملفات {a} صفحة، وفي الكتاب {b}. تحديث عدد الصفحات؟',
+  'rd.kindQ': 'كيف يُحتسب هذا الملف؟', 'rd.kindVol': 'المجلد التالي — يُحتسب في التقدم', 'rd.kindExtra': 'إضافي (شرح، تعليق) — بلا تقدم',
+  'rd.fileTitle': 'الملف', 'rd.fName': 'الاسم', 'rd.fOffset': 'أي صفحة في الملف هي الصفحة الأولى من الكتاب', 'rd.fCounts': 'التقدم', 'rd.fDel': 'الملف', 'rd.keep': 'إبقاء', 'rd.delFile': 'حذف الملف من الجهاز', 'rd.delQ': 'حذف ملف PDF من الجهاز؟ يبقى التقدم والفوائد.',
+  'rd.mark': 'علامة الصفحة', 'rd.markTitle': 'علامة: ص {n}', 'rd.unmark': 'إزالة العلامة', 'rd.toNotes': 'إلى الفوائد', 'rd.noted': 'أُضيف إلى الفوائد', 'rd.opts': 'العرض', 'rd.page': 'الصفحة',
+  'rd.modePage': 'صفحة بصفحة كالكتاب', 'rd.modeScroll': 'تمرير متصل', 'rd.thAuto': 'الخلفية: تلقائي (ليلي بعد العشاء)', 'rd.thLight': 'الخلفية: عادية', 'rd.thSepia': 'الخلفية: بنية دافئة', 'rd.thNight': 'الخلفية: ليلية',
+  'rd.cropOn': 'قصّ الهوامش', 'rd.cropOff': 'دون قصّ الهوامش',
+  'rd.sess': 'اليوم {a} من {g} ص', 'rd.extra': 'ملف إضافي لا يُحتسب', 'rd.countQ': 'احتساب المقروء حتى ص {n}؟', 'rd.counted': 'احتُسب حتى ص {n}',
+  'rd.marks': 'علامات الصفحات', 'mark.imp': 'مهم', 'mark.rev': 'للمراجعة', 'mark.ask': 'سؤال للشيخ',
+  'rd.storage': 'ملفات PDF تشغل {s} م.ب على هذا الجهاز. لا تدخل في النسخة الاحتياطية: أرفقها مجددًا على هاتف جديد.',
+  'task.jumua': 'الجمعة', 'task.r_jum_b': 'سنة قبل الجمعة', 'task.r_jum_a': '{n} بعد الجمعة', 'task.pa': 'أذكار بعد الصلاة',
+  'fri.isnad': 'عَنْ أَوْسِ بْنِ أَوْسٍ الثَّقَفِيِّ رَضِيَ اللَّهُ عَنْهُ قَالَ: سَمِعْتُ رَسُولَ اللَّهِ ﷺ يَقُولُ:',
+  'fri.text': '«مَنْ غَسَّلَ يَوْمَ الْجُمُعَةِ وَاغْتَسَلَ، ثُمَّ بَكَّرَ وَابْتَكَرَ، وَمَشَى وَلَمْ يَرْكَبْ، وَدَنَا مِنَ الْإِمَامِ فَاسْتَمَعَ وَلَمْ يَلْغُ، كَانَ لَهُ بِكُلِّ خُطْوَةٍ عَمَلُ سَنَةٍ أَجْرُ صِيَامِهَا وَقِيَامِهَا»',
+  'fri.src': 'أبو داود ٣٤٥، الترمذي ٤٩٦',
+  'set.safar': 'وضع السفر', 'set.safarHint': 'تُقصر الظهر والعصر والعشاء إلى ركعتين، وتُخفى الرواتب إلا سنة الفجر. أوقفه عند عودتك',
+  'set.paHint': 'نقطة صغيرة تحت كل صلاة أُدّيت. لا تدخل في نسبة اليوم',
+  'stats.pa': 'أذكار بعد الصلاة',
+  'items.addHere': 'بند خاص', 'items.newIn': 'بند جديد: {b}', 'items.editCustom': 'بندي', 'items.fGroup': 'القسم',
+  'items.fEv': 'الدليل (اختياري)', 'items.fEvPh': 'آية أو حديث يذكّرك بفضل هذا العمل', 'items.fEvSrc': 'المصدر', 'items.fEvSrcPh': 'مثلًا: مسلم ٥٩٧',
+  'items.fTitlePhSunna': 'مثلًا: دعاء دخول المنزل', 'items.noSrc': 'لم يُذكر المصدر', 'items.hasEv': 'فيه دليل',
   'book.fCover': 'الغلاف (اختياري)', 'book.coverAdd': 'إضافة غلاف', 'book.coverChange': 'تغيير الغلاف', 'book.coverRemove': 'إزالة الغلاف', 'book.coverRemoveQ': 'إزالة الغلاف؟', 'book.coverErr': 'تعذّر فتح الصورة. جرّب صورة أخرى', 'err.quota': 'ذاكرة المتصفح ممتلئة. أزل بعض الأغلفة أو احفظ نسخة',
   'st.how': 'كيف أدّيت الصلاة؟', 'st.why': 'لماذا هذا مهم', 'tip.ratib': 'فوق كل صلاة سنتها القبلية، وتحتها البعدية. اضغط مطوّلًا لمعرفة المزيد',
   'app.title': 'المتابع',
@@ -2033,12 +2264,13 @@ function viewToday() {
 
 function hadithCard() {
   const open = S.settings.hadithOpen, glow = Date.now() < ui.glowUntil;
+  const h = fridayEveNow() ? 'fri.' : 'hadith.';
   return `<section class="mihrab ${glow ? 'glow' : ''}" aria-label="${t('hadith.label')}">
     <div class="orn" aria-hidden="true">۞</div>
-    ${open ? `<p class="isnad">${t('hadith.isnad')}</p>` : ''}
-    <blockquote>${t('hadith.text')}</blockquote>
-    ${open ? `<p class="after">${t('hadith.after')}</p>` : ''}
-    <div class="foot"><span>${t('hadith.src')}</span><i></i><button data-a="hadith">${open ? t('hadith.less') : t('hadith.more')}</button></div>
+    ${open ? `<p class="isnad">${t(h + 'isnad')}</p>` : ''}
+    <blockquote>${t(h + 'text')}</blockquote>
+    ${open && h === 'hadith.' ? `<p class="after">${t('hadith.after')}</p>` : ''}
+    <div class="foot"><span>${t(h + 'src')}</span><i></i><button data-a="hadith">${open ? t('hadith.less') : t('hadith.more')}</button></div>
     ${glow ? `<div class="alh" role="status">${t('hadith.alh')}</div>` : ''}
   </section>`;
 }
@@ -2068,11 +2300,11 @@ function fardStrip(d) {
 
   const chip = id => {
     if (!id || !has(id)) return '';
-    const on = log[id] === true, title = t('task.' + id, { n: S.settings.zuhrAfter });
-    return `<button class="rchip ${on ? 'on' : ''}" data-a="toggle" data-id="${id}" data-d="${k}" data-info="${id}" role="checkbox" aria-checked="${on}" aria-label="${esc(title)}" title="${esc(title)}">${on ? icon('check') : ''}<span>${ratibN(id)}</span></button>`;
+    const tk = tasks.find(x => x.id === id), on = log[id] === true, title = tk ? tk.title : t('task.' + id, { n: S.settings.zuhrAfter });
+    return `<button class="rchip ${on ? 'on' : ''}" data-a="toggle" data-id="${id}" data-d="${k}" data-info="${id}" role="checkbox" aria-checked="${on}" aria-label="${esc(title)}" title="${esc(title)}">${on ? icon('check') : ''}<span>${ratibN(id, d)}</span></button>`;
   };
   const cols = live ? ['fajr', 'sunrise', 'zuhr', 'asr', 'maghrib', 'isha'] : FARD;
-  const anyTop = FARD.some(id => RATIB_POS[id][0].some(has)), anyBot = FARD.some(id => RATIB_POS[id][1].some(has));
+  const anyTop = FARD.some(id => RATIB_POS[id][0].some(has)), anyBot = S.settings.postAzkar || FARD.some(id => RATIB_POS[id][1].some(has));
 
   // текущий и следующий намаз
   let cur = -1, next = null, frac = 0;
@@ -2086,12 +2318,19 @@ function fardStrip(d) {
     frac = clamp((now - start) / (next[1] - start), 0, 1);
     cols.timeOf = id => times[id];
   }
-  const name = id => id === 'sunrise' ? t('slot.sunrise') : t('task.' + id);
+  const name = id => id === 'sunrise' ? t('slot.sunrise') : prayerName(id, d);
+  const pa = S.settings.postAzkar;
+  /** Маленькая точка «азкары после намаза» — появляется под совершённым фардом. */
+  const paDot = id => {
+    if (!pa || !isPrayed(log[id])) return '';
+    const on = log['pa_' + id] === true, title = `${t('task.pa')}: ${name(id)}`;
+    return `<button class="pa ${on ? 'on' : ''}" data-a="toggle" data-id="pa_${id}" data-d="${k}" data-info="pa_${id}" role="checkbox" aria-checked="${on}" aria-label="${esc(title)}" title="${esc(title)}">${on ? icon('check') : '<i></i><i></i><i></i>'}</button>`;
+  };
 
   const column = (id, i) => {
     const isNow = i === cur;
     const top = id === 'sunrise' ? '' : RATIB_POS[id][0].map(chip).join('');
-    const bot = id === 'sunrise' ? '' : RATIB_POS[id][1].map(chip).join('');
+    const bot = id === 'sunrise' ? '' : RATIB_POS[id][1].map(chip).join('') + paDot(id);
     const tm = live ? `<span class="tm">${hm(cols.timeOf(id))}</span>` : '';
     let tile;
     if (id === 'sunrise') {
@@ -2099,7 +2338,8 @@ function fardStrip(d) {
     } else {
       const v = log[id], st = STATUS[v];
       const short = safar && ['zuhr', 'asr', 'isha'].includes(id) ? `, ${t('rak.short')}` : '';
-      tile = `<button class="slot ${st ? 'done' : ''} ${isNow ? 'now' : ''}" style="--c:${st ? st.color : 'transparent'}" data-a="fard" data-id="${id}" data-d="${k}" data-info="${id}" aria-label="${name(id)}${live ? ' ' + hm(cols.timeOf(id)) : ''}${short}: ${st ? t('st.' + v) : t('st.none')}">
+      const jumCls = id === 'zuhr' && isJumua(d) ? 'jum' : '';
+      tile = `<button class="slot ${st ? 'done' : ''} ${isNow ? 'now' : ''} ${jumCls}" style="--c:${st ? st.color : 'transparent'}" data-a="fard" data-id="${id}" data-d="${k}" data-info="${id}" aria-label="${name(id)}${live ? ' ' + hm(cols.timeOf(id)) : ''}${short}: ${st ? t('st.' + v) : t('st.none')}">
         <span class="n">${name(id)}</span>${tm}
         <span class="mk">${st ? icon(st.icon) : '<span class="ring"></span>'}</span>
         ${isNow ? `<span class="el" style="width:${(frac * 100).toFixed(1)}%"></span>` : ''}</button>`;
@@ -2137,20 +2377,15 @@ function fardStrip(d) {
 function summary(d) {
   const tasks = tasksFor(d), log = peek(d), k = dkey(d);
   const done = tasks.filter(x => isDone(x, log)).length, p = tasks.length ? done / tasks.length : 0;
-  const C = 2 * Math.PI * 21, today = isToday(d);
-  const safar = isSafar(d), exc = isExcused(d);
+  const today = isToday(d), safar = isSafar(d), exc = isExcused(d), pct = Math.round(p * 100);
   return `<section class="sum">
-    <svg class="ring-p" viewBox="0 0 52 52" role="img" aria-label="${Math.round(p * 100)}%">
-      <circle class="rt" cx="26" cy="26" r="21"/>
-      <circle class="rv" cx="26" cy="26" r="21" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${(C * (1 - p)).toFixed(2)}" transform="rotate(-90 26 26)"/>
-      <text x="26" y="30.5">${Math.round(p * 100)}%</text>
-    </svg>
-    <div class="grow">
-      <div class="t">${t(today ? 'sum.today' : 'sum.day', { a: done, b: tasks.length })}</div>
-      ${today ? `<div class="s">${icon('fire')}${t('sum.streak', { n: nDays(fardStreak()) })}</div>` : ''}
+    <div class="sum-row">
+      <span class="t">${t(today ? 'sum.today' : 'sum.day', { a: done, b: tasks.length })}</span>
+      <span class="sum-pct num">${pct}%</span>
     </div>
-    <div class="toggles">
-      <button class="chip ${safar ? 'on' : ''}" data-a="safar" data-d="${k}" aria-pressed="${safar}">${icon('bag')}${t('chip.safar')}</button>
+    <div class="pline ${p === 1 ? 'full' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="${pct}%"><i style="width:${pct}%"></i></div>
+    <div class="sum-row">
+      <span class="s">${today ? `${icon('fire')}${t('sum.streak', { n: nDays(fardStreak()) })}` : ''}${safar ? `<span class="sum-safar">${icon('bag')}${t('chip.safar')}</span>` : ''}</span>
       ${S.settings.female ? `<button class="chip ${exc ? 'on' : ''}" data-a="excused" data-d="${k}" aria-pressed="${exc}">${icon('heart')}${t('chip.excused')}</button>` : ''}
     </div>
   </section>`;
@@ -2188,7 +2423,12 @@ function sectionHtml(key, title, items, log, k, note = '', accent = false) {
     </button>
     ${open ? `<div class="sec-b">
       ${note ? `<p class="sec-note">${note}</p>` : ''}
-      ${checks.length ? `<div class="pills">${checks.map((x, i) => pill(x, log, k, checks.length % 2 === 1 && i === checks.length - 1)).join('')}</div>` : ''}
+      ${(() => {
+        const add = key === 'small' || key === 'sleep';
+        const parts = checks.map(x => w => pill(x, log, k, w));
+        if (add) parts.push(w => `<button class="pill add ${w ? 'wide' : ''}" data-a="addCustom" data-v="${key}">${icon('plus')}<span>${t('items.addHere')}</span></button>`);
+        return parts.length ? `<div class="pills">${parts.map((f, i) => f(parts.length % 2 === 1 && i === parts.length - 1)).join('')}</div>` : '';
+      })()}
       ${counters.map(x => counterRow(x, log, k)).join('')}
     </div>` : ''}
   </section>`;
@@ -2210,8 +2450,10 @@ function counterRow(x, log, k) {
     <button class="body" data-a="countInput" data-id="${x.id}" data-d="${k}" data-info="${x.id}">
       <span class="t">${esc(x.title)}</span><span class="s">${parts.join(', ')}</span>
       <span class="meter"><i style="width:${Math.min(100, n / x.goal * 100).toFixed(0)}%"></i></span></button>
-    <div class="stepper"><button data-a="count" data-v="-1" data-id="${x.id}" data-d="${k}" aria-label="−1">${icon('minus')}</button>
-    <button data-a="count" data-v="1" data-id="${x.id}" data-d="${k}" aria-label="+1">${icon('plus')}</button></div>
+    ${b && b.files && b.files.length && !done && isToday(parseKey(k))
+      ? `<button class="read-btn" data-a="readOpen" data-id="${b.id}">${icon('book')}${t('rd.read')}</button>`
+      : `<div class="stepper"><button data-a="count" data-v="-1" data-id="${x.id}" data-d="${k}" aria-label="−1">${icon('minus')}</button>
+    <button data-a="count" data-v="1" data-id="${x.id}" data-d="${k}" aria-label="+1">${icon('plus')}</button></div>`}
   </div>`;
 }
 
@@ -2275,10 +2517,12 @@ function viewLibrary() {
 
   const readingRow = b => {
     const pct = b.currentPage / Math.max(1, b.totalPages) * 100, today = iv(peek(td)['book_' + b.id]), fc = bookForecast(b);
-    return `<button class="book" data-a="open" data-v="book" data-id="${b.id}">${coverHtml(b, 'sm')}
+    const mf = mainFile(b);
+    return `<div class="book-wrap"><button class="book" data-a="open" data-v="book" data-id="${b.id}">${coverHtml(b, 'sm')}
       <span class="grow"><span class="t">${esc(b.title)}</span>${b.author ? `<span class="au">${esc(b.author)}</span>` : ''}
         <span class="meter" style="margin-top:9px"><i style="width:${pct.toFixed(0)}%"></i></span>
-        <span class="s">${t('book.progressLine', { a: b.currentPage, b: b.totalPages, c: today, g: b.dailyGoal })}${fc ? `<br>${t(fc.byPace ? 'book.forecast' : 'book.forecastGoal', { d: human(fc.date) })}` : ''}</span></span></button>`;
+        <span class="s">${t('book.progressLine', { a: b.currentPage, b: b.totalPages, c: today, g: b.dailyGoal })}${fc ? `<br>${t(fc.byPace ? 'book.forecast' : 'book.forecastGoal', { d: human(fc.date) })}` : ''}</span></span></button>
+      ${mf ? `<button class="cont" data-a="readOpen" data-id="${b.id}">${icon('book')}<span>${t('rd.continue', { n: mf.lastPage || 1 })}</span>${icon('chev', 'dir')}</button>` : ''}</div>`;
   };
   const gridItem = b => `<button class="shelf-item" data-a="open" data-v="book" data-id="${b.id}">${coverHtml(b)}
       <span class="si-t">${esc(b.title)}</span>
@@ -2307,6 +2551,29 @@ function viewLibrary() {
     ${body}`;
 }
 
+function filesSection(b) {
+  const fs = b.files || [];
+  const row = f => `<div class="item file-row">${icon('file')}
+      <button class="grow" data-a="readOpen" data-id="${b.id}" data-v="${f.id}"><span class="t">${esc(f.name)}</span><br>
+        <span class="s">${t('rd.fileLine', { n: f.pages, s: mb(f.size) })}${f.counts ? '' : ` · ${t('rd.extraShort')}`}${f.offset > 1 ? ` · ${t('rd.offsetShort', { n: f.offset })}` : ''}</span></button>
+      <button class="btn ghost sm" data-a="readOpen" data-id="${b.id}" data-v="${f.id}">${t('rd.pageShort', { n: f.lastPage || 1 })}</button>
+      <button class="icon-btn" data-a="fileEdit" data-id="${b.id}" data-v="${f.id}" aria-label="${t('b.edit')}">${icon('gear')}</button></div>`;
+  return `<h2 class="h2">${t('rd.files')} <button class="icon-btn" data-a="pdfAdd" data-id="${b.id}" aria-label="${t('rd.attach')}">${icon('plus')}</button></h2>
+    ${fs.length ? `<div class="list">${fs.map(row).join('')}</div>`
+      : `<button class="pill add wide pdf-add" data-a="pdfAdd" data-id="${b.id}">${icon('file')}<span>${t('rd.attachHint')}</span></button>`}`;
+}
+function marksSection(b) {
+  const ms = (b.marks || []).filter(m => (b.files || []).some(f => f.id === m.f));
+  if (!ms.length) return '';
+  const fname = id => { const f = b.files.find(x => x.id === id); return b.files.length > 1 && f ? ` · ${esc(f.name)}` : ''; };
+  return `<h2 class="h2">${t('rd.marks')}</h2>
+    <div class="list">${Object.keys(MARKS).map(c => {
+      const list = ms.filter(m => m.c === c).sort((x, y) => x.p - y.p);
+      if (!list.length) return '';
+      return `<div class="item mark-group"><span class="mk-dot" style="--c:${MARKS[c]}"></span><span class="grow"><span class="t">${t('mark.' + c)}</span>
+        <span class="mk-pages">${list.map(m => `<button class="mk-p" data-a="readOpen" data-id="${b.id}" data-v="${m.f}" data-p="${m.p}">${t('u.p')} ${m.p}${fname(m.f)}</button>`).join('')}</span></span></div>`;
+    }).join('')}</div>`;
+}
 function viewBook(id) {
   const b = S.books.find(x => x.id === id);
   if (!b) return pageTop(t('book.title')) + `<p class="empty">${t('book.deleted')}</p>`;
@@ -2329,9 +2596,11 @@ function viewBook(id) {
       ${b.finishedAt ? `<div class="item"><span class="grow t">${t('book.finished')}</span><b>${humanY(parseKey(b.finishedAt))}</b></div>` : ''}
       ${b.status === 'done' ? `<div class="item"><span class="grow t">${t('book.rating')}</span><span class="stars">${[1, 2, 3, 4, 5].map(n => `<button class="${n <= b.rating ? 'on' : ''}" data-a="rate" data-id="${b.id}" data-v="${n}" aria-label="${n}/5">${icon('star')}</button>`).join('')}</span></div>` : ''}
     </div>
+    ${filesSection(b)}
+    ${marksSection(b)}
     <h2 class="h2">${t('book.notes')} <button class="icon-btn" data-a="addNote" data-id="${b.id}" aria-label="${t('book.addNote')}">${icon('plus')}</button></h2>
     ${b.notes.length ? `<div class="list">${b.notes.map((n, i) => `<div class="item"><span class="grow"><span style="white-space:pre-wrap">${esc(n.text)}</span><br>
-      <span class="s">${human(parseKey(n.date))}${n.page != null ? `, ${t('u.p')} ${n.page}` : ''}</span></span>
+      <span class="s">${human(parseKey(n.date))}${n.page != null ? `, ${t('u.p')} ${n.page}` : ''}${n.src ? `, ${esc(n.src)}` : ''}</span></span>
       <button class="icon-btn" data-a="delNote" data-id="${b.id}" data-v="${i}" aria-label="${t('b.delete')}">${icon('close')}</button></div>`).join('')}</div>`
       : `<p class="empty">${t('book.notesEmpty')}</p>`}
     <button class="btn ghost wide" style="margin-top:14px;color:var(--danger)" data-a="delBook" data-id="${b.id}">${icon('trash')}${t('book.delete')}</button>`;
@@ -2498,7 +2767,8 @@ function viewStats() {
       <div class="metric"><b>${pct(fardOn, okDays.length * 5)}%</b><span>${t('stats.onTimePct')}</span></div>
     </div>
     ${card('cal', t('stats.year'), [[t('stats.activeDays'), heat.active], [t('stats.perfectDays'), heat.perfect]], heat.svg)}
-    ${card('users', t('stats.prayers'), [[t('st.ontime'), t('n.of', { a: fardOn, b: okDays.length * 5 })], [t('st.jamaat'), jam], [t('st.late'), late], [t('stats.ratib'), `${pct(ratib, okDays.length * 6)}%`]],
+    ${card('users', t('stats.prayers'), [[t('st.ontime'), t('n.of', { a: fardOn, b: okDays.length * 5 })], [t('st.jamaat'), jam], [t('st.late'), late], [t('stats.ratib'), `${pct(ratib, okDays.length * 6)}%`],
+      ...(S.settings.postAzkar ? [[t('stats.pa'), t('n.of', { a: okDays.reduce((a, d) => a + FARD.filter(id => peek(d)['pa_' + id] === true).length, 0), b: okDays.reduce((a, d) => a + FARD.filter(id => isPrayed(peek(d)[id])).length, 0) })]] : [])],
       chartPrayers(D), lg([['var(--st-jamaat)', t('st.jamaat')], ['var(--st-ontime)', t('st.ontime')], ['var(--st-late)', t('st.late')], ['var(--brass)', t('stats.ratib')]]))}
     ${card('book', t('task.quran'), [[t('stats.total'), `${sum(quran)} ${t('u.p')}`], [t('stats.avg'), t('stats.perDay', { n: (sum(quran) / n).toFixed(1) })], [t('stats.goalMet'), nDays(qMet)]],
       chartBars(D, quran, qGoal, 'var(--accent)', t('task.quran')),
@@ -2595,7 +2865,7 @@ function viewItems() {
   return pageTop(t('items.title')) + `
     <h2 class="h2">${t('items.customs')}</h2>
     <p class="prose">${t('items.customsHint')}</p>
-    ${S.customs.length ? `<div class="list">${S.customs.map(c => `<div class="item"><span class="grow"><span class="t">${esc(c.title)}</span><br><span class="s">${c.counter ? t('items.perDay', { n: c.target, u: esc(c.unit) }) : t('items.check')}</span></span>
+    ${S.customs.length ? `<div class="list">${S.customs.map(c => `<div class="item"><button class="grow" data-a="editCustom" data-id="${c.id}"><span class="t">${esc(c.title)}</span><br><span class="s">${t('sec.' + ({ small: 'small', sleep: 'sleep' }[c.group] || 'dhikr'))} · ${c.counter ? t('items.perDay', { n: c.target, u: esc(c.unit) }) : t('items.check')}${c.ev ? ` · ${t('items.hasEv')}` : ''}</span></button>
       <button class="icon-btn" data-a="delCustom" data-id="${c.id}" aria-label="${t('b.delete')}">${icon('trash')}</button></div>`).join('')}</div>` : ''}
     <button class="btn ghost wide" data-a="addCustom">${icon('plus')}${t('items.addCustom')}</button>
     <h2 class="h2">${t('sec.avoid')}</h2>
@@ -2642,7 +2912,9 @@ function viewSettings() {
       ${s.lat != null ? `<div class="set"><span class="grow">${t('set.dayFajr')}<br><span class="s">${t('set.dayFajrHint')}</span></span></div>`
         : `<div class="set"><span class="grow">${t('set.dayStart')}<br><span class="s">${t('set.dayStartHint')}</span></span>${seg('dayStartHour', [[0, '0:00'], [3, '3:00'], [5, '5:00']])}</div>`}
       <div class="set"><span class="grow">${t('set.zuhrAfter')}</span>${seg('zuhrAfter', [[2, '2'], [4, '4']])}</div>
+      <div class="set"><span class="grow">${t('set.safar')}<br><span class="s">${t('set.safarHint')}</span></span><button class="switch" role="switch" aria-checked="${isSafar(todayDate())}" aria-label="${esc(t('set.safar'))}" data-a="safarSet"></button></div>
       ${sw('fridayMode', t('set.friday'), t('set.fridayHint'))}
+      ${sw('postAzkar', t('task.pa'), t('set.paHint'))}
       <div class="set"><span class="grow">${t('set.quranGoal')}${s.khatmActive ? `<br><span class="s">${t('set.quranKhatm')}</span>` : ''}</span>
         <div class="stepper"><button data-a="step" data-k="quranGoal" data-v="-1" aria-label="−1">${icon('minus')}</button><span class="val">${s.quranGoal}</span><button data-a="step" data-k="quranGoal" data-v="1" aria-label="+1">${icon('plus')}</button></div></div>
     </div>
@@ -2673,6 +2945,7 @@ function viewSettings() {
     <h2 class="set-title">${t('set.backup')}</h2>
     <p class="prose">${t('set.backupHint')}</p>
     <div class="btn-row"><button class="btn ghost" data-a="exportData">${icon('save')}${t('set.export')}</button><button class="btn ghost" data-a="importData">${t('set.import')}</button></div>
+    ${filesSize() ? `<p class="prose">${icon('file')} ${t('rd.storage', { s: mb(filesSize()) })}</p>` : ''}
     <div class="btn-row"><button class="btn ghost" data-a="redoWizard">${icon('replay')}${t('set.redoWizard')}</button></div>`;
 }
 
@@ -2715,6 +2988,7 @@ function viewWizard() {
 // =====================================================================
 function commit(reschedule = false) {
   ptCache = {};
+  if (S.settings.safar && !('_safar' in peek(todayDate()))) logOf(todayDate())._safar = true;
   checkMilestones();
   // тихое завершение дня
   const td = todayDate(), p = progress(td);
@@ -2752,7 +3026,7 @@ const A = {
   async fard(ds) {
     const d = parseKey(ds.d), id = ds.id, cur = peek(d)[id];
     const v = await new Promise(res => {
-      openModal(`<h2>${t('task.' + id)}</h2><p class="prose" style="margin-top:-8px">${t('st.how')}</p>
+      openModal(`<h2>${prayerName(id, d)}</h2><p class="prose" style="margin-top:-8px">${t('st.how')}</p>
         <div class="st-pick">${Object.entries(STATUS).map(([k, s]) => `<button class="stp ${cur === k ? 'on' : ''}" data-v="${k}" style="--c:${s.color}">${icon(s.icon)}<span>${t('st.' + k)}</span></button>`).join('')}</div>
         ${isPrayed(cur) ? `<button class="stp-clear" data-v="__clear">${icon('close')}${t('st.clear')}</button>` : ''}
         <details class="why"><summary>${icon('info')}${t('st.why')}</summary>${evidenceFor(id).map(evHtml).join('')}</details>`);
@@ -2857,9 +3131,11 @@ const A = {
       { name: 'title', label: t('book.fTitle') }, { name: 'author', label: t('book.fAuthor') },
       { name: 'total', type: 'number', label: t('book.fPages') }, { name: 'goal', type: 'number', label: t('book.fGoal'), value: 10 },
       { name: 'shelf', type: 'select', label: t('book.fShelf'), value: ds && ds.v === 'want' ? 'want' : 'reading', options: [['reading', t('shelf.reading')], ['want', t('shelf.want')]] },
-      { name: 'cover', type: 'file', label: t('book.fCover') }],
+      { name: 'cover', type: 'file', label: t('book.fCover') },
+      { name: 'pdf', type: 'file', accept: 'application/pdf,.pdf', label: t('rd.fPdf') }],
       submit: t('b.add') });
     if (!r) return;
+    if (r.pdf && !(r.total > 0)) r.total = 1;
     if (!r.title || !(r.total > 0) || !(r.goal > 0)) return toast(t('book.err'));
     let cover = null;
     if (r.cover) { try { cover = await toCover(r.cover); } catch (e) { toast(t('book.coverErr')); } }
@@ -2867,6 +3143,56 @@ const A = {
     if (r.shelf === 'reading') setBookStatus(b, 'reading');
     S.books.push(b);
     ui.shelf = b.status;
+    if (r.pdf) { b.totalPages = 0; await attachPdf(b, r.pdf, true); if (!b.totalPages) b.totalPages = countedTotal(b) || Math.round(r.total); }
+    commit();
+  },
+  readOpen: ds => {
+    const b = S.books.find(x => x.id === ds.id);
+    if (!b) return;
+    if (!b.files || !b.files.length) return go('book', b.id);
+    openReader(b.id, ds.v || null, ds.p ? Number(ds.p) : null);
+  },
+  pdfAdd: ds => {
+    const b = S.books.find(x => x.id === ds.id);
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'application/pdf,.pdf';
+    inp.onchange = async () => {
+      const file = inp.files[0];
+      if (!file) return;
+      let counts;
+      if ((b.files || []).some(f => f.counts)) {
+        const v = await sheet(t('rd.kindQ'), [{ v: 'vol', label: t('rd.kindVol'), icon: 'book' }, { v: 'extra', label: t('rd.kindExtra'), icon: 'file' }]);
+        if (v == null) return;
+        counts = v === 'vol';
+      }
+      if (await attachPdf(b, file, counts)) { commit(); toast(t('rd.attached')); }
+    };
+    inp.click();
+  },
+  async fileEdit(ds) {
+    const b = S.books.find(x => x.id === ds.id), f = b && b.files.find(x => x.id === ds.v);
+    if (!f) return;
+    const r = await form({ title: t('rd.fileTitle'), fields: [
+      { name: 'name', label: t('rd.fName'), value: f.name },
+      { name: 'offset', type: 'number', label: t('rd.fOffset'), value: f.offset || 1 },
+      { name: 'counts', type: 'select', label: t('rd.fCounts'), value: f.counts ? '1' : '0', options: [['1', t('rd.kindVol')], ['0', t('rd.kindExtra')]] },
+      { name: 'del', type: 'select', label: t('rd.fDel'), value: '0', options: [['0', t('rd.keep')], ['1', t('rd.delFile')]] }] });
+    if (!r) return;
+    if (r.del === '1') {
+      if (!await confirmBox(t('rd.delQ'))) return;
+      b.files = b.files.filter(x => x !== f);
+      b.marks = (b.marks || []).filter(m => m.f !== f.id);
+      if (b.lastFile === f.id) b.lastFile = null;
+      await FDB.del(f.id);
+      return commit();
+    }
+    f.name = r.name || f.name;
+    f.offset = clamp(Math.round(r.offset || 1), 1, f.pages);
+    f.counts = r.counts === '1';
+    const total = countedTotal(b);
+    if (total && total !== b.totalPages && await confirmBox(t('rd.updTotal', { a: total, b: b.totalPages }), t('b.save'))) {
+      b.totalPages = total; b.currentPage = Math.min(b.currentPage, total);
+    }
     commit();
   },
   async editBook(ds) {
@@ -2932,6 +3258,8 @@ const A = {
   },
   async delBook(ds) {
     if (!await confirmBox(t('book.delQ'))) return;
+    const b = S.books.find(x => x.id === ds.id);
+    for (const f of (b && b.files) || []) await FDB.del(f.id);
     S.books = S.books.filter(x => x.id !== ds.id); ui.stack.pop(); commit();
   },
 
@@ -2963,17 +3291,9 @@ const A = {
   },
   duaToggle: ds => { const d = S.duas.find(x => x.id === ds.id); d.accepted = d.accepted ? null : dkey(new Date()); commit(); },
   async delDua(ds) { if (await confirmBox(t('dua.delQ'))) { S.duas = S.duas.filter(x => x.id !== ds.id); commit(); } },
-  async addCustom() {
-    const r = await form({ title: t('items.newCustom'), fields: [
-      { name: 'title', label: t('items.fTitle'), placeholder: t('items.fTitlePh') },
-      { name: 'type', type: 'select', label: t('items.fType'), value: 'check', options: [['check', t('items.check')], ['counter', t('items.counter')]] },
-      { name: 'target', type: 'number', label: t('items.fTarget'), value: 100 },
-      { name: 'unit', label: t('items.fUnit'), value: t('items.fUnitDef') }], submit: t('b.add') });
-    if (!r || !r.title) return;
-    const counter = r.type === 'counter';
-    S.customs.push({ id: uid(), title: r.title, counter, target: counter ? Math.max(1, Math.round(r.target || 1)) : 1, unit: counter ? r.unit : '' });
-    commit();
-  },
+  async addCustom(ds) { await customForm(null, ds && ds.v); },
+  async editCustom(ds) { await customForm(S.customs.find(x => x.id === ds.id)); },
+  safarSet: () => { const d = todayDate(); setSafar(d, !isSafar(d)); },
   async delCustom(ds) { if (await confirmBox(t('items.delQ'))) { S.customs = S.customs.filter(x => x.id !== ds.id); commit(); } },
   async addAvoid() {
     const x = await askText(t('items.askAvoid'), t('items.askAvoidPh'));
@@ -3028,6 +3348,31 @@ const A = {
   wizFinish: () => { S.settings.onboarded = true; ui.tab = 'today'; ui.dayOffset = 0; commit(true); window.scrollTo(0, 0); toast(t('wiz.ready')); },
 };
 
+/** Форма своего пункта: блок, тип, довод и источник. */
+async function customForm(c, presetGroup) {
+  const quick = !c && (presetGroup === 'small' || presetGroup === 'sleep');
+  const group = c ? (c.group || 'custom') : (presetGroup || 'custom');
+  const fields = [{ name: 'title', label: t('items.fTitle'), placeholder: t(quick ? 'items.fTitlePhSunna' : 'items.fTitlePh'), value: c ? c.title : '' }];
+  if (!quick) {
+    fields.push({ name: 'group', type: 'select', label: t('items.fGroup'), value: group, options: [['custom', t('sec.dhikr')], ['small', t('sec.small')], ['sleep', t('sec.sleep')]] });
+    fields.push({ name: 'type', type: 'select', label: t('items.fType'), value: c && c.counter ? 'counter' : 'check', options: [['check', t('items.check')], ['counter', t('items.counter')]] });
+    fields.push({ name: 'target', type: 'number', label: t('items.fTarget'), value: c && c.counter ? c.target : 100 });
+    fields.push({ name: 'unit', label: t('items.fUnit'), value: c && c.counter ? c.unit : t('items.fUnitDef') });
+  }
+  fields.push({ name: 'ev', type: 'textarea', label: t('items.fEv'), placeholder: t('items.fEvPh'), value: c ? c.ev || '' : '' });
+  fields.push({ name: 'evSrc', label: t('items.fEvSrc'), placeholder: t('items.fEvSrcPh'), value: c ? c.evSrc || '' : '' });
+  const title = c ? t('items.editCustom') : quick ? t('items.newIn', { b: t('sec.' + group) }) : t('items.newCustom');
+  const r = await form({ title, fields, submit: c ? t('b.save') : t('b.add') });
+  if (!r || !r.title) return;
+  const counter = !quick && r.type === 'counter';
+  const data = {
+    title: r.title, group: quick ? group : r.group, counter,
+    target: counter ? Math.max(1, Math.round(r.target || 1)) : 1, unit: counter ? r.unit : '',
+    ev: (r.ev || '').slice(0, 1200), evSrc: (r.evSrc || '').slice(0, 160),
+  };
+  if (c) Object.assign(c, data); else S.customs.push({ id: uid(), ...data });
+  commit();
+}
 function setCity(i) { const c = CITIES[i]; Object.assign(S.settings, { cityId: i, cityName: c.ru, lat: c.lat, lng: c.lng }); ptCache = {}; }
 function setMadhab(m) { S.settings.madhab = m; S.settings.hanafiAsr = m === 'hanafi'; ptCache = {}; }
 function goalCheck(g) { if (g.current >= g.target) addMilestone('goal-' + g.id, { type: 'goal', title: g.title }); }
@@ -3038,6 +3383,453 @@ function geolocate(done) {
     p => { Object.assign(S.settings, { cityId: 'geo', cityName: null, lat: +p.coords.latitude.toFixed(4), lng: +p.coords.longitude.toFixed(4) }); ptCache = {}; done(); },
     () => toast(t('city.geoErr')), { timeout: 10000 });
 }
+
+// =====================================================================
+//  PDF: хранилище файлов (IndexedDB) и встроенная читалка (pdf.js)
+// =====================================================================
+const FDB = {
+  _db: null,
+  open() {
+    if (this._db) return Promise.resolve(this._db);
+    return new Promise((ok, err) => {
+      let rq;
+      try { rq = indexedDB.open('nurTrackerFiles', 1); } catch (e) { return err(e); }
+      rq.onupgradeneeded = () => rq.result.createObjectStore('pdf');
+      rq.onsuccess = () => { this._db = rq.result; ok(this._db); };
+      rq.onerror = () => err(rq.error);
+    });
+  },
+  async run(mode, fn) {
+    const db = await this.open();
+    return new Promise((ok, err) => {
+      const tx = db.transaction('pdf', mode), st = tx.objectStore('pdf'), rq = fn(st);
+      tx.oncomplete = () => ok(rq && rq.result);
+      tx.onerror = tx.onabort = () => err(tx.error);
+    });
+  },
+  put(id, buf) { return this.run('readwrite', st => st.put(buf, id)); },
+  get(id) { return this.run('readonly', st => st.get(id)); },
+  del(id) { return this.run('readwrite', st => st.delete(id)).catch(() => {}); },
+};
+
+let PDFJS = null;
+async function loadPdfJs() {
+  if (PDFJS) return PDFJS;
+  PDFJS = await import('./vendor/pdf.mjs');
+  PDFJS.GlobalWorkerOptions.workerSrc = new URL('vendor/pdf.worker.mjs', location.href).href;
+  return PDFJS;
+}
+
+const MARKS = { imp: 'var(--brass)', rev: 'var(--st-ontime)', ask: 'var(--n-tahajjud)' };
+const mb = n => Math.max(0.1, n / 1048576).toFixed(n < 10485760 ? 1 : 0);
+const countable = f => f.counts ? Math.max(0, f.pages - (f.offset || 1) + 1) : 0;
+const countedTotal = b => (b.files || []).reduce((s, f) => s + countable(f), 0);
+/** Номер страницы книги для страницы файла (null — файл не идёт в прогресс). */
+function bookPageOf(b, f, p) {
+  if (!f.counts) return null;
+  let base = 0;
+  for (const g of b.files) { if (g === f) break; base += countable(g); }
+  return base + clamp(p - (f.offset || 1) + 1, 0, countable(f));
+}
+function mainFile(b) {
+  const fs = b.files || [];
+  return fs.find(f => f.id === b.lastFile) || fs.find(f => f.counts) || fs[0] || null;
+}
+const filesSize = () => S.books.reduce((s, b) => s + (b.files || []).reduce((a, f) => a + (f.size || 0), 0), 0);
+
+/** Прикрепить PDF к книге: считает страницы, кладёт файл в IndexedDB. */
+async function attachPdf(b, file, asCounts) {
+  if (!file) return false;
+  if (file.type && file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) { toast(t('rd.notPdf')); return false; }
+  toast(t('rd.loading'));
+  let buf, pages;
+  try {
+    buf = await file.arrayBuffer();
+    const lib = await loadPdfJs();
+    const doc = await lib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+    pages = doc.numPages;
+    doc.destroy();
+  } catch (e) { toast(t('rd.badPdf')); return false; }
+  const id = uid();
+  try { await FDB.put(id, buf); } catch (e) { toast(t('rd.noSpace')); return false; }
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+  b.files = b.files || [];
+  const counts = asCounts ?? !b.files.some(f => f.counts);
+  b.files.push({ id, name: file.name.replace(/\.pdf$/i, ''), size: buf.byteLength, pages, offset: 1, counts, lastPage: 1 });
+  if (!b.lastFile) b.lastFile = id;
+  const total = countedTotal(b);
+  if (counts && total && total !== b.totalPages) {
+    if (!b.totalPages || await confirmBox(t('rd.updTotal', { a: total, b: b.totalPages }), t('b.save'))) {
+      b.totalPages = total;
+      b.currentPage = Math.min(b.currentPage, total);
+    }
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------
+//  Читалка
+// ---------------------------------------------------------------------
+const RD = { el: null, b: null, f: null, doc: null, page: 1, n: 0, chrome: true, crop: {}, uniCrop: null, task: null, obs: null, saveT: 0, gen: 0 };
+
+function readerTheme() {
+  const v = S.settings.reader.theme;
+  if (v !== 'auto') return v;
+  const now = new Date(), p = prayerTimes(now);
+  if (p) return (now >= p.isha || now < p.fajr) ? 'night' : 'light';
+  const h = now.getHours();
+  return (h >= 21 || h < 5) ? 'night' : 'light';
+}
+
+function readerShell() {
+  if (RD.el) return RD.el;
+  const el = document.createElement('div');
+  el.id = 'reader'; el.className = 'rd'; el.hidden = true;
+  el.innerHTML = `<div class="rd-stage" id="rdStage"></div>
+    <header class="rd-top">
+      <button class="rd-ib" data-r="close" aria-label="${t('a.back')}">${icon('back', 'dir')}</button>
+      <div class="rd-title"><b></b><span></span></div>
+      <button class="rd-ib" data-r="mark" aria-label="${t('rd.mark')}">${icon('flag')}</button>
+      <button class="rd-ib" data-r="note" aria-label="${t('rd.toNotes')}">${icon('quote')}</button>
+      <button class="rd-ib" data-r="opts" aria-label="${t('rd.opts')}">${icon('aa')}</button>
+    </header>
+    <footer class="rd-bot">
+      <div class="rd-prompt" hidden></div>
+      <div class="rd-row"><span class="rd-sess"></span><span class="rd-num num"></span></div>
+      <input class="rd-range" type="range" min="1" max="1" value="1" aria-label="${t('rd.page')}">
+    </footer>
+    <div class="rd-load" hidden></div>`;
+  document.body.appendChild(el);
+  RD.el = el;
+  el.addEventListener('click', e => {
+    const b = e.target.closest('[data-r]');
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    RA[b.dataset.r] && RA[b.dataset.r](b);
+  });
+  const rng = el.querySelector('.rd-range');
+  rng.addEventListener('input', () => { el.querySelector('.rd-num').textContent = `${rng.value} / ${RD.n}`; });
+  rng.addEventListener('change', () => goPage(Number(rng.value), 'jump'));
+  // жесты на странице
+  const st = el.querySelector('#rdStage');
+  let pd = null;
+  st.addEventListener('pointerdown', e => { if (e.isPrimary) pd = { x: e.clientX, y: e.clientY, t: Date.now() }; });
+  st.addEventListener('pointerup', e => {
+    if (!pd || !e.isPrimary) return;
+    const dx = e.clientX - pd.x, dy = e.clientY - pd.y, dt = Date.now() - pd.t;
+    pd = null;
+    const sel = (window.getSelection && String(window.getSelection())) || '';
+    if (sel.trim()) return;
+    const paged = S.settings.reader.mode === 'page', rtl = LANG === 'ar';
+    if (paged && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4 && dt < 700) {
+      return goPage(RD.page + ((dx < 0) !== rtl ? 1 : -1), 'flip');
+    }
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10 || dt > 450) return;
+    const z = e.clientX / window.innerWidth;
+    if (paged && z < 0.28) return goPage(RD.page + (rtl ? 1 : -1), 'flip');
+    if (paged && z > 0.72) return goPage(RD.page + (rtl ? -1 : 1), 'flip');
+    setChrome(!RD.chrome);
+  });
+  st.addEventListener('scroll', () => { if (S.settings.reader.mode === 'scroll') requestAnimationFrame(trackScroll); }, { passive: true });
+  document.addEventListener('keydown', e => {
+    if (el.hidden || root.classList.contains('open')) return;
+    if (e.key === 'Escape') RA.close();
+    if (S.settings.reader.mode === 'page' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      goPage(RD.page + ((e.key === 'ArrowRight') !== (LANG === 'ar') ? 1 : -1), 'flip');
+    }
+  });
+  let rz = 0;
+  window.addEventListener('resize', () => { if (el.hidden) return; clearTimeout(rz); rz = setTimeout(() => layout(true), 200); });
+  return el;
+}
+
+function setChrome(v) { RD.chrome = v; RD.el.classList.toggle('immersive', !v); }
+
+async function openReader(bookId, fileId, page) {
+  const b = S.books.find(x => x.id === bookId);
+  if (!b || !b.files || !b.files.length) return;
+  const f = b.files.find(x => x.id === fileId) || mainFile(b);
+  const el = readerShell();
+  RD.gen++;
+  const gen = RD.gen;
+  Object.assign(RD, { b, f, page: clamp(page || f.lastPage || 1, 1, f.pages), n: f.pages, crop: {}, uniCrop: null, jumpFrom: null });
+  el.hidden = false;
+  document.body.classList.add('rd-open');
+  el.className = `rd t-${readerTheme()}`;
+  setChrome(true);
+  el.querySelector('.rd-title b').textContent = b.title;
+  el.querySelector('.rd-title span').textContent = b.files.length > 1 ? f.name : '';
+  el.querySelector('.rd-stage').innerHTML = '';
+  const load = el.querySelector('.rd-load');
+  load.hidden = false; load.textContent = t('rd.loading');
+  try {
+    const lib = await loadPdfJs();
+    const buf = await FDB.get(f.id);
+    if (!buf) throw new Error('missing');
+    if (RD.doc) { try { RD.doc.destroy(); } catch (e) {} }
+    RD.doc = await lib.getDocument({ data: new Uint8Array(buf) }).promise;
+    if (gen !== RD.gen) return;
+    RD.n = RD.doc.numPages;
+    if (RD.n !== f.pages) { f.pages = RD.n; }
+    b.lastFile = f.id;
+  } catch (e) {
+    load.hidden = true;
+    closeReader(false);
+    toast(e && e.message === 'missing' ? t('rd.missing') : t('rd.badPdf'));
+    return;
+  }
+  load.hidden = true;
+  const rng = el.querySelector('.rd-range');
+  rng.max = String(RD.n);
+  await layout(false);
+}
+
+function closeReader(doCommit = true) {
+  if (!RD.el) return;
+  RD.gen++;
+  if (RD.obs) { RD.obs.disconnect(); RD.obs = null; }
+  if (RD.task) { try { RD.task.cancel(); } catch (e) {} RD.task = null; }
+  RD.el.hidden = true;
+  RD.el.querySelector('.rd-stage').innerHTML = '';
+  document.body.classList.remove('rd-open');
+  if (RD.doc) { try { RD.doc.destroy(); } catch (e) {} RD.doc = null; }
+  if (doCommit) commit();
+}
+
+/** Поля страницы: ищем рамку содержимого на маленьком рендере. Аккуратно: не больше 18% с каждой стороны. */
+async function detectCrop(n) {
+  if (RD.crop[n]) return RD.crop[n];
+  const none = { l: 0, t: 0, r: 0, b: 0 };
+  try {
+    const page = await RD.doc.getPage(n), vp = page.getViewport({ scale: 0.25 });
+    const c = document.createElement('canvas');
+    c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    const { data, width: W, height: H } = ctx.getImageData(0, 0, c.width, c.height);
+    const dark = (x, y) => { const i = (y * W + x) * 4; return data[i] * 0.3 + data[i + 1] * 0.59 + data[i + 2] * 0.11 < 215; };
+    const rowHas = y => { let k = 0; for (let x = 0; x < W; x++) if (dark(x, y) && ++k > 1) return true; return false; };
+    const colHas = x => { let k = 0; for (let y = 0; y < H; y++) if (dark(x, y) && ++k > 1) return true; return false; };
+    let t0 = 0, b0 = H - 1, l0 = 0, r0 = W - 1;
+    while (t0 < H && !rowHas(t0)) t0++;
+    while (b0 > t0 && !rowHas(b0)) b0--;
+    while (l0 < W && !colHas(l0)) l0++;
+    while (r0 > l0 && !colHas(r0)) r0--;
+    if (t0 >= H || (r0 - l0) / W < 0.3 || (b0 - t0) / H < 0.2) return (RD.crop[n] = none);
+    const pad = 0.02, cap = 0.18;
+    const cr = {
+      l: clamp(l0 / W - pad, 0, cap), r: clamp(1 - (r0 + 1) / W - pad, 0, cap),
+      t: clamp(t0 / H - pad, 0, cap), b: clamp(1 - (b0 + 1) / H - pad, 0, cap),
+    };
+    return (RD.crop[n] = cr);
+  } catch (e) { return (RD.crop[n] = none); }
+}
+
+async function layout(keep) {
+  const st = RD.el.querySelector('.rd-stage');
+  if (RD.obs) { RD.obs.disconnect(); RD.obs = null; }
+  st.innerHTML = '';
+  st.className = 'rd-stage ' + (S.settings.reader.mode === 'scroll' ? 'scroll' : 'paged');
+  if (S.settings.reader.mode === 'scroll') await layoutScroll();
+  else await showPage(RD.page);
+  updateBars();
+}
+
+function pageMarkHtml(n) {
+  const m = (RD.b.marks || []).find(x => x.f === RD.f.id && x.p === n);
+  return m ? `<i class="rd-flag" style="--c:${MARKS[m.c]}"></i>` : '';
+}
+
+/** Отрисовка одной страницы в контейнер нужного размера (с обрезкой полей и текстовым слоем). */
+async function drawPage(n, box, scale, cr) {
+  const gen = RD.gen;
+  const page = await RD.doc.getPage(n);
+  if (gen !== RD.gen) return;
+  const vp1 = page.getViewport({ scale: 1 });
+  const W = vp1.width * scale, H = vp1.height * scale;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  box.style.width = `${Math.round(W * (1 - cr.l - cr.r))}px`;
+  box.style.height = `${Math.round(H * (1 - cr.t - cr.b))}px`;
+  const inner = document.createElement('div');
+  inner.className = 'rd-inner';
+  inner.style.cssText = `width:${W}px;height:${H}px;transform:translate(${-cr.l * W}px,${-cr.t * H}px)`;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.floor(W * dpr); canvas.height = Math.floor(H * dpr);
+  canvas.style.width = `${W}px`; canvas.style.height = `${H}px`;
+  const tl = document.createElement('div');
+  tl.className = 'textLayer';
+  const vp = page.getViewport({ scale });
+  tl.style.setProperty('--scale-factor', String(scale));
+  inner.append(canvas, tl);
+  box.innerHTML = pageMarkHtml(n);
+  box.appendChild(inner);
+  const task = page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport({ scale: scale * dpr }) });
+  if (box.dataset.single) RD.task = task;
+  try { await task.promise; } catch (e) { return; }
+  if (gen !== RD.gen) return;
+  try { await new PDFJS.TextLayer({ textContentSource: page.streamTextContent(), container: tl, viewport: vp }).render(); } catch (e) {}
+  box.dataset.done = '1';
+}
+
+async function showPage(n) {
+  const st = RD.el.querySelector('.rd-stage');
+  const page = await RD.doc.getPage(n), vp1 = page.getViewport({ scale: 1 });
+  const cr = S.settings.reader.crop ? await detectCrop(n) : { l: 0, t: 0, r: 0, b: 0 };
+  const AW = st.clientWidth - 12, AH = st.clientHeight - 12;
+  const scale = Math.min(AW / (vp1.width * (1 - cr.l - cr.r)), AH / (vp1.height * (1 - cr.t - cr.b)));
+  if (RD.task) { try { RD.task.cancel(); } catch (e) {} }
+  const box = document.createElement('div');
+  box.className = 'rd-page'; box.dataset.single = '1'; box.dataset.n = String(n);
+  st.innerHTML = ''; st.appendChild(box);
+  await drawPage(n, box, scale, cr);
+}
+
+async function layoutScroll() {
+  const st = RD.el.querySelector('.rd-stage');
+  let cr = { l: 0, t: 0, r: 0, b: 0 };
+  if (S.settings.reader.crop) {
+    // одна общая обрезка для ленты, чтобы страницы не «прыгали»
+    const sample = [Math.min(RD.n, 2), Math.min(RD.n, 3), Math.min(RD.n, Math.max(1, RD.page))];
+    const cs = await Promise.all([...new Set(sample)].map(detectCrop));
+    cr = ['l', 't', 'r', 'b'].reduce((o, k) => (o[k] = Math.min(...cs.map(c => c[k])), o), {});
+  }
+  RD.uniCrop = cr;
+  const p1 = (await RD.doc.getPage(1)).getViewport({ scale: 1 });
+  const AW = st.clientWidth - 12, scale = AW / (p1.width * (1 - cr.l - cr.r));
+  RD.scale = scale;
+  const list = document.createElement('div');
+  list.className = 'rd-list';
+  const ph = Math.round(p1.height * scale * (1 - cr.t - cr.b)), pw = Math.round(p1.width * scale * (1 - cr.l - cr.r));
+  for (let i = 1; i <= RD.n; i++) list.insertAdjacentHTML('beforeend', `<div class="rd-page" data-n="${i}" style="width:${pw}px;height:${ph}px"><span class="rd-pn">${i}</span></div>`);
+  st.appendChild(list);
+  RD.obs = new IntersectionObserver(ents => {
+    for (const en of ents) {
+      const box = en.target, n = Number(box.dataset.n);
+      if (en.isIntersecting && !box.dataset.busy) { box.dataset.busy = '1'; drawPage(n, box, scale, cr); }
+      else if (!en.isIntersecting && box.dataset.done && Math.abs(n - RD.page) > 4) {
+        const h = box.style.height; box.innerHTML = `<span class="rd-pn">${n}</span>`; box.style.height = h;
+        delete box.dataset.done; delete box.dataset.busy;
+      }
+    }
+  }, { root: st, rootMargin: '150% 0px' });
+  list.querySelectorAll('.rd-page').forEach(x => RD.obs.observe(x));
+  const target = list.querySelector(`.rd-page[data-n="${RD.page}"]`);
+  if (target) st.scrollTop = target.offsetTop - 6;
+}
+
+function trackScroll() {
+  const st = RD.el.querySelector('.rd-stage'), mid = st.scrollTop + st.clientHeight * 0.4;
+  let n = RD.page;
+  for (const box of st.querySelectorAll('.rd-page')) { if (box.offsetTop <= mid) n = Number(box.dataset.n); else break; }
+  if (n !== RD.page) pageChanged(n, 'scroll');
+}
+
+async function goPage(n, how) {
+  n = clamp(n, 1, RD.n);
+  if (n === RD.page && how !== 'jump') return;
+  if (S.settings.reader.mode === 'scroll') {
+    const st = RD.el.querySelector('.rd-stage'), box = st.querySelector(`.rd-page[data-n="${n}"]`);
+    if (box) st.scrollTop = box.offsetTop - 6;
+    pageChanged(n, how);
+  } else {
+    pageChanged(n, how);
+    await showPage(n);
+  }
+}
+
+/** Смена страницы: запоминаем место и засчитываем прочитанное. */
+function pageChanged(n, how) {
+  const { b, f } = RD;
+  RD.page = n;
+  f.lastPage = n;
+  b.lastFile = f.id;
+  const bp = bookPageOf(b, f, n);
+  if (bp != null && bp > b.currentPage) {
+    const delta = bp - b.currentPage, lim = how === 'scroll' ? 10 : 3;
+    if (how !== 'jump' && delta <= lim) countTo(bp);
+  }
+  scheduleSave();
+  updateBars();
+}
+
+function countTo(bp) {
+  const b = RD.b, diff = bp - b.currentPage;
+  if (diff <= 0) return;
+  if (b.status !== 'reading' && b.status !== 'done') setBookStatus(b, 'reading', true);
+  const l = logOf(todayDate()), k = 'book_' + b.id;
+  l[k] = iv(l[k]) + diff;
+  b.currentPage = Math.min(bp, b.totalPages);
+  if (b.currentPage >= b.totalPages && b.status !== 'done') setBookStatus(b, 'done');
+}
+
+function scheduleSave() { clearTimeout(RD.saveT); RD.saveT = setTimeout(save, 700); }
+
+function updateBars() {
+  const { el, b, f } = RD;
+  if (!el) return;
+  el.querySelector('.rd-num').textContent = `${RD.page} / ${RD.n}`;
+  const rng = el.querySelector('.rd-range'); rng.max = String(RD.n); rng.value = String(RD.page);
+  const sess = el.querySelector('.rd-sess');
+  if (f.counts && b.status !== 'done') sess.textContent = t('rd.sess', { a: iv(peek(todayDate())['book_' + b.id]), g: b.dailyGoal });
+  else if (f.counts) sess.textContent = t('book.finishedOn', { d: human(parseKey(b.finishedAt || dkey(todayDate()))) });
+  else sess.textContent = t('rd.extra');
+  const m = (b.marks || []).find(x => x.f === f.id && x.p === RD.page);
+  const mk = el.querySelector('[data-r="mark"]');
+  mk.classList.toggle('on', !!m); mk.style.setProperty('--c', m ? MARKS[m.c] : 'currentColor');
+  // предложение засчитать при прыжке вперёд
+  const pr = el.querySelector('.rd-prompt'), bp = bookPageOf(b, f, RD.page);
+  if (bp != null && bp > b.currentPage + 3 && b.status !== 'done') {
+    pr.hidden = false;
+    pr.innerHTML = `<span>${t('rd.countQ', { n: bp })}</span><button data-r="countYes">${icon('check')}</button>`;
+  } else pr.hidden = true;
+  // флажок на текущей странице (постраничный режим)
+  const box = el.querySelector(`.rd-page[data-n="${RD.page}"]`);
+  if (box) { const old = box.querySelector('.rd-flag'); if (old) old.remove(); box.insertAdjacentHTML('afterbegin', pageMarkHtml(RD.page)); }
+}
+
+const RA = {
+  close: () => closeReader(true),
+  countYes: () => { const bp = bookPageOf(RD.b, RD.f, RD.page); countTo(bp); save(); updateBars(); toast(t('rd.counted', { n: bp })); },
+  async mark() {
+    const { b, f } = RD, cur = (b.marks || []).find(x => x.f === f.id && x.p === RD.page);
+    const v = await sheet(t('rd.markTitle', { n: RD.page }), [
+      ...Object.keys(MARKS).map(k => ({ v: k, label: t('mark.' + k), icon: 'flag', color: MARKS[k], sel: cur && cur.c === k })),
+      ...(cur ? [{ v: '__del', label: t('rd.unmark'), icon: 'close' }] : []),
+    ]);
+    if (v == null) return;
+    b.marks = (b.marks || []).filter(x => !(x.f === f.id && x.p === RD.page));
+    if (v !== '__del') b.marks.push({ f: f.id, p: RD.page, c: v, d: dkey(new Date()) });
+    save(); updateBars();
+  },
+  async note() {
+    const sel = ((window.getSelection && String(window.getSelection())) || '').trim().replace(/\s+\n/g, '\n').slice(0, 2000);
+    const { b, f } = RD, bp = bookPageOf(b, f, RD.page) ?? RD.page;
+    const r = await form({ title: t('book.addNote'), fields: [
+      { name: 'x', type: 'textarea', value: sel, placeholder: t('book.notePh') },
+      { name: 'p', type: 'number', label: t('book.notePage'), value: bp }] });
+    if (!r || !r.x) return;
+    b.notes.unshift({ text: r.x, page: r.p == null || !isFinite(r.p) ? null : Math.round(r.p), date: dkey(new Date()), ...(f.counts ? {} : { src: f.name }) });
+    try { window.getSelection().removeAllRanges(); } catch (e) {}
+    save(); toast(t('rd.noted'));
+  },
+  async opts() {
+    const R = S.settings.reader;
+    const v = await sheet(t('rd.opts'), [
+      { v: 'm:page', label: t('rd.modePage'), icon: 'book', sel: R.mode === 'page' },
+      { v: 'm:scroll', label: t('rd.modeScroll'), icon: 'list', sel: R.mode === 'scroll' },
+      { v: 'th:auto', label: t('rd.thAuto'), icon: 'moon', sel: R.theme === 'auto' },
+      { v: 'th:light', label: t('rd.thLight'), icon: 'sun', sel: R.theme === 'light' },
+      { v: 'th:sepia', label: t('rd.thSepia'), icon: 'sun', color: '#B0843A', sel: R.theme === 'sepia' },
+      { v: 'th:night', label: t('rd.thNight'), icon: 'moon', sel: R.theme === 'night' },
+      { v: 'crop', label: R.crop ? t('rd.cropOff') : t('rd.cropOn'), icon: 'crop', sel: R.crop },
+    ]);
+    if (v == null) return;
+    if (v.startsWith('m:')) { R.mode = v.slice(2); save(); await layout(true); }
+    else if (v.startsWith('th:')) { R.theme = v.slice(3); save(); RD.el.className = `rd t-${readerTheme()}${RD.chrome ? '' : ' immersive'}`; }
+    else if (v === 'crop') { R.crop = !R.crop; save(); await layout(true); }
+  },
+};
 
 // =====================================================================
 //  ЖЕСТЫ: долгое нажатие (довод) и свайп (дни)

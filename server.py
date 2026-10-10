@@ -23,6 +23,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         **http.server.SimpleHTTPRequestHandler.extensions_map,
         ".webmanifest": "application/manifest+json",
         ".js": "application/javascript",
+        ".mjs": "application/javascript",
         ".svg": "image/svg+xml",
     }
 
