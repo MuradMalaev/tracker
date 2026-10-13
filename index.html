@@ -239,6 +239,18 @@ main{max-width:540px;margin:0 auto;padding:4px 14px calc(96px + env(safe-area-in
 .book .s{font-size:13px;color:var(--muted);margin-top:4px;display:block}
 .book .side{align-self:center}
 .shelf-note{font-size:13.5px;color:var(--muted);margin:8px 4px 0}
+.fold-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:0 16px 2px}
+.fold-row::-webkit-scrollbar{display:none}
+.fchip{display:inline-flex;align-items:center;gap:5px;flex:none;padding:6px 11px;border-radius:999px;font-size:13px;color:var(--muted);background:transparent;box-shadow:0 0 0 1px var(--line) inset;white-space:nowrap;max-width:70vw}
+.fchip span{overflow:hidden;text-overflow:ellipsis}
+.fchip .ic{width:15px;height:15px;flex:none}
+.fchip small{font-size:11.5px;opacity:.7;font-variant-numeric:tabular-nums}
+.fchip.on{color:var(--ink);background:var(--surface);box-shadow:0 0 0 1px var(--hair) inset,0 1px 2px rgba(15,59,51,.12);font-weight:600}
+.fchip .ic.pen{width:12px;height:12px;opacity:.5}
+.fsel{gap:12px;align-items:center}
+.fsel .tick{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 1.5px var(--line) inset;flex:none;color:transparent}
+.fsel .tick .ic{width:15px;height:15px;stroke-width:2.6}
+.fsel.on .tick{background:var(--accent);box-shadow:none;color:var(--on-accent)}
 .stars{display:inline-flex;gap:2px}
 .stars button{width:30px;height:30px;display:grid;place-items:center;color:var(--line)}
 .stars button.on{color:var(--brass)}
@@ -555,6 +567,10 @@ details.why .ev{margin:8px 0 0}
 .cover.sm .cv-a,.cover.sm .cv-orn,.cover.sm .cv-t{display:none}
 .cover.sm .cv-i{display:block;font:500 24px/1 var(--serif);color:#F7E7C0}
 .cover.lg{width:124px;font-size:15px}
+.cover.xs{width:34px;padding:0!important;align-self:center;border-radius:4px 6px 6px 4px}
+.cover.xs .cv-a,.cover.xs .cv-orn,.cover.xs .cv-t{display:none}
+.cover.xs .cv-i{display:block;font:500 16px/1 var(--serif);color:#F7E7C0}
+.cover.xs.gen::before{inset:8%}
 .shelf .cover{font-size:12px}
 
 .book{align-items:center}
@@ -787,6 +803,7 @@ const ICONS = {
   users: '<circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6"/><circle cx="16.5" cy="8.5" r="2.6"/><path d="M15.5 13.8c2.4 0 4.3 1.4 4.9 4.2"/>',
   replay: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3.8h3.8"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  folder: '<path d="M3.5 7.2a1.9 1.9 0 0 1 1.9-1.9h3.9l2 2.1h7.3a1.9 1.9 0 0 1 1.9 1.9v7.9a1.9 1.9 0 0 1-1.9 1.9H5.4a1.9 1.9 0 0 1-1.9-1.9z"/>',
   minus: '<path d="M5 12h14"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
   chev: '<path d="M9 5l7 7-7 7"/>',
@@ -1247,7 +1264,7 @@ const DEFAULTS = {
     smallSunnas: false, sleepSunnas: true, tipShown: false, tipInfo: false, postAzkar: true,
   },
   quran: { page: null, sura: 1, ayah: 1 },
-  books: [], customs: [], avoids: [], goals: [], duas: [], milestones: [], logs: {},
+  books: [], folders: [], customs: [], avoids: [], goals: [], duas: [], milestones: [], logs: {},
 };
 
 function normalize(d) {
@@ -1276,6 +1293,8 @@ function normalize(d) {
   if (!('onboarded' in (d.settings || {})) && Object.keys(s.logs || {}).length) st.onboarded = true;
   s.milestones = s.milestones || [];
   if (!Array.isArray(s.msHidden)) s.msHidden = [];
+  s.folders = Array.isArray(s.folders) ? s.folders.filter(f => f && f.id) : [];
+  for (const b of s.books) if (b.folder && !s.folders.some(f => f.id === b.folder)) b.folder = null;
   return s;
 }
 function load() {
@@ -1803,6 +1822,7 @@ I18N.ru = {
 
   'cal.title': 'Календарь', 'cal.hint': 'Чем насыщеннее цвет, тем больше сделано. Нажмите на день, чтобы посмотреть или исправить отметки.',
 
+  'fold.title': 'Папки', 'fold.new': 'Новая папка', 'fold.name': 'Название папки', 'fold.namePh': 'Например, Тафсир или Хадисы', 'fold.all': 'Все', 'fold.none': 'Без папки', 'fold.row': 'Папка', 'fold.hint': 'Отметьте книги, которые лежат в этой папке. У книги может быть только одна папка.', 'fold.inOther': 'сейчас в «{f}»', 'fold.delQ': 'Удалить папку «{f}»? Книги останутся в библиотеке.', 'fold.rename': 'Переименовать', 'fold.empty': 'На этой полке в папке пока нет книг', 'fold.pick': 'Выбрать книги', 'fold.noBooks': 'В библиотеке пока нет книг. Добавьте книгу, и её можно будет положить в папку.', 'fold.err': 'Введите название папки', 'fold.choose': 'В какую папку?', 'fold.edit': 'Изменить папку',
   'lib.title': 'Библиотека', 'lib.mark': 'Закладка: {s}, аят {a}, стр. {p}', 'lib.markNone': 'Отметьте закладку в Коране', 'lib.yearCount': 'В {y} году прочитано: {n} {w}',
   'khatm.title': 'Хатм Корана', 'khatm.read': 'Прочитано', 'khatm.of604': '{n} из 604 стр.', 'khatm.today': 'Норма на сегодня', 'khatm.until': 'Срок', 'khatm.manage': 'Настроить',
   'khatm.done': 'Хатм завершён, альхамдулиЛлях!', 'khatm.doneFull': 'Хатм завершён, альхамдулиЛлях! Пусть Аллах примет.',
@@ -1965,6 +1985,7 @@ I18N.en = {
 
   'cal.title': 'Calendar', 'cal.hint': 'The deeper the colour, the more was done. Tap a day to view or correct it.',
 
+  'fold.title': 'Folders', 'fold.new': 'New folder', 'fold.name': 'Folder name', 'fold.namePh': 'For example, Tafsir or Hadith', 'fold.all': 'All', 'fold.none': 'No folder', 'fold.row': 'Folder', 'fold.hint': 'Tick the books that belong in this folder. A book can be in one folder only.', 'fold.inOther': 'now in “{f}”', 'fold.delQ': 'Delete the folder “{f}”? The books stay in your library.', 'fold.rename': 'Rename', 'fold.empty': 'No books from this folder on this shelf yet', 'fold.pick': 'Choose books', 'fold.noBooks': 'Your library has no books yet. Add a book and you can put it in a folder.', 'fold.err': 'Enter a folder name', 'fold.choose': 'Which folder?', 'fold.edit': 'Edit folder',
   'lib.title': 'Library', 'lib.mark': 'Bookmark: {s}, ayah {a}, p. {p}', 'lib.markNone': 'Set your Quran bookmark', 'lib.yearCount': 'Read in {y}: {n} {w}',
   'khatm.title': 'Quran khatm', 'khatm.read': 'Read', 'khatm.of604': '{n} of 604 p.', 'khatm.today': 'Today’s portion', 'khatm.until': 'Deadline', 'khatm.manage': 'Manage',
   'khatm.done': 'Khatm completed, alhamdulillah!', 'khatm.doneFull': 'Khatm completed, alhamdulillah! May Allah accept it.',
@@ -2126,6 +2147,7 @@ I18N.ar = {
 
   'cal.title': 'التقويم', 'cal.hint': 'كلما كان اللون أعمق كان الإنجاز أكبر. اضغط على يوم لعرضه أو تصحيحه.',
 
+  'fold.title': 'المجلدات', 'fold.new': 'مجلد جديد', 'fold.name': 'اسم المجلد', 'fold.namePh': 'مثلًا: التفسير أو الحديث', 'fold.all': 'الكل', 'fold.none': 'بلا مجلد', 'fold.row': 'المجلد', 'fold.hint': 'حدّد الكتب الموجودة في هذا المجلد. للكتاب مجلد واحد فقط.', 'fold.inOther': 'الآن في «{f}»', 'fold.delQ': 'حذف المجلد «{f}»؟ ستبقى الكتب في المكتبة.', 'fold.rename': 'إعادة التسمية', 'fold.empty': 'لا كتب من هذا المجلد على هذا الرف بعد', 'fold.pick': 'اختيار الكتب', 'fold.noBooks': 'لا كتب في مكتبتك بعد. أضف كتابًا لتضعه في مجلد.', 'fold.err': 'أدخل اسم المجلد', 'fold.choose': 'في أي مجلد؟', 'fold.edit': 'تعديل المجلد',
   'lib.title': 'المكتبة', 'lib.mark': 'العلامة: {s}، الآية {a}، ص {p}', 'lib.markNone': 'حدّد علامتك في المصحف', 'lib.yearCount': 'قُرئ في {y}: {n} {w}',
   'khatm.title': 'ختمة القرآن', 'khatm.read': 'المقروء', 'khatm.of604': '{n} من 604 ص', 'khatm.today': 'ورد اليوم', 'khatm.until': 'الموعد', 'khatm.manage': 'إدارة',
   'khatm.done': 'تمّت الختمة، الحمد لله!', 'khatm.doneFull': 'تمّت الختمة، الحمد لله! تقبّل الله منك.',
@@ -2213,7 +2235,7 @@ I18N.ar = {
 // =====================================================================
 //  ОТРИСОВКА
 // =====================================================================
-const ui = { tab: 'today', stack: [], cal: null, statsDays: 7, dayOffset: 0, shelf: 'reading', glowUntil: 0, lastP: null, wiz: 0 };
+const ui = { tab: 'today', stack: [], cal: null, statsDays: 7, dayOffset: 0, shelf: 'reading', folder: null, glowUntil: 0, lastP: null, wiz: 0 };
 const app = $('#app'), nav = $('#nav');
 
 function applyLang() {
@@ -2260,6 +2282,7 @@ function page({ view, param }) {
     case 'calendar': return pageTop(t('cal.title')) + viewCalendar();
     case 'khatm': return viewKhatm();
     case 'book': return viewBook(param);
+    case 'folder': return viewFolder(param);
     case 'goals': return viewGoals();
     case 'duas': return viewDuas();
     case 'items': return viewItems();
@@ -2537,7 +2560,9 @@ function viewLibrary() {
       </section>`;
 
   const shelves = ['reading', 'want', 'done'];
-  const list = S.books.filter(b => b.status === ui.shelf);
+  if (ui.folder && !S.folders.some(f => f.id === ui.folder)) ui.folder = null;
+  const inF = b => !ui.folder || b.folder === ui.folder;
+  const list = S.books.filter(b => b.status === ui.shelf && inF(b));
   const year = td.getFullYear();
   const doneYear = S.books.filter(b => b.status === 'done' && b.finishedAt && parseKey(b.finishedAt).getFullYear() === year).length;
 
@@ -2557,7 +2582,10 @@ function viewLibrary() {
         : `<span class="si-s">${t('book.pages', { n: b.totalPages })}</span>`}</button>`;
 
   let body;
-  if (!list.length) {
+  if (!list.length && ui.folder) {
+    body = `<div class="empty-art">${ART.books}<p>${t('fold.empty')}</p>
+      <button class="btn ghost" data-a="open" data-v="folder" data-id="${ui.folder}">${icon('folder')}${t('fold.pick')}</button></div>`;
+  } else if (!list.length) {
     body = `<div class="empty-art">${ART.books}<p>${t('shelf.empty.' + ui.shelf)}</p>
       ${ui.shelf !== 'done' ? `<button class="btn primary" data-a="addBook" data-v="${ui.shelf}">${icon('plus')}${t('book.add')}</button>` : ''}</div>`;
   } else if (ui.shelf === 'reading') {
@@ -2566,15 +2594,39 @@ function viewLibrary() {
     body = `<div class="shelf">${list.map(gridItem).join('')}</div>`;
   }
 
+  const folderRow = S.folders.length ? `<div class="fold-row" role="tablist">
+      <button role="tab" class="fchip ${!ui.folder ? 'on' : ''}" data-a="folderPick" data-v="">${t('fold.all')}</button>
+      ${S.folders.map(f => { const on = ui.folder === f.id, n = S.books.filter(b => b.folder === f.id).length;
+        return `<button role="tab" class="fchip ${on ? 'on' : ''}" data-a="folderPick" data-v="${f.id}" aria-selected="${on}">${icon('folder')}<span>${esc(f.name)}</span>${n ? `<small>${n}</small>` : ''}${on ? icon('edit', 'pen') : ''}</button>`; }).join('')}
+    </div>` : '';
   return `<header class="top"><h1 class="grow">${t('lib.title')}</h1>
+      <button class="icon-btn" data-a="folders" aria-label="${t('fold.title')}">${icon('folder')}</button>
       <button class="icon-btn" data-a="addBook" aria-label="${t('book.add')}">${icon('plus')}</button></header>
     ${khatm}
     <div class="seg full" role="tablist" style="margin-top:16px">${shelves.map(sh => {
-      const n = S.books.filter(b => b.status === sh).length;
+      const n = S.books.filter(b => b.status === sh && inF(b)).length;
       return `<button role="tab" aria-selected="${ui.shelf === sh}" class="${ui.shelf === sh ? 'on' : ''}" data-a="shelf" data-v="${sh}">${t('shelf.' + sh)} ${n ? `<span class="muted">${n}</span>` : ''}</button>`;
     }).join('')}</div>
+    ${folderRow}
     ${ui.shelf === 'done' && doneYear ? `<p class="shelf-note">${t('lib.yearCount', { y: year, n: doneYear, w: pl(doneYear, 'book') })}</p>` : ''}
     ${body}`;
+}
+
+function viewFolder(id) {
+  const f = S.folders.find(x => x.id === id);
+  if (!f) return pageTop(t('fold.title')) + `<p class="empty">${t('book.deleted')}</p>`;
+  const order = { reading: 0, want: 1, done: 2 };
+  const books = [...S.books].sort((a, b) => order[a.status] - order[b.status] || a.title.localeCompare(b.title));
+  const row = b => {
+    const on = b.folder === f.id, other = !on && b.folder ? S.folders.find(x => x.id === b.folder) : null;
+    return `<button class="item fsel ${on ? 'on' : ''}" data-a="folderToggle" data-id="${f.id}" data-v="${b.id}" role="checkbox" aria-checked="${on}">${coverHtml(b, 'xs')}
+      <span class="grow"><span class="t">${esc(b.title)}</span><br><span class="s">${t('shelf.' + b.status)}${other ? ` · ${t('fold.inOther', { f: esc(other.name) })}` : ''}</span></span>
+      <span class="tick">${icon('check')}</span></button>`;
+  };
+  return pageTop(f.name, `<button class="icon-btn" data-a="folderRename" data-id="${f.id}" aria-label="${t('fold.rename')}">${icon('edit')}</button>
+      <button class="icon-btn" data-a="folderDel" data-id="${f.id}" aria-label="${t('b.delete')}">${icon('trash')}</button>`) + `
+    ${books.length ? `<p class="prose">${t('fold.hint')}</p><div class="list">${books.map(row).join('')}</div>`
+      : `<div class="empty-art">${ART.books}<p>${t('fold.noBooks')}</p></div>`}`;
 }
 
 function filesSection(b) {
@@ -2621,6 +2673,7 @@ function viewBook(id) {
         : b.status === 'reading' ? `<button class="item" data-a="bookDue" data-id="${b.id}"><span class="grow t">${t('book.eta')}</span><b>${fc ? humanY(fc.date) : '—'}</b>${icon('edit', 'pen')}</button>` : ''}
       ${b.startedAt ? `<button class="item" data-a="bookDate" data-id="${b.id}" data-v="startedAt"><span class="grow t">${t('book.started')}</span><b>${humanY(parseKey(b.startedAt))}</b>${icon('edit', 'pen')}</button>` : ''}
       ${b.finishedAt ? `<button class="item" data-a="bookDate" data-id="${b.id}" data-v="finishedAt"><span class="grow t">${t('book.finished')}</span><b>${humanY(parseKey(b.finishedAt))}</b>${icon('edit', 'pen')}</button>` : ''}
+      <button class="item" data-a="bookFolder" data-id="${b.id}"><span class="grow t">${t('fold.row')}</span><b>${esc((S.folders.find(f => f.id === b.folder) || {}).name || t('fold.none'))}</b>${icon('edit', 'pen')}</button>
       ${b.status === 'done' ? `<div class="item"><span class="grow t">${t('book.rating')}</span><span class="stars">${[1, 2, 3, 4, 5].map(n => `<button class="${n <= b.rating ? 'on' : ''}" data-a="rate" data-id="${b.id}" data-v="${n}" aria-label="${n}/5">${icon('star')}</button>`).join('')}</span></div>` : ''}
     </div>
     ${filesSection(b)}
@@ -3158,6 +3211,7 @@ const A = {
       { name: 'title', label: t('book.fTitle') }, { name: 'author', label: t('book.fAuthor') },
       { name: 'total', type: 'number', label: t('book.fPages') }, { name: 'goal', type: 'number', label: t('book.fGoal'), value: 10 },
       { name: 'shelf', type: 'select', label: t('book.fShelf'), value: ds && ds.v === 'want' ? 'want' : 'reading', options: [['reading', t('shelf.reading')], ['want', t('shelf.want')]] },
+      ...(S.folders.length ? [{ name: 'folder', type: 'select', label: t('fold.row'), value: ui.folder || '', options: [['', t('fold.none')], ...S.folders.map(f => [f.id, f.name])] }] : []),
       { name: 'cover', type: 'file', label: t('book.fCover') },
       { name: 'pdf', type: 'file', accept: 'application/pdf,.pdf', label: t('rd.fPdf') }],
       submit: t('b.add') });
@@ -3166,7 +3220,7 @@ const A = {
     if (!r.title || !(r.total > 0) || !(r.goal > 0)) return toast(t('book.err'));
     let cover = null;
     if (r.cover) { try { cover = await toCover(r.cover); } catch (e) { toast(t('book.coverErr')); } }
-    const b = { id: uid(), title: r.title, author: r.author, totalPages: Math.round(r.total), currentPage: 0, dailyGoal: Math.round(r.goal), notes: [], status: 'want', startedAt: null, finishedAt: null, rating: 0, cover };
+    const b = { id: uid(), title: r.title, author: r.author, totalPages: Math.round(r.total), currentPage: 0, dailyGoal: Math.round(r.goal), notes: [], status: 'want', startedAt: null, finishedAt: null, rating: 0, cover, folder: S.folders.some(f => f.id === r.folder) ? r.folder : null };
     if (r.shelf === 'reading') setBookStatus(b, 'reading');
     S.books.push(b);
     ui.shelf = b.status;
@@ -3220,6 +3274,54 @@ const A = {
     if (total && total !== b.totalPages && await confirmBox(t('rd.updTotal', { a: total, b: b.totalPages }), t('b.save'))) {
       b.totalPages = total; b.currentPage = Math.min(b.currentPage, total);
     }
+    commit();
+  },
+  // ---------- папки ----------
+  async folders() {
+    const v = await sheet(t('fold.title'), [
+      ...S.folders.map(f => ({ v: f.id, label: `${f.name} · ${S.books.filter(b => b.folder === f.id).length}`, icon: 'folder' })),
+      { v: '__new', label: t('fold.new'), icon: 'plus' }]);
+    if (v == null) return;
+    if (v === '__new') { const f = await newFolder(); if (f) { ui.folder = f.id; commit(); go('folder', f.id); } return; }
+    go('folder', v);
+  },
+  folderPick(ds) {
+    if (ds.v && ui.folder === ds.v) return go('folder', ds.v);   // повторное нажатие — изменить папку
+    ui.folder = ds.v || null;
+    render();
+  },
+  folderToggle(ds) {
+    const b = S.books.find(x => x.id === ds.v);
+    if (!b) return;
+    b.folder = b.folder === ds.id ? null : ds.id;
+    commit();
+  },
+  async folderRename(ds) {
+    const f = S.folders.find(x => x.id === ds.id);
+    const r = await form({ title: t('fold.rename'), fields: [{ name: 'name', label: t('fold.name'), value: f.name, placeholder: t('fold.namePh') }] });
+    if (!r) return;
+    if (!r.name) return toast(t('fold.err'));
+    f.name = r.name.slice(0, 40);
+    commit();
+  },
+  async folderDel(ds) {
+    const f = S.folders.find(x => x.id === ds.id);
+    if (!f || !(await confirmBox(t('fold.delQ', { f: f.name })))) return;
+    S.folders = S.folders.filter(x => x !== f);
+    S.books.forEach(b => { if (b.folder === f.id) b.folder = null; });
+    if (ui.folder === f.id) ui.folder = null;
+    ui.stack = ui.stack.filter(p => !(p.view === 'folder' && p.param === f.id));
+    commit();
+  },
+  async bookFolder(ds) {
+    const b = S.books.find(x => x.id === ds.id);
+    const v = await sheet(t('fold.choose'), [
+      { v: '', label: t('fold.none'), icon: 'close', sel: !b.folder },
+      ...S.folders.map(f => ({ v: f.id, label: f.name, icon: 'folder', sel: b.folder === f.id })),
+      { v: '__new', label: t('fold.new'), icon: 'plus' }]);
+    if (v == null) return;
+    if (v === '__new') { const f = await newFolder(); if (!f) return; b.folder = f.id; }
+    else b.folder = v || null;
     commit();
   },
   async editBook(ds) {
@@ -3431,6 +3533,14 @@ async function customForm(c, presetGroup) {
   };
   if (c) Object.assign(c, data); else S.customs.push({ id: uid(), ...data });
   commit();
+}
+async function newFolder() {
+  const r = await form({ title: t('fold.new'), fields: [{ name: 'name', label: t('fold.name'), placeholder: t('fold.namePh') }], submit: t('b.add') });
+  if (!r) return null;
+  if (!r.name) { toast(t('fold.err')); return null; }
+  const f = { id: uid(), name: r.name.slice(0, 40) };
+  S.folders.push(f);
+  return f;
 }
 function setCity(i) { const c = CITIES[i]; Object.assign(S.settings, { cityId: i, cityName: c.ru, lat: c.lat, lng: c.lng }); ptCache = {}; }
 function setMadhab(m) { S.settings.madhab = m; S.settings.hanafiAsr = m === 'hanafi'; ptCache = {}; }
