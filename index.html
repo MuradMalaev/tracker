@@ -7,8 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Трекер</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png" type="image/png" sizes="64x64">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Golos+Text:wght@400;500;600;700&family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
@@ -239,6 +240,105 @@ main{max-width:540px;margin:0 auto;padding:4px 14px calc(96px + env(safe-area-in
 .book .s{font-size:13px;color:var(--muted);margin-top:4px;display:block}
 .book .side{align-self:center}
 .shelf-note{font-size:13.5px;color:var(--muted);margin:8px 4px 0}
+/* ---- План дня ---- */
+.pl-tl{position:relative;padding:2px 4px 4px}
+.pl-tl::before{content:"";position:absolute;inset-inline-start:63px;top:14px;bottom:14px;width:1.5px;background:var(--hair,var(--line));border-radius:1px}
+.pl-row,.pl-pr,.pl-now{position:relative;display:grid;grid-template-columns:46px 26px 1fr;align-items:center;column-gap:10px}
+.pl-row{min-height:46px}
+.pl-t{font-size:13px;color:var(--ink);font-weight:600;text-align:end;line-height:1.1;display:flex;flex-direction:column;align-items:flex-end;direction:ltr}
+.pl-t small{font-size:11px;color:var(--muted);font-weight:400;margin-top:2px}
+.pl-c{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface);box-shadow:0 0 0 1.5px var(--line) inset;color:transparent;justify-self:center;z-index:1}
+.pl-c .ic{width:14px;height:14px;stroke-width:2.6}
+.pl-row.deen .pl-c{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--brass) 70%,var(--line)) inset}
+.pl-row.done .pl-c{background:var(--accent);box-shadow:none;color:var(--on-accent)}
+.pl-row.deen.done .pl-c{background:var(--brass)}
+.pl-x{display:flex;align-items:center;gap:8px;text-align:start;padding:10px 4px;min-width:0;font-size:15px;line-height:1.3}
+.pl-tt{overflow:hidden;text-overflow:ellipsis}
+.pl-row.done .pl-tt{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--muted) 55%,transparent)}
+.pl-row.deen .pl-x::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--brass);flex:none}
+.pl-row.cur{background:color-mix(in srgb,var(--accent) 8%,transparent);border-radius:12px}
+.pl-badge{font-size:11px;font-weight:600;color:var(--accent);padding:2px 7px;border-radius:99px;background:color-mix(in srgb,var(--accent) 14%,transparent);flex:none}
+.pl-pr{min-height:26px}
+.pl-pr .pl-t{font-weight:500;color:var(--muted);font-size:11.5px}
+.pl-pr::after{content:"";grid-column:2;justify-self:center;width:7px;height:7px;border-radius:50%;background:var(--surface);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--brass) 60%,transparent) inset;z-index:1;grid-row:1}
+.pl-pn{grid-column:3;font-size:12px;color:color-mix(in srgb,var(--brass) 80%,var(--muted));letter-spacing:.02em}
+.pl-now{min-height:16px}
+.pl-now .pl-t{color:var(--accent);font-size:11px;font-weight:600}
+.pl-now i{grid-column:2/4;height:1.5px;background:var(--accent);opacity:.7;border-radius:1px;position:relative}
+.pl-now i::before{content:"";position:absolute;inset-inline-start:7px;top:-3px;width:7.5px;height:7.5px;border-radius:50%;background:var(--accent)}
+.pl-acts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}
+.pl-acts .pill{min-height:38px;padding:7px 12px;font-size:13.5px}
+.pl-tag{font-size:12px;color:var(--muted);margin-inline-start:auto;padding:0 6px}
+.pl-scopes{margin-top:2px}
+.pl-div{flex:none;align-self:center;font-size:11.5px;color:var(--muted);padding:0 2px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+.pl-info{margin-top:10px}
+.pl-card{padding:8px 8px 6px}
+.pl-paste{margin-top:8px}
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:4px 0 6px}
+.pick-h{grid-column:1/-1;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:8px 2px 0}
+.pick{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;box-shadow:0 0 0 1px var(--hair,var(--line)) inset;font-size:14px;cursor:pointer}
+.pick input{width:18px;height:18px;accent-color:var(--accent);margin:0}
+.pick:has(input:checked){background:color-mix(in srgb,var(--accent) 10%,var(--surface));box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent) inset}
+/* ---- Статистика ---- */
+.icon-btn.sm{width:32px;height:32px}
+.icon-btn.sm .ic{width:16px;height:16px}
+.hd-note{font-size:12.5px;color:var(--muted)}
+.ov{padding-bottom:12px}
+.ov-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.ov-big{margin:0;font:500 46px/1 var(--serif);letter-spacing:-.02em}
+.ov-big small{font-size:22px;margin-inline-start:2px;color:var(--muted)}
+.ov-cap{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.delta{font-size:12.5px;padding:5px 10px;border-radius:99px;background:var(--surface-2);color:var(--muted);white-space:nowrap;margin-top:4px}
+.delta.up{color:var(--st-jamaat);background:color-mix(in srgb,var(--st-jamaat) 12%,var(--surface))}
+.delta.down{color:var(--st-late);background:color-mix(in srgb,var(--st-late) 12%,var(--surface))}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;border-top:1px solid var(--hair,var(--line));padding-top:12px}
+.kpis div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+.kpis b{font:600 22px/1.1 var(--serif)}
+.kpis span{font-size:11.5px;color:var(--muted);line-height:1.25}
+svg.chart .hit{fill:transparent}
+svg.chart .hit:hover{fill:color-mix(in srgb,var(--accent) 6%,transparent)}
+svg.chart .bv{text-anchor:middle;font-size:9.5px;font-weight:600;fill:var(--ink)}
+svg.chart .xl.on{fill:var(--ink);font-weight:600}
+.pr-top{display:flex;align-items:center;gap:16px}
+.donut{width:118px;height:118px;flex:none;direction:ltr}
+.donut .dn-v{font:600 24px var(--serif);fill:var(--ink);text-anchor:middle}
+.donut .dn-s{font-size:10.5px;fill:var(--muted);text-anchor:middle}
+.pr-side{flex:1;min-width:0}
+.pr-side .kv{font-size:13.5px;padding:3px 0}
+.sub-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:16px 0 8px;font:600 13px/1.2 var(--sans);color:var(--ink)}
+.sub-h span{font-weight:400;color:var(--muted);font-size:12.5px}
+.pr-row{display:grid;grid-template-columns:78px 1fr 46px;align-items:center;gap:10px;padding:5px 0;font-size:13.5px}
+.pr-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr-bar{display:flex;gap:2px;height:8px;border-radius:4px;overflow:hidden}
+.pr-bar i{display:block;height:100%;border-radius:2px;min-width:2px}
+.pr-bar i.none{background:var(--surface-2)}
+.pr-row b{text-align:end;font-size:13px}
+.tip{display:flex;align-items:center;gap:6px;margin:10px 0 0;font-size:13px}
+.tip .ic{width:15px;height:15px;color:var(--brass);flex:none}
+.hb-row{display:grid;grid-template-columns:1fr auto 42px;align-items:center;gap:10px;padding:7px 0}
+.hb-row + .hb-row{border-top:1px solid var(--hair,var(--line))}
+.hb-n{font-size:14px;display:flex;align-items:center;gap:6px;min-width:0}
+.hb-n small{display:inline-flex;align-items:center;gap:1px;font-size:11.5px;color:var(--brass);font-weight:600}
+.hb-n small .ic{width:12px;height:12px}
+.hb-dots{display:flex;gap:3px;direction:ltr}
+.hb-dots i{width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 1.2px var(--line) inset}
+.hb-dots i.on{background:var(--c);box-shadow:none}
+.hb-dots i.exc{background:var(--pink);opacity:.5;box-shadow:none}
+.hb-row b{text-align:end;font-size:13.5px}
+.year .hd{margin-bottom:8px}
+.ynav{display:flex;align-items:center;gap:6px}
+.ynav b{font:600 16px var(--serif);min-width:40px;text-align:center}
+.heat-lg{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin:6px 0 2px;font-size:11px;color:var(--muted)}
+.heat-lg i{width:9px;height:9px;border-radius:2px}
+.heat-lg span{margin:0 3px}
+.ygrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.yt{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;padding:11px 12px;border-radius:14px;background:color-mix(in srgb,var(--surface-2) 70%,transparent)}
+.yt:last-child:nth-child(odd){grid-column:1/-1}
+.st-period{margin:0 0 4px}
+.yt .ic{grid-row:1/3;width:18px;height:18px;color:var(--brass)}
+.yt b{font:600 21px/1.1 var(--serif)}
+.yt span{font-size:11.5px;color:var(--muted);line-height:1.25}
+.y-foot{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--hair,var(--line));font:italic 400 15px/1.4 var(--serif);color:var(--ink);text-align:center}
 .fold-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:0 16px 2px}
 .fold-row::-webkit-scrollbar{display:none}
 .fchip{display:inline-flex;align-items:center;gap:5px;flex:none;padding:6px 11px;border-radius:999px;font-size:13px;color:var(--muted);background:transparent;box-shadow:0 0 0 1px var(--line) inset;white-space:nowrap;max-width:70vw}
@@ -1259,12 +1359,12 @@ const DEFAULTS = {
     disabled: [], female: false, safar: false, zuhrAfter: 2, quranGoal: 5, dayStartHour: 3, fridayMode: true,
     cityId: null, cityName: null, lat: null, lng: null, method: 'mwl', hanafiAsr: false,
     offsets: { fajr: 0, sunrise: 0, zuhr: 0, asr: 0, maghrib: 0, isha: 0 },
-    remindFard: true, remindMinutes: 15, tahajjudAlarm: false, sleepReminder: false, sleepAfterIsha: 60,
+    planOn: true, planRemind: false, remindFard: true, remindMinutes: 15, tahajjudAlarm: false, sleepReminder: false, sleepAfterIsha: 60,
     khatmActive: false, khatmPage: 0, khatmEnd: '', hadithOpen: false, theme: 'auto', folded: {},
     smallSunnas: false, sleepSunnas: true, tipShown: false, tipInfo: false, postAzkar: true,
   },
   quran: { page: null, sura: 1, ayah: 1 },
-  books: [], folders: [], customs: [], avoids: [], goals: [], duas: [], milestones: [], logs: {},
+  books: [], folders: [], plan: { w: {}, d: {}, clip: null, frozen: null }, customs: [], avoids: [], goals: [], duas: [], milestones: [], logs: {},
 };
 
 function normalize(d) {
@@ -1293,6 +1393,8 @@ function normalize(d) {
   if (!('onboarded' in (d.settings || {})) && Object.keys(s.logs || {}).length) st.onboarded = true;
   s.milestones = s.milestones || [];
   if (!Array.isArray(s.msHidden)) s.msHidden = [];
+  s.plan = { w: {}, d: {}, clip: null, frozen: null, ...(d.plan && typeof d.plan === 'object' ? d.plan : {}) };
+  for (const [k, w] of Object.entries(s.plan.w)) if (!w || !Array.isArray(w.items)) delete s.plan.w[k];
   s.folders = Array.isArray(s.folders) ? s.folders.filter(f => f && f.id) : [];
   for (const b of s.books) if (b.folder && !s.folders.some(f => f.id === b.folder)) b.folder = null;
   return s;
@@ -1574,9 +1676,21 @@ function notify(title, body) {
 function scheduleWeb() {
   timers.forEach(clearTimeout); timers = [];
   const st = S.settings;
-  if (st.lat == null) return;
   const now = new Date(), today = dateOnly(now);
   const at = (when, fn) => { const ms = when - now; if (ms > 0 && ms < 36 * 3600e3) timers.push(setTimeout(fn, ms)); };
+  if (st.planRemind) {
+    for (const off of [0, 1]) {
+      const date = addDays(todayDate(), off);
+      for (const x of planOf(date).items) {
+        if (!x.time) continue;
+        const w = new Date(date), m = tmin(x.time);
+        w.setHours(Math.floor(m / 60), m % 60, 0, 0);
+        if (m < 240) w.setDate(w.getDate() + 1);   // после полуночи — ещё тот же «день»
+        at(w, () => { if (peek(date)['pl_' + x.id] !== true) notify(t('n.planTitle', { x: x.title }), x.end ? `${x.time}–${x.end}` : x.time); });
+      }
+    }
+  }
+  if (st.lat == null) return;
   if (st.remindFard) {
     for (const off of [0, 1]) {
       const date = addDays(today, off), p = prayerTimes(date), pn = prayerTimes(addDays(date, 1));
@@ -1822,6 +1936,24 @@ I18N.ru = {
 
   'cal.title': 'Календарь', 'cal.hint': 'Чем насыщеннее цвет, тем больше сделано. Нажмите на день, чтобы посмотреть или исправить отметки.',
 
+  'plan.title': 'План дня', 'plan.add': 'Задача', 'plan.all': 'Весь план', 'plan.empty': 'Распишите день по времени: поклонение и обычные дела. Отмечайте сделанное.', 'plan.byTpl': 'шаблон: {w}',
+  'plan.today': 'Сегодня', 'plan.tomorrow': 'Завтра', 'plan.tpls': 'Шаблоны', 'plan.ownDay': 'свой план на этот день', 'plan.fromTpl': 'по шаблону: {w}', 'plan.noPlan': 'плана пока нет',
+  'plan.tplHint': 'Шаблон дня недели «{w}» сам появляется в этот день, если у дня нет своего плана. Прошедшие дни не меняются.', 'plan.emptyTpl': 'Шаблон пока пуст. Добавьте задачи, и они будут появляться каждую неделю.',
+  'plan.new': 'Новая задача', 'plan.edit': 'Задача', 'plan.fTitle': 'Что сделать', 'plan.fTitlePh': 'Например, урок тафсира или спортзал', 'plan.fStart': 'Начало', 'plan.fEnd': 'Конец',
+  'plan.fKind': 'Тип', 'plan.k.deen': 'Поклонение', 'plan.k.life': 'Обычное дело', 'plan.fRepeat': 'Повторять', 'plan.rep.once': 'Только в этот день', 'plan.rep.wd': 'Каждую неделю: {w}', 'plan.rep.work': 'По будням, пн–пт', 'plan.rep.all': 'Каждый день',
+  'plan.err': 'Введите название задачи', 'plan.more': 'Действия с планом', 'plan.copy': 'Скопировать план', 'plan.copied': 'Скопировано задач: {n}. Откройте другой день и вставьте.', 'plan.paste': 'Вставить скопированное · {n}',
+  'plan.pasteQ': 'В этом дне уже есть задачи', 'plan.replace': 'Заменить', 'plan.append': 'Добавить к ним', 'plan.pasted': 'План вставлен', 'plan.apply': 'Применить к другим дням…', 'plan.applyTitle': 'Куда скопировать план?',
+  'plan.applyHint': 'Задачи в выбранных днях заменятся этим планом.', 'plan.applyBtn': 'Применить', 'plan.applied': 'План применён', 'plan.saveTpl': 'Сделать шаблоном: {w}', 'plan.tplSaved': 'Готово. Шаблон «{w}» будет появляться каждую неделю',
+  'plan.tplReplaceQ': 'Заменить шаблон «{w}» этим планом?', 'plan.resetTpl': 'Вернуть шаблон: {w}', 'plan.moveUndone': 'Перенести несделанное на завтра · {n}', 'plan.moved': 'Перенесено на завтра: {n}',
+  'plan.clear': 'Очистить', 'plan.clearQ': 'Очистить план?', 'plan.nothing': 'План пока пуст', 'plan.scopeQ': 'Где изменить?', 'plan.onlyHere': 'Только в этот день', 'plan.alsoTpl': 'И в шаблоне: {w}', 'plan.now': 'сейчас', 'plan.repAdded': 'Добавлено и в шаблоны дней недели',
+  'plan.sugDeen': 'Чтение Корана|Заучивание Корана|Повторение выученного|Урок тафсира|Урок хадиса|Изучение фикха|Утренние азкары|Вечерние азкары|Намаз духа|Тахаджуд|Садака|Посещение родителей|Чтение книги|Пятничная проповедь',
+  'plan.sugLife': 'Работа|Учёба|Пары в университете|Домашнее задание|Спорт|Прогулка|Покупки|Уборка|Время с семьёй|Обед|Ужин|Отдых|Сон',
+  'set.planOn': 'План дня', 'set.planOnHint': 'Свои задачи по времени на главном экране', 'set.planRemind': 'Напоминать о задачах плана', 'set.planRemindHint': 'В момент начала, если задача ещё не отмечена', 'n.planTitle': 'Пора: {x}',
+  'st2.overview': 'Итог периода', 'st2.avgDay': 'в среднем выполнено за день', 'st2.vsPrev': '{n}% к прошлому периоду', 'st2.same': 'как в прошлом периоде', 'st2.bestStreak': 'лучшая серия', 'st2.perfect': 'идеальных дней',
+  'st2.byPrayer': 'По намазам', 'st2.missed': 'Не отмечен', 'st2.onTimeShort': 'вовремя', 'st2.weakest': 'Больше всего внимания просит {p}.', 'st2.habits': 'Привычки', 'st2.last14': '14 дней', 'st2.bestDay': 'Лучший день', 'st2.weekly': 'По неделям',
+  'st2.plan': 'План дня', 'st2.planDone': 'Выполнено задач', 'st2.rhythm': 'Ритм недели', 'st2.rhythmSub': '12 недель', 'st2.rhythmBest': 'Сильнее всего у вас {a}, слабее всего {b}.',
+  'st2.yearTitle': 'Итоги года', 'st2.months': 'По месяцам', 'st2.bestMonth': 'лучший — {m}', 'st2.yActive': 'активных дней', 'st2.yPerfect': 'идеальных дней', 'st2.yStreak': 'лучшая серия фарда', 'st2.yOnTime': 'фард вовремя', 'st2.yJamaat': 'намазов в джамаате',
+  'st2.yQuran': 'страниц Корана', 'st2.yBooks': 'книг прочитано', 'st2.yNight': 'ночей с тахаджудом', 'st2.yKhatm': 'хатмов Корана', 'st2.yAzkar': 'азкаров утром и вечером', 'st2.yDeeds': 'За год отмечено дел: {n}. Да примет Аллах!',
   'fold.title': 'Папки', 'fold.new': 'Новая папка', 'fold.name': 'Название папки', 'fold.namePh': 'Например, Тафсир или Хадисы', 'fold.all': 'Все', 'fold.none': 'Без папки', 'fold.row': 'Папка', 'fold.hint': 'Отметьте книги, которые лежат в этой папке. У книги может быть только одна папка.', 'fold.inOther': 'сейчас в «{f}»', 'fold.delQ': 'Удалить папку «{f}»? Книги останутся в библиотеке.', 'fold.rename': 'Переименовать', 'fold.empty': 'На этой полке в папке пока нет книг', 'fold.pick': 'Выбрать книги', 'fold.noBooks': 'В библиотеке пока нет книг. Добавьте книгу, и её можно будет положить в папку.', 'fold.err': 'Введите название папки', 'fold.choose': 'В какую папку?', 'fold.edit': 'Изменить папку',
   'lib.title': 'Библиотека', 'lib.mark': 'Закладка: {s}, аят {a}, стр. {p}', 'lib.markNone': 'Отметьте закладку в Коране', 'lib.yearCount': 'В {y} году прочитано: {n} {w}',
   'khatm.title': 'Хатм Корана', 'khatm.read': 'Прочитано', 'khatm.of604': '{n} из 604 стр.', 'khatm.today': 'Норма на сегодня', 'khatm.until': 'Срок', 'khatm.manage': 'Настроить',
@@ -1985,6 +2117,24 @@ I18N.en = {
 
   'cal.title': 'Calendar', 'cal.hint': 'The deeper the colour, the more was done. Tap a day to view or correct it.',
 
+  'plan.title': 'Day plan', 'plan.add': 'Task', 'plan.all': 'Full plan', 'plan.empty': 'Plan your day by the clock: worship and everyday tasks. Tick off what is done.', 'plan.byTpl': 'template: {w}',
+  'plan.today': 'Today', 'plan.tomorrow': 'Tomorrow', 'plan.tpls': 'Templates', 'plan.ownDay': 'own plan for this day', 'plan.fromTpl': 'from template: {w}', 'plan.noPlan': 'no plan yet',
+  'plan.tplHint': 'The {w} template appears on that day automatically unless the day has its own plan. Past days do not change.', 'plan.emptyTpl': 'This template is empty. Add tasks and they will appear every week.',
+  'plan.new': 'New task', 'plan.edit': 'Task', 'plan.fTitle': 'What to do', 'plan.fTitlePh': 'For example, tafsir class or gym', 'plan.fStart': 'Start', 'plan.fEnd': 'End',
+  'plan.fKind': 'Type', 'plan.k.deen': 'Worship', 'plan.k.life': 'Everyday', 'plan.fRepeat': 'Repeat', 'plan.rep.once': 'Only this day', 'plan.rep.wd': 'Every week: {w}', 'plan.rep.work': 'Weekdays, Mon–Fri', 'plan.rep.all': 'Every day',
+  'plan.err': 'Enter a task name', 'plan.more': 'Plan actions', 'plan.copy': 'Copy plan', 'plan.copied': 'Copied {n} tasks. Open another day and paste.', 'plan.paste': 'Paste copied · {n}',
+  'plan.pasteQ': 'This day already has tasks', 'plan.replace': 'Replace', 'plan.append': 'Add to them', 'plan.pasted': 'Plan pasted', 'plan.apply': 'Apply to other days…', 'plan.applyTitle': 'Where to copy the plan?',
+  'plan.applyHint': 'Tasks on the chosen days will be replaced with this plan.', 'plan.applyBtn': 'Apply', 'plan.applied': 'Plan applied', 'plan.saveTpl': 'Make it the template: {w}', 'plan.tplSaved': 'Done. The {w} template will appear every week',
+  'plan.tplReplaceQ': 'Replace the {w} template with this plan?', 'plan.resetTpl': 'Restore template: {w}', 'plan.moveUndone': 'Move unfinished to tomorrow · {n}', 'plan.moved': 'Moved to tomorrow: {n}',
+  'plan.clear': 'Clear', 'plan.clearQ': 'Clear the plan?', 'plan.nothing': 'The plan is empty', 'plan.scopeQ': 'Where to change it?', 'plan.onlyHere': 'Only this day', 'plan.alsoTpl': 'Also in template: {w}', 'plan.now': 'now', 'plan.repAdded': 'Also added to weekday templates',
+  'plan.sugDeen': 'Reading Quran|Memorising Quran|Revising memorised|Tafsir class|Hadith class|Studying fiqh|Morning adhkar|Evening adhkar|Duha prayer|Tahajjud|Sadaqah|Visiting parents|Reading a book|Friday khutbah',
+  'plan.sugLife': 'Work|Study|University classes|Homework|Sport|Walk|Shopping|Cleaning|Family time|Lunch|Dinner|Rest|Sleep',
+  'set.planOn': 'Day plan', 'set.planOnHint': 'Your timed tasks on the main screen', 'set.planRemind': 'Remind about plan tasks', 'set.planRemindHint': 'At the start time, if the task is not ticked yet', 'n.planTitle': 'Time for: {x}',
+  'st2.overview': 'Period summary', 'st2.avgDay': 'done per day on average', 'st2.vsPrev': '{n}% vs previous period', 'st2.same': 'same as previous period', 'st2.bestStreak': 'best streak', 'st2.perfect': 'perfect days',
+  'st2.byPrayer': 'By prayer', 'st2.missed': 'Not marked', 'st2.onTimeShort': 'on time', 'st2.weakest': '{p} needs the most attention.', 'st2.habits': 'Habits', 'st2.last14': '14 days', 'st2.bestDay': 'Best day', 'st2.weekly': 'By week',
+  'st2.plan': 'Day plan', 'st2.planDone': 'Tasks done', 'st2.rhythm': 'Weekly rhythm', 'st2.rhythmSub': '12 weeks', 'st2.rhythmBest': 'Your strongest day is {a}, the weakest is {b}.',
+  'st2.yearTitle': 'Year in review', 'st2.months': 'By month', 'st2.bestMonth': 'best: {m}', 'st2.yActive': 'active days', 'st2.yPerfect': 'perfect days', 'st2.yStreak': 'best fard streak', 'st2.yOnTime': 'fard on time', 'st2.yJamaat': 'prayers in jamaʿah',
+  'st2.yQuran': 'Quran pages', 'st2.yBooks': 'books finished', 'st2.yNight': 'nights of tahajjud', 'st2.yKhatm': 'Quran khatms', 'st2.yAzkar': 'morning and evening adhkar', 'st2.yDeeds': '{n} deeds marked this year. May Allah accept them!',
   'fold.title': 'Folders', 'fold.new': 'New folder', 'fold.name': 'Folder name', 'fold.namePh': 'For example, Tafsir or Hadith', 'fold.all': 'All', 'fold.none': 'No folder', 'fold.row': 'Folder', 'fold.hint': 'Tick the books that belong in this folder. A book can be in one folder only.', 'fold.inOther': 'now in “{f}”', 'fold.delQ': 'Delete the folder “{f}”? The books stay in your library.', 'fold.rename': 'Rename', 'fold.empty': 'No books from this folder on this shelf yet', 'fold.pick': 'Choose books', 'fold.noBooks': 'Your library has no books yet. Add a book and you can put it in a folder.', 'fold.err': 'Enter a folder name', 'fold.choose': 'Which folder?', 'fold.edit': 'Edit folder',
   'lib.title': 'Library', 'lib.mark': 'Bookmark: {s}, ayah {a}, p. {p}', 'lib.markNone': 'Set your Quran bookmark', 'lib.yearCount': 'Read in {y}: {n} {w}',
   'khatm.title': 'Quran khatm', 'khatm.read': 'Read', 'khatm.of604': '{n} of 604 p.', 'khatm.today': 'Today’s portion', 'khatm.until': 'Deadline', 'khatm.manage': 'Manage',
@@ -2147,6 +2297,24 @@ I18N.ar = {
 
   'cal.title': 'التقويم', 'cal.hint': 'كلما كان اللون أعمق كان الإنجاز أكبر. اضغط على يوم لعرضه أو تصحيحه.',
 
+  'plan.title': 'خطة اليوم', 'plan.add': 'مهمة', 'plan.all': 'الخطة كاملة', 'plan.empty': 'رتّب يومك بالساعة: العبادات والأعمال اليومية، وعلّم ما أنجزته.', 'plan.byTpl': 'القالب: {w}',
+  'plan.today': 'اليوم', 'plan.tomorrow': 'غدًا', 'plan.tpls': 'القوالب', 'plan.ownDay': 'خطة خاصة بهذا اليوم', 'plan.fromTpl': 'من قالب: {w}', 'plan.noPlan': 'لا خطة بعد',
+  'plan.tplHint': 'قالب «{w}» يظهر تلقائيًا في هذا اليوم ما لم تكن له خطة خاصة. الأيام الماضية لا تتغيّر.', 'plan.emptyTpl': 'القالب فارغ. أضف مهامّ لتظهر كل أسبوع.',
+  'plan.new': 'مهمة جديدة', 'plan.edit': 'المهمة', 'plan.fTitle': 'ماذا ستفعل', 'plan.fTitlePh': 'مثلًا: درس تفسير أو رياضة', 'plan.fStart': 'البداية', 'plan.fEnd': 'النهاية',
+  'plan.fKind': 'النوع', 'plan.k.deen': 'عبادة', 'plan.k.life': 'عمل يومي', 'plan.fRepeat': 'التكرار', 'plan.rep.once': 'هذا اليوم فقط', 'plan.rep.wd': 'كل أسبوع: {w}', 'plan.rep.work': 'أيام العمل، الاثنين–الجمعة', 'plan.rep.all': 'كل يوم',
+  'plan.err': 'أدخل اسم المهمة', 'plan.more': 'إجراءات الخطة', 'plan.copy': 'نسخ الخطة', 'plan.copied': 'نُسخت {n} مهامّ. افتح يومًا آخر والصقها.', 'plan.paste': 'لصق المنسوخ · {n}',
+  'plan.pasteQ': 'في هذا اليوم مهامّ بالفعل', 'plan.replace': 'استبدال', 'plan.append': 'إضافة إليها', 'plan.pasted': 'لُصقت الخطة', 'plan.apply': 'تطبيق على أيام أخرى…', 'plan.applyTitle': 'إلى أين تُنسخ الخطة؟',
+  'plan.applyHint': 'ستُستبدل مهامّ الأيام المختارة بهذه الخطة.', 'plan.applyBtn': 'تطبيق', 'plan.applied': 'طُبّقت الخطة', 'plan.saveTpl': 'اجعلها قالبًا: {w}', 'plan.tplSaved': 'تم. سيظهر قالب «{w}» كل أسبوع',
+  'plan.tplReplaceQ': 'استبدال قالب «{w}» بهذه الخطة؟', 'plan.resetTpl': 'إرجاع القالب: {w}', 'plan.moveUndone': 'نقل غير المنجز إلى الغد · {n}', 'plan.moved': 'نُقل إلى الغد: {n}',
+  'plan.clear': 'مسح', 'plan.clearQ': 'مسح الخطة؟', 'plan.nothing': 'الخطة فارغة', 'plan.scopeQ': 'أين تريد التعديل؟', 'plan.onlyHere': 'في هذا اليوم فقط', 'plan.alsoTpl': 'وفي القالب: {w}', 'plan.now': 'الآن', 'plan.repAdded': 'أُضيفت إلى قوالب أيام الأسبوع أيضًا',
+  'plan.sugDeen': 'تلاوة القرآن|حفظ القرآن|مراجعة المحفوظ|درس تفسير|درس حديث|دراسة الفقه|أذكار الصباح|أذكار المساء|صلاة الضحى|التهجد|صدقة|زيارة الوالدين|قراءة كتاب|خطبة الجمعة',
+  'plan.sugLife': 'العمل|الدراسة|محاضرات الجامعة|الواجبات|الرياضة|المشي|التسوّق|التنظيف|وقت مع العائلة|الغداء|العشاء|الراحة|النوم',
+  'set.planOn': 'خطة اليوم', 'set.planOnHint': 'مهامّك بالساعة في الشاشة الرئيسية', 'set.planRemind': 'التذكير بمهامّ الخطة', 'set.planRemindHint': 'عند البداية إن لم تُعلَّم المهمة بعد', 'n.planTitle': 'حان وقت: {x}',
+  'st2.overview': 'خلاصة الفترة', 'st2.avgDay': 'متوسط الإنجاز اليومي', 'st2.vsPrev': '{n}% مقارنة بالفترة السابقة', 'st2.same': 'كالفترة السابقة', 'st2.bestStreak': 'أفضل سلسلة', 'st2.perfect': 'أيام كاملة',
+  'st2.byPrayer': 'حسب الصلاة', 'st2.missed': 'غير مسجّلة', 'st2.onTimeShort': 'في الوقت', 'st2.weakest': 'صلاة {p} تحتاج أكبر اهتمام.', 'st2.habits': 'العادات', 'st2.last14': '14 يومًا', 'st2.bestDay': 'أفضل يوم', 'st2.weekly': 'حسب الأسابيع',
+  'st2.plan': 'خطة اليوم', 'st2.planDone': 'المهامّ المنجزة', 'st2.rhythm': 'إيقاع الأسبوع', 'st2.rhythmSub': '12 أسبوعًا', 'st2.rhythmBest': 'أقوى أيامك {a}، وأضعفها {b}.',
+  'st2.yearTitle': 'حصاد العام', 'st2.months': 'حسب الأشهر', 'st2.bestMonth': 'الأفضل: {m}', 'st2.yActive': 'أيام نشطة', 'st2.yPerfect': 'أيام كاملة', 'st2.yStreak': 'أفضل سلسلة فرائض', 'st2.yOnTime': 'فرائض في وقتها', 'st2.yJamaat': 'صلوات في جماعة',
+  'st2.yQuran': 'صفحات قرآن', 'st2.yBooks': 'كتب مقروءة', 'st2.yNight': 'ليالٍ بالتهجد', 'st2.yKhatm': 'ختمات', 'st2.yAzkar': 'أذكار صباح ومساء', 'st2.yDeeds': 'سُجّل هذا العام {n} عملًا. تقبّل الله!',
   'fold.title': 'المجلدات', 'fold.new': 'مجلد جديد', 'fold.name': 'اسم المجلد', 'fold.namePh': 'مثلًا: التفسير أو الحديث', 'fold.all': 'الكل', 'fold.none': 'بلا مجلد', 'fold.row': 'المجلد', 'fold.hint': 'حدّد الكتب الموجودة في هذا المجلد. للكتاب مجلد واحد فقط.', 'fold.inOther': 'الآن في «{f}»', 'fold.delQ': 'حذف المجلد «{f}»؟ ستبقى الكتب في المكتبة.', 'fold.rename': 'إعادة التسمية', 'fold.empty': 'لا كتب من هذا المجلد على هذا الرف بعد', 'fold.pick': 'اختيار الكتب', 'fold.noBooks': 'لا كتب في مكتبتك بعد. أضف كتابًا لتضعه في مجلد.', 'fold.err': 'أدخل اسم المجلد', 'fold.choose': 'في أي مجلد؟', 'fold.edit': 'تعديل المجلد',
   'lib.title': 'المكتبة', 'lib.mark': 'العلامة: {s}، الآية {a}، ص {p}', 'lib.markNone': 'حدّد علامتك في المصحف', 'lib.yearCount': 'قُرئ في {y}: {n} {w}',
   'khatm.title': 'ختمة القرآن', 'khatm.read': 'المقروء', 'khatm.of604': '{n} من 604 ص', 'khatm.today': 'ورد اليوم', 'khatm.until': 'الموعد', 'khatm.manage': 'إدارة',
@@ -2254,6 +2422,7 @@ function applyTheme() {
 
 function render() {
   S.books.forEach(syncDue);
+  planFreeze();
   applyLang();
   applyTheme();
   if (!S.settings.onboarded) { nav.hidden = true; app.innerHTML = viewWizard(); return; }
@@ -2283,6 +2452,7 @@ function page({ view, param }) {
     case 'khatm': return viewKhatm();
     case 'book': return viewBook(param);
     case 'folder': return viewFolder(param);
+    case 'plan': return viewPlan(param);
     case 'goals': return viewGoals();
     case 'duas': return viewDuas();
     case 'items': return viewItems();
@@ -2325,7 +2495,7 @@ function hadithCard() {
 }
 
 function viewDayBody(d) {
-  return `${fardStrip(d)}${summary(d)}${fridayNight(d)}${sections(d)}`;
+  return `${fardStrip(d)}${summary(d)}${planBlock(d)}${fridayNight(d)}${sections(d)}`;
 }
 
 /** Время суток для цвета неба на плашке. */
@@ -2505,6 +2675,299 @@ function counterRow(x, log, k) {
     <button data-a="count" data-v="1" data-id="${x.id}" data-d="${k}" aria-label="+1">${icon('plus')}</button></div>`}
   </div>`;
 }
+
+// =====================================================================
+//  ПЛАН ДНЯ: свои задачи по времени, шаблоны по дням недели
+// =====================================================================
+const tmin = s => (s ? Number(s.slice(0, 2)) * 60 + Number(s.slice(3, 5)) : 1e4);
+const REF_SUNDAY = new Date(2026, 9, 18);
+const wdName = wd => wdLong(addDays(REF_SUNDAY, wd));
+const wdAbbr = wd => wdShort(addDays(REF_SUNDAY, wd));
+const WD_ORDER = [1, 2, 3, 4, 5, 6, 0];
+const planClone = (items, keepIds) => items.map(x => ({ ...x, id: keepIds ? x.id : uid() }));
+
+/** План на дату: свой план дня или шаблон дня недели. */
+function planOf(d) {
+  const k = dkey(d);
+  if (S.plan.d[k]) return { items: S.plan.d[k], own: true, tpl: null };
+  const w = S.plan.w[d.getDay()];
+  if (w && w.items.length && k >= w.from) return { items: w.items, own: false, tpl: d.getDay() };
+  return { items: [], own: false, tpl: null };
+}
+/** Список задач области: 'd:2026-10-19' — день, 'w:1' — шаблон понедельника. create — сделать изменяемым. */
+function scopeItems(sc, create) {
+  if (sc.startsWith('w:')) {
+    const wd = Number(sc.slice(2));
+    if (!S.plan.w[wd] && create) S.plan.w[wd] = { items: [], from: dkey(todayDate()) };
+    return S.plan.w[wd] ? S.plan.w[wd].items : [];
+  }
+  const k = sc.slice(2);
+  // при первой правке день получает копию шаблона с теми же id — отметки сохраняются
+  if (!S.plan.d[k] && create) S.plan.d[k] = planClone(planOf(parseKey(k)).items, true);
+  return S.plan.d[k] || planOf(parseKey(k)).items;
+}
+const scopeName = sc => sc.startsWith('w:') ? wdName(Number(sc.slice(2)))
+  : sc.slice(2) === dkey(todayDate()) ? t('plan.today') : sc.slice(2) === dkey(addDays(todayDate(), 1)) ? t('plan.tomorrow') : human(parseKey(sc.slice(2)));
+
+/** Прошедшие дни «замораживаем»: правка шаблона потом не меняет историю. */
+function planFreeze() {
+  const y = dkey(addDays(todayDate(), -1));
+  if (!S.plan.frozen) { S.plan.frozen = y; return; }
+  if (S.plan.frozen >= y) return;
+  let d = addDays(parseKey(S.plan.frozen), 1), n = 0;
+  while (dkey(d) <= y && n++ < 120) {
+    const k = dkey(d);
+    if (!S.plan.d[k]) { const p = planOf(d); if (p.items.length) S.plan.d[k] = planClone(p.items, true); }
+    d = addDays(d, 1);
+  }
+  S.plan.frozen = y;
+}
+
+/** Лента задач: время · отметка · название; намазы — тонкими метками. */
+function planTimeline(sc, opts = {}) {
+  const isDay = sc.startsWith('d:'), k = isDay ? sc.slice(2) : '', d = isDay ? parseKey(k) : null;
+  const items = [...scopeItems(sc)].sort((a, b) => tmin(a.time) - tmin(b.time));
+  const log = isDay ? peek(d) : {};
+  const rows = items.map(x => ({ m: tmin(x.time), x }));
+  const timed = rows.filter(r => r.m < 1e4);
+  if (opts.prayers && isDay && S.settings.lat != null && timed.length) {
+    const p = prayerTimes(d);
+    if (p) {
+      const lo = opts.prayers === 'all' ? -1 : timed[0].m, hi = opts.prayers === 'all' ? 1e4 : timed[timed.length - 1].m;
+      [['fajr', p.fajr], ['zuhr', p.dhuhr], ['asr', p.asr], ['maghrib', p.maghrib], ['isha', p.isha]].forEach(([id, tm]) => {
+        const m = tm.getHours() * 60 + tm.getMinutes();
+        if (m >= lo && m <= hi) rows.push({ m: m - 0.5, pr: prayerName(id, d), t: hm(tm) });
+      });
+    }
+  }
+  // что идёт сейчас
+  if (isDay && isToday(d) && timed.length) {
+    const now = new Date(), nm = now.getHours() * 60 + now.getMinutes();
+    let cur = null;
+    timed.forEach((r, i) => {
+      const nextM = timed[i + 1] ? timed[i + 1].m : r.m + 60, end = r.x.end ? tmin(r.x.end) : nextM;
+      if (r.m <= nm && nm < Math.max(end, r.m + 1)) cur = r;
+    });
+    if (cur) cur.cur = true;
+    else if (nm > timed[0].m - 120 && nm < timed[timed.length - 1].m + 180) rows.push({ m: nm + 0.25, nowLine: true, t: hm(now) });
+  }
+  rows.sort((a, b) => a.m - b.m);
+  const html = rows.map(r => {
+    if (r.pr) return `<div class="pl-pr"><span class="pl-t num">${r.t}</span><span class="pl-pn">${esc(r.pr)}</span></div>`;
+    if (r.nowLine) return `<div class="pl-now" aria-hidden="true"><span class="pl-t num">${r.t}</span><i></i></div>`;
+    const x = r.x, on = isDay && log['pl_' + x.id] === true;
+    return `<div class="pl-row ${x.kind === 'deen' ? 'deen' : ''} ${on ? 'done' : ''} ${r.cur ? 'cur' : ''}">
+      <span class="pl-t num">${x.time || ''}${x.end ? `<small>${x.end}</small>` : ''}</span>
+      ${isDay ? `<button class="pl-c" data-a="toggle" data-id="pl_${x.id}" data-d="${k}" role="checkbox" aria-checked="${on}" aria-label="${esc(x.title)}">${icon('check')}</button>` : '<span class="pl-c" aria-hidden="true"></span>'}
+      <button class="pl-x" data-a="planEdit" data-v="${sc}" data-id="${x.id}"><span class="pl-tt">${esc(x.title)}</span>${r.cur ? `<span class="pl-badge">${t('plan.now')}</span>` : ''}</button>
+    </div>`;
+  }).join('');
+  return `<div class="pl-tl">${html}</div>`;
+}
+
+/** Блок «План дня» на главном экране. */
+function planBlock(d) {
+  if (S.settings.planOn === false) return '';
+  const k = dkey(d), sc = 'd:' + k, p = planOf(d), items = p.items, log = peek(d);
+  const done = items.filter(x => log['pl_' + x.id] === true).length, open = !S.settings.folded.plan;
+  const tag = p.tpl != null ? `<span class="pl-tag">${esc(t('plan.byTpl', { w: wdName(p.tpl) }))}</span>` : '';
+  return `<section class="sec plan ${open ? 'open' : ''}">
+    <button class="sec-h" data-a="foldSec" data-v="plan" aria-expanded="${open}">
+      <span class="title grow">${t('plan.title')}</span>${items.length ? `<span class="cnt">${t('n.of', { a: done, b: items.length })}</span>
+      <span class="mini"><i style="width:${(done / items.length * 100).toFixed(0)}%"></i></span>` : ''}${icon('chev', 'rot')}
+    </button>
+    ${open ? `<div class="sec-b">
+      ${items.length ? planTimeline(sc, { prayers: 'range' }) : `<p class="sec-note">${t('plan.empty')}</p>`}
+      <div class="pl-acts">
+        <button class="pill add" data-a="planAdd" data-v="${sc}">${icon('plus')}<span>${t('plan.add')}</span></button>
+        <button class="pill add" data-a="open" data-v="plan" data-id="${sc}">${icon('list')}<span>${t('plan.all')}</span></button>
+        ${tag}
+      </div>
+    </div>` : ''}
+  </section>`;
+}
+
+/** Страница плана: сегодня, завтра и шаблоны по дням недели. */
+function viewPlan(sc) {
+  const td = todayDate(), tk = 'd:' + dkey(td), tm = 'd:' + dkey(addDays(td, 1));
+  sc = sc || tk;
+  const isDay = sc.startsWith('d:');
+  const chip = (v, l, extra = '') => `<button class="fchip ${v === sc ? 'on' : ''}" data-a="planScope" data-v="${v}" aria-selected="${v === sc}">${l}${extra}</button>`;
+  const cnt = v => { const n = scopeItems(v).length; return n ? `<small>${n}</small>` : ''; };
+  const scopes = `<div class="fold-row pl-scopes" role="tablist">
+      ${isDay && sc !== tk && sc !== tm ? chip(sc, esc(human(parseKey(sc.slice(2)))), cnt(sc)) : ''}
+      ${chip(tk, t('plan.today'), cnt(tk))}${chip(tm, t('plan.tomorrow'), cnt(tm))}
+      <span class="pl-div">${t('plan.tpls')}</span>
+      ${WD_ORDER.map(w => chip('w:' + w, esc(wdAbbr(w)), cnt('w:' + w))).join('')}
+    </div>`;
+  let info;
+  if (isDay) {
+    const d = parseKey(sc.slice(2)), p = planOf(d);
+    info = `${esc(wdLong(d))}, ${esc(human(d))} · ${p.own ? t('plan.ownDay') : p.tpl != null ? esc(t('plan.fromTpl', { w: wdName(p.tpl) })) : t('plan.noPlan')}`;
+  } else info = esc(t('plan.tplHint', { w: wdName(Number(sc.slice(2))) }));
+  const items = scopeItems(sc);
+  return pageTop(t('plan.title'), `<button class="icon-btn" data-a="planMenu" data-v="${sc}" aria-label="${t('plan.more')}">${icon('more')}</button>`) + `
+    ${scopes}
+    <p class="prose pl-info">${info}</p>
+    ${items.length ? `<section class="card pl-card">${planTimeline(sc, { prayers: 'all' })}</section>`
+      : `<div class="empty-art">${ART.lantern}<p>${isDay ? t('plan.empty') : t('plan.emptyTpl')}</p></div>`}
+    <button class="btn ghost wide" data-a="planAdd" data-v="${sc}">${icon('plus')}${t('plan.new')}</button>
+    ${S.plan.clip && S.plan.clip.length ? `<button class="btn ghost wide pl-paste" data-a="planPaste" data-v="${sc}">${icon('save')}${t('plan.paste', { n: S.plan.clip.length })}</button>` : ''}`;
+}
+
+/** Форма задачи плана. */
+function planForm(sc, x) {
+  const isDay = sc.startsWith('d:'), d = isDay ? parseKey(sc.slice(2)) : null;
+  const deen = t('plan.sugDeen').split('|'), life = t('plan.sugLife').split('|');
+  const kind0 = x ? x.kind || 'life' : 'life';
+  return new Promise(res => {
+    openModal(`<form novalidate><h2>${x ? t('plan.edit') : t('plan.new')}</h2>
+      <label class="field"><span>${t('plan.fTitle')}</span><input name="title" list="plSug" value="${esc(x ? x.title : '')}" placeholder="${esc(t('plan.fTitlePh'))}" autocomplete="off" maxlength="80"></label>
+      <datalist id="plSug">${[...deen, ...life].map(s => `<option value="${esc(s)}">`).join('')}</datalist>
+      <div class="two">
+        <label class="field"><span>${t('plan.fStart')}</span><input name="time" type="time" value="${x ? x.time || '' : ''}"></label>
+        <label class="field"><span>${t('plan.fEnd')}</span><input name="end" type="time" value="${x ? x.end || '' : ''}"></label>
+      </div>
+      ${isDay && !x ? `<label class="field"><span>${t('plan.fRepeat')}</span><select name="rep">${[['once', t('plan.rep.once')], ['wd', t('plan.rep.wd', { w: wdName(d.getDay()) })], ['work', t('plan.rep.work')], ['all', t('plan.rep.all')]]
+        .map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join('')}</select></label>` : ''}
+      <div class="actions">${x ? `<button type="button" class="icon-btn info-del" data-del aria-label="${t('b.delete')}">${icon('trash')}</button>` : ''}
+        <button type="button" class="btn ghost" data-cancel>${t('b.cancel')}</button><button class="btn primary">${x ? t('b.save') : t('b.add')}</button></div></form>`);
+    modalResolve = res;
+    const f = root.querySelector('form');
+    root.querySelector('[data-cancel]').onclick = () => closeModal(null);
+    const del = root.querySelector('[data-del]');
+    if (del) del.onclick = () => closeModal({ del: true });
+    f.onsubmit = e => {
+      e.preventDefault();
+      const title = f.elements.title.value.trim().slice(0, 80);
+      const kind = deen.includes(title) ? 'deen' : life.includes(title) ? 'life' : kind0;
+      closeModal({ title, time: f.elements.time.value || '', end: f.elements.end.value || '', kind, rep: f.elements.rep ? f.elements.rep.value : 'once' });
+    };
+    setTimeout(() => f.elements.title.focus(), 60);
+  });
+}
+
+/** Выбор дней, куда применить план. */
+function planTargets(sc) {
+  const td = todayDate();
+  const opts = [['d:' + dkey(td), t('plan.today')], ['d:' + dkey(addDays(td, 1)), t('plan.tomorrow')], ...WD_ORDER.map(w => ['w:' + w, wdName(w)])].filter(([v]) => v !== sc);
+  return new Promise(res => {
+    openModal(`<form novalidate><h2>${t('plan.applyTitle')}</h2><p class="prose">${t('plan.applyHint')}</p>
+      <div class="pick-grid">${opts.map(([v, l], i) => `${i === 2 || (i === 1 && !opts[0][0].startsWith('d:')) ? `<span class="pick-h">${t('plan.tpls')}</span>` : ''}<label class="pick"><input type="checkbox" name="t" value="${v}"><span>${esc(l)}</span></label>`).join('')}</div>
+      <div class="actions"><button type="button" class="btn ghost" data-cancel>${t('b.cancel')}</button><button class="btn primary">${t('plan.applyBtn')}</button></div></form>`);
+    modalResolve = res;
+    const f = root.querySelector('form');
+    root.querySelector('[data-cancel]').onclick = () => closeModal(null);
+    f.onsubmit = e => { e.preventDefault(); closeModal([...f.querySelectorAll('input[name=t]:checked')].map(i => i.value)); };
+  });
+}
+
+const PA = {
+  async planAdd(ds) {
+    const sc = ds.v, r = await planForm(sc, null);
+    if (!r) return;
+    if (!r.title) return toast(t('plan.err'));
+    const it = { id: uid(), title: r.title, time: r.time, end: r.end, kind: r.kind };
+    scopeItems(sc, true).push(it);
+    if (r.rep && r.rep !== 'once') {
+      const wds = r.rep === 'wd' ? [parseKey(sc.slice(2)).getDay()] : r.rep === 'work' ? [1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5, 6];
+      wds.forEach(w => scopeItems('w:' + w, true).push({ ...it, id: uid() }));
+      toast(t('plan.repAdded'));
+    }
+    commit(true);
+  },
+  async planEdit(ds) {
+    const sc = ds.v, x0 = scopeItems(sc).find(i => i.id === ds.id);
+    if (!x0) return;
+    const r = await planForm(sc, x0);
+    if (!r) return;
+    if (!r.del && !r.title) return toast(t('plan.err'));
+    // задача пришла из шаблона — спросить, где менять
+    let alsoTpl = null;
+    if (sc.startsWith('d:')) {
+      const wd = parseKey(sc.slice(2)).getDay(), w = S.plan.w[wd];
+      if (w && w.items.some(i => i.id === x0.id)) {
+        const v = await sheet(t('plan.scopeQ'), [{ v: 'day', label: t('plan.onlyHere'), icon: 'cal' }, { v: 'tpl', label: t('plan.alsoTpl', { w: wdName(wd) }), icon: 'replay' }]);
+        if (v == null) return;
+        if (v === 'tpl') alsoTpl = w.items;
+      }
+    }
+    const apply = list => {
+      const i = list.findIndex(o => o.id === x0.id);
+      if (i < 0) return;
+      if (r.del) list.splice(i, 1); else Object.assign(list[i], { title: r.title, time: r.time, end: r.end, kind: r.kind });
+    };
+    apply(scopeItems(sc, true));
+    if (alsoTpl) apply(alsoTpl);
+    commit(true);
+  },
+  planScope(ds) { const top = ui.stack[ui.stack.length - 1]; if (top) top.param = ds.v; render(); },
+  async planPaste(ds) {
+    const sc = ds.v, clip = S.plan.clip || [];
+    if (!clip.length) return;
+    let mode = 'replace';
+    if (scopeItems(sc).length) {
+      mode = await sheet(t('plan.pasteQ'), [{ v: 'replace', label: t('plan.replace'), icon: 'replay' }, { v: 'append', label: t('plan.append'), icon: 'plus' }]);
+      if (mode == null) return;
+    }
+    const list = scopeItems(sc, true);
+    if (mode === 'replace') list.splice(0, list.length);
+    list.push(...planClone(clip));
+    toast(t('plan.pasted'));
+    commit(true);
+  },
+  async planMenu(ds) {
+    const sc = ds.v, isDay = sc.startsWith('d:'), items = scopeItems(sc);
+    const d = isDay ? parseKey(sc.slice(2)) : null, wd = isDay ? d.getDay() : Number(sc.slice(2));
+    const tomorrow = 'd:' + dkey(addDays(todayDate(), 1));
+    const log = isDay ? peek(d) : {}, undone = isDay ? items.filter(x => log['pl_' + x.id] !== true) : [];
+    const p = isDay ? planOf(d) : null;
+    const opts = [
+      ...(items.length ? [{ v: 'copy', label: t('plan.copy'), icon: 'save' }] : []),
+      ...(S.plan.clip && S.plan.clip.length ? [{ v: 'paste', label: t('plan.paste', { n: S.plan.clip.length }), icon: 'list' }] : []),
+      ...(items.length ? [{ v: 'apply', label: t('plan.apply'), icon: 'cal' }] : []),
+      ...(isDay && items.length ? [{ v: 'tpl', label: t('plan.saveTpl', { w: wdName(wd) }), icon: 'replay' }] : []),
+      ...(isDay && p.own && S.plan.w[wd] && S.plan.w[wd].items.length ? [{ v: 'reset', label: t('plan.resetTpl', { w: wdName(wd) }), icon: 'back' }] : []),
+      ...(isDay && sc !== tomorrow && undone.length ? [{ v: 'move', label: t('plan.moveUndone', { n: undone.length }), icon: 'arrow' }] : []),
+      ...(items.length ? [{ v: 'clear', label: t('plan.clear'), icon: 'trash', color: 'var(--danger)' }] : []),
+    ];
+    if (!opts.length) return toast(t('plan.nothing'));
+    const v = await sheet(t('plan.more'), opts);
+    if (v == null) return;
+    if (v === 'copy') { S.plan.clip = planClone(items).map(({ id, ...rest }) => rest); save(); toast(t('plan.copied', { n: items.length })); render(); return; }
+    if (v === 'paste') return PA.planPaste(ds);
+    if (v === 'apply') {
+      const tg = await planTargets(sc);
+      if (!tg || !tg.length) return;
+      const src = items.map(({ id, ...rest }) => rest);
+      tg.forEach(tsc => { const list = scopeItems(tsc, true); list.splice(0, list.length, ...planClone(src)); });
+      toast(t('plan.applied'));
+      return commit(true);
+    }
+    if (v === 'tpl') {
+      const w = S.plan.w[wd];
+      if (w && w.items.length && !(await confirmBox(t('plan.tplReplaceQ', { w: wdName(wd) }), t('plan.replace')))) return;
+      // у этого дня — свой план, шаблон — копия с новыми id
+      scopeItems(sc, true);
+      S.plan.w[wd] = { items: planClone(items), from: w ? w.from : dkey(todayDate()) };
+      toast(t('plan.tplSaved', { w: wdName(wd) }));
+      return commit(true);
+    }
+    if (v === 'reset') { delete S.plan.d[sc.slice(2)]; return commit(true); }
+    if (v === 'move') {
+      const list = scopeItems(sc, true), ids = new Set(undone.map(x => x.id));
+      scopeItems(tomorrow, true).push(...planClone(list.filter(x => ids.has(x.id))));
+      list.splice(0, list.length, ...list.filter(x => !ids.has(x.id)));
+      toast(t('plan.moved', { n: ids.size }));
+      return commit(true);
+    }
+    if (v === 'clear') {
+      if (!(await confirmBox(t('plan.clearQ')))) return;
+      scopeItems(sc, true).splice(0);
+      return commit(true);
+    }
+  },
+};
 
 // =====================================================================
 //  КАЛЕНДАРЬ
@@ -2693,7 +3156,8 @@ const CW = 320, PL = 24, PB = 16, PT_ = 8;
 const yOf = (v, H, max) => PT_ + (H - PT_ - PB) * (1 - v / max);
 const slotW = n => (CW - PL) / n;
 const xLabel = (D, i) => D.length <= 7 ? wdShort(D[i]) : D[i].getDate();
-const xLabels = (D, H) => D.map((d, i) => (D.length > 7 && i % 5 !== 0 && i !== D.length - 1) ? '' :
+const xStep = n => n > 14 ? 5 : n > 7 ? 3 : 1;
+const xLabels = (D, H) => D.map((d, i) => (D.length > 7 && i % xStep(D.length) !== 0 && !(D.length > 14 && i === D.length - 1)) ? '' :
   `<text class="xl" x="${(PL + (i + .5) * slotW(D.length)).toFixed(1)}" y="${H - 3}">${xLabel(D, i)}</text>`).join('');
 const yGrid = (H, max, ticks) => ticks.map(v => {
   const y = yOf(v, H, max).toFixed(1);
@@ -2723,7 +3187,7 @@ function chartPrayers(D) {
   });
   return `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="img" aria-label="${t('stats.prayers')}">${yGrid(H, max, [0, 2, 4, 6])}${bars}${xLabels(D, H)}</svg>`;
 }
-function chartBars(D, values, goal, color, label) {
+function chartBars(D, values, goal, color, label, labs) {
   const H = 130, top = niceMax(Math.max(goal || 0, ...values, 1) * 1.1), s = slotW(D.length), bw = Math.min(16, s * 0.6);
   const bars = values.map((v, i) => {
     if (!v) return '';
@@ -2731,7 +3195,8 @@ function chartBars(D, values, goal, color, label) {
     return `<rect x="${(cx - bw / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${(yOf(0, H, top) - y).toFixed(1)}" rx="3" style="fill:${met ? 'var(--st-ontime)' : color}"/>`;
   }).join('');
   const g = goal ? `<line class="goal" x1="${PL}" x2="${CW}" y1="${yOf(goal, H, top).toFixed(1)}" y2="${yOf(goal, H, top).toFixed(1)}"/>` : '';
-  return `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="img" aria-label="${label}">${yGrid(H, top, [0, top / 2, top])}${g}${bars}${xLabels(D, H)}</svg>`;
+  const xl = labs ? labs.map((l, i) => `<text class="xl" x="${(PL + (i + .5) * s).toFixed(1)}" y="${H - 3}">${esc(l)}</text>`).join('') : xLabels(D, H);
+  return `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="img" aria-label="${label}">${yGrid(H, top, [0, top / 2, top])}${g}${bars}${xl}</svg>`;
 }
 function chartDots(D, rows) {
   const LAB = 70, rowH = 24, H = rows.length * rowH + 16, s = (CW - LAB) / D.length, r = Math.min(6.5, s * 0.36);
@@ -2747,37 +3212,6 @@ function chartDots(D, rows) {
   const xl = D.map((d, i) => (D.length > 7 && i % 5 !== 0 && i !== D.length - 1) ? '' :
     `<text class="xl" x="${(LAB + (i + .5) * s).toFixed(1)}" y="${H - 2}">${xLabel(D, i)}</text>`).join('');
   return `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="img">${body}${xl}</svg>`;
-}
-/** Тепловая карта последнего года: 53 недели × 7 дней. */
-function heatmap() {
-  const today = todayDate(), start = addDays(today, -wdi(today) - 7 * 52);
-  const cell = 5.2, step = 6, top = 11;
-  let rects = '', labels = '', active = 0, perfect = 0, lastMonth = -1, labelEnd = -99;
-  for (let c = 0; c < 53; c++) {
-    for (let r = 0; r < 7; r++) {
-      const d = addDays(start, c * 7 + r);
-      if (d > today) continue;
-      const has = !!S.logs[dkey(d)], p = has ? progress(d) : 0;
-      if (has && p > 0) active++;
-      if (p === 1) perfect++;
-      const pct = p === 0 ? 0 : p < .34 ? 28 : p < .67 ? 55 : p < 1 ? 80 : 100;
-      const fill = pct ? `color-mix(in srgb, var(--accent) ${pct}%, var(--surface-2))` : 'var(--surface-2)';
-      rects += `<rect x="${c * step}" y="${top + r * step}" width="${cell}" height="${cell}" rx="1.3" style="fill:${fill}"><title>${human(d)}: ${Math.round(p * 100)}%</title></rect>`;
-    }
-    const first = addDays(start, c * 7);
-    if (first.getMonth() !== lastMonth && first.getDate() <= 7 && c < 51) {
-      lastMonth = first.getMonth();
-      const txt = monthShort(first), w = txt.length * 4.3, x = c * step;
-      if (x >= labelEnd + 4) { labels += `<text x="${x}" y="7">${esc(txt)}</text>`; labelEnd = x + w; }
-    }
-  }
-  const legend = [0, 28, 55, 80, 100].map((p, i) => `<rect x="${236 + i * 8}" y="${top + 7 * step + 4}" width="6" height="6" rx="1.3" style="fill:${p ? `color-mix(in srgb, var(--accent) ${p}%, var(--surface-2))` : 'var(--surface-2)'}"/>`).join('');
-  const H = top + 7 * step + 14;
-  return {
-    svg: `<svg class="chart heat" viewBox="0 0 318 ${H}" role="img" aria-label="${t('stats.year')}">${labels}${rects}
-      <text x="230" y="${top + 7 * step + 9.5}" style="text-anchor:end">${t('stats.less')}</text>${legend}<text x="278" y="${top + 7 * step + 9.5}">${t('stats.more')}</text></svg>`,
-    active, perfect,
-  };
 }
 /** Связи между делами за последние 90 дней. */
 function correlations() {
@@ -2814,59 +3248,337 @@ function correlations() {
   return { need: 0, list };
 }
 
+/** Итог дня (кэш на одну отрисовку): доля выполненного и число отмеченных дел. */
+let DAYC = null;
+function dayInfo(d) {
+  const k = dkey(d);
+  if (DAYC && DAYC.has(k)) return DAYC.get(k);
+  let r = { p: 0, done: 0, has: false };
+  if (S.logs[k]) {
+    const ts = tasksFor(d), l = peek(d), done = ts.filter(x => isDone(x, l)).length;
+    r = { p: ts.length ? done / ts.length : 0, done, has: true };
+  }
+  if (DAYC) DAYC.set(k, r);
+  return r;
+}
+const f1 = n => n.toFixed(1);
+/** Плавная кривая через точки (без выбросов за пределы графика). */
+function smoothPath(pts, lo, hi) {
+  if (pts.length < 2) return pts.length ? `M${f1(pts[0][0])},${f1(pts[0][1])}` : '';
+  let s = `M${f1(pts[0][0])},${f1(pts[0][1])}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1y = clamp(p1[1] + (p2[1] - p0[1]) / 6, lo, hi), c2y = clamp(p2[1] - (p3[1] - p1[1]) / 6, lo, hi);
+    s += ` C${f1(p1[0] + (p2[0] - p0[0]) / 6)},${f1(c1y)} ${f1(p2[0] - (p3[0] - p1[0]) / 6)},${f1(c2y)} ${f1(p2[0])},${f1(p2[1])}`;
+  }
+  return s;
+}
+/** Корзины периода: дни (7/30) или недели (90). */
+function buckets(D) {
+  if (D.length <= 31) return D.map(d => ({ start: d, days: [d] }));
+  const out = [];
+  for (let i = D.length % 7; i < D.length; i += 7) out.push({ start: D[i], days: D.slice(i, i + 7) });
+  if (D.length % 7) out[0].days = D.slice(0, 7 + D.length % 7);
+  return out;
+}
+/** Мягкая площадь: средний процент выполнения по дням/неделям. */
+function chartArea(B, vals) {
+  const H = 104, top = 10, base = H - 18, n = vals.length, s = (CW - PL) / n;
+  const pts = vals.map((v, i) => [PL + (i + .5) * s, base - (base - top) * v]);
+  const line = smoothPath(pts, top, base);
+  const area = `${line} L${f1(pts[n - 1][0])},${base} L${f1(pts[0][0])},${base} Z`;
+  const grid = [0, .5, 1].map(v => { const y = f1(base - (base - top) * v); return `<line class="gl ${v === 0 ? 'base' : ''}" x1="${PL}" x2="${CW}" y1="${y}" y2="${y}"/><text class="yl" x="${PL - 6}" y="${f1(+y + 3.2)}">${v * 100}</text>`; }).join('');
+  const last = pts[n - 1];
+  const hits = vals.map((v, i) => `<rect class="hit" x="${f1(PL + i * s)}" y="0" width="${f1(s)}" height="${H}"><title>${B[i].label ? esc(cap(fmt(B[i].start, { month: 'long' }))) : B[i].days.length > 1 ? `${human(B[i].days[0])} – ${human(B[i].days[B[i].days.length - 1])}` : human(B[i].start)}: ${Math.round(v * 100)}%</title></rect>`).join('');
+  const labels = B.map((b, i) => (!b.label && n > 7 && i % xStep(n) !== 0 && !(n > 14 && i === n - 1)) ? '' : `<text class="xl" x="${f1(PL + (i + .5) * s)}" y="${H - 3}">${esc(b.label || (n <= 7 ? wdShort(b.start) : String(b.start.getDate())))}</text>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="img" aria-label="${t('st2.overview')}">
+    <defs><linearGradient id="ovg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+    ${grid}<path d="${area}" fill="url(#ovg)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${f1(last[0])}" cy="${f1(last[1])}" r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>${labels}${hits}</svg>`;
+}
+/** Кольцо статусов намаза. */
+function donut(parts, center, sub) {
+  const R = 44, C = 2 * Math.PI * R, tot = parts.reduce((a, p) => a + p.v, 0) || 1;
+  const gap = parts.filter(p => p.v > 0).length > 1 ? 2.5 : 0;
+  let off = 0;
+  const segs = parts.map(p => {
+    if (!p.v) return '';
+    const len = p.v / tot * C;
+    const s = `<circle r="${R}" cx="60" cy="60" fill="none" stroke="${p.color}" stroke-width="13" stroke-dasharray="${f1(Math.max(0.1, len - gap))} ${f1(C)}" stroke-dashoffset="${f1(-off)}" transform="rotate(-90 60 60)"><title>${esc(p.label)}: ${p.v}</title></circle>`;
+    off += len;
+    return s;
+  }).join('');
+  return `<svg class="donut" viewBox="0 0 120 120" role="img" aria-label="${esc(center)} ${esc(sub)}">
+    <circle r="${R}" cx="60" cy="60" fill="none" stroke="var(--surface-2)" stroke-width="13"/>${segs}
+    <text x="60" y="60" class="dn-v">${esc(center)}</text><text x="60" y="78" class="dn-s">${esc(sub)}</text></svg>`;
+}
+/** Серия подряд для одного дела (сегодня ещё может быть не отмечено). */
+function habitStreak(f, prayerLike) {
+  let d = todayDate(), n = 0;
+  if (!f(d)) d = addDays(d, -1);
+  for (let g = 0; g < 2000; g++) {
+    if (prayerLike && isExcused(d)) { d = addDays(d, -1); continue; }
+    if (!f(d)) break;
+    n++; d = addDays(d, -1);
+  }
+  return n;
+}
+/** Лучшая серия фарда за отрезок дней. */
+function bestFardStreak(from, to) {
+  let best = 0, cur = 0;
+  for (let d = from; d <= to; d = addDays(d, 1)) {
+    if (isExcused(d)) continue;
+    if (FARD.every(id => isPrayed(peek(d)[id]))) { cur++; best = Math.max(best, cur); } else cur = 0;
+  }
+  return best;
+}
+const firstLogDay = () => { const ks = Object.keys(S.logs).sort(); return ks.length ? parseKey(ks[0]) : todayDate(); };
+
+/** Выбранный год и границы для стрелок. */
+function yearSel() {
+  const today = todayDate(), first = firstLogDay();
+  const minY = Math.min(first.getFullYear(), today.getFullYear()), maxY = today.getFullYear();
+  return { y: clamp(ui.statsYear || maxY, minY, maxY), minY, maxY };
+}
+/** Корзины по месяцам (для вкладки «Год»). */
+function monthBuckets(D) {
+  const out = [];
+  D.forEach(d => { const last = out[out.length - 1]; if (last && last.start.getMonth() === d.getMonth()) last.days.push(d); else out.push({ start: d, days: [d], label: fmt(d, { month: 'narrow' }) }); });
+  return out;
+}
+/** Карточка года: тепловая карта, итоги, месяцы. */
+function yearCard() {
+  const today = todayDate(), first = firstLogDay();
+  const { y, minY, maxY } = yearSel();
+  const jan1 = new Date(y, 0, 1), dec31 = new Date(y, 11, 31), end = dec31 < today ? dec31 : today;
+  const start = addDays(jan1, -wdi(jan1));
+  const cols = Math.ceil((daysBetween(start, dec31) + 1) / 7);
+  const step = 318 / cols, cell = step - 0.9, top = 12;
+  const lvl = p => p === 0 ? 0 : p < .34 ? 28 : p < .67 ? 55 : p < 1 ? 80 : 100;
+  const fillOf = pct => pct ? `color-mix(in srgb, var(--accent) ${pct}%, var(--surface-2))` : 'var(--surface-2)';
+  let rects = '', labels = '', active = 0, perfect = 0, deeds = 0, onT = 0, slots = 0, jam = 0, quran = 0, night = 0, azk = 0;
+  const month = [...Array(12)].map(() => ({ s: 0, n: 0 }));
+  for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < 7; r++) {
+      const d = addDays(start, c * 7 + r);
+      if (d < jan1 || d > dec31) continue;
+      const future = d > today, info = future ? { p: 0, has: false, done: 0 } : dayInfo(d);
+      const pct = lvl(info.p);
+      rects += `<rect x="${f1(c * step)}" y="${f1(top + r * step)}" width="${f1(cell)}" height="${f1(cell)}" rx="1.4" style="fill:${future ? 'transparent' : fillOf(pct)}${future ? ';stroke:var(--surface-2);stroke-width:.6' : ''}"><title>${human(d)}: ${Math.round(info.p * 100)}%</title></rect>`;
+      if (future) continue;
+      if (info.has && info.p > 0) active++;
+      if (info.p === 1) perfect++;
+      deeds += info.done;
+      const l = peek(d);
+      if (!isExcused(d)) {
+        slots += 5;
+        FARD.forEach(id => { if (l[id] === 'ontime' || l[id] === 'jamaat') onT++; if (l[id] === 'jamaat') jam++; });
+        if (l.tahajjud === true) night++;
+        if (info.has) { month[d.getMonth()].s += info.p; month[d.getMonth()].n++; }
+      }
+      quran += iv(l.quran);
+      azk += (l.azkar_m === true) + (l.azkar_e === true);
+    }
+  }
+  for (let m = 0; m < 12; m++) {
+    const d = new Date(y, m, 1), c = Math.floor(daysBetween(start, d) / 7);
+    labels += `<text x="${f1(c * step)}" y="8">${esc(monthShort(d))}</text>`;
+  }
+  const H = top + 7 * step + 2;
+  const heat = `<svg class="chart heat" viewBox="0 0 318 ${f1(H)}" role="img" aria-label="${t('stats.year')}">${labels}${rects}</svg>
+    <div class="heat-lg"><span>${t('stats.less')}</span>${[0, 28, 55, 80, 100].map(p => `<i style="background:${fillOf(p)}"></i>`).join('')}<span>${t('stats.more')}</span></div>`;
+  const books = S.books.filter(b => b.status === 'done' && b.finishedAt && parseKey(b.finishedAt).getFullYear() === y).length;
+  const khatms = S.milestones.filter(m => m.type === 'khatm' && m.date && parseKey(m.date).getFullYear() === y).length;
+  const streak = bestFardStreak(jan1 > first ? jan1 : first, end);
+  const tile = (v, l, ic) => `<div class="yt">${icon(ic)}<b class="num">${v}</b><span>${l}</span></div>`;
+  const tiles = [
+    tile(active, t('st2.yActive'), 'cal'), tile(perfect, t('st2.yPerfect'), 'star'),
+    tile(streak, t('st2.yStreak'), 'fire'), tile(`${slots ? Math.round(onT / slots * 100) : 0}%`, t('st2.yOnTime'), 'check'),
+    tile(jam, t('st2.yJamaat'), 'users'), tile(quran, t('st2.yQuran'), 'book'),
+    tile(books, t('st2.yBooks'), 'lib'), tile(night, t('st2.yNight'), 'moon'),
+    ...(khatms ? [tile(khatms, t('st2.yKhatm'), 'milestone')] : []), tile(azk, t('st2.yAzkar'), 'sunrise'),
+  ].join('');
+  // месяцы
+  const avg = month.map(m => m.n ? m.s / m.n : 0), best = avg.indexOf(Math.max(...avg));
+  const mw = (CW - 4) / 12, MH = 92, mtop = 14, mbase = MH - 16;
+  const mbars = avg.map((v, i) => {
+    const x = 2 + i * mw + mw * 0.2, w = mw * 0.6, hgt = Math.max(v ? 3 : 0, (mbase - mtop) * v), isBest = i === best && v > 0;
+    const fut = new Date(y, i, 1) > today;
+    return `${fut ? `<rect x="${f1(x)}" y="${f1(mbase - 3)}" width="${f1(w)}" height="3" rx="1.5" style="fill:var(--surface-2)"/>` : `<rect x="${f1(x)}" y="${f1(mbase - (mbase - mtop))}" width="${f1(w)}" height="${f1(mbase - mtop)}" rx="4" style="fill:var(--surface-2);opacity:.6"/>`}
+      ${hgt ? `<rect x="${f1(x)}" y="${f1(mbase - hgt)}" width="${f1(w)}" height="${f1(hgt)}" rx="4" style="fill:${isBest ? 'var(--accent)' : 'color-mix(in srgb, var(--accent) 45%, var(--surface-2))'}"><title>${esc(cap(fmt(new Date(y, i, 1), { month: 'long' })))}: ${Math.round(v * 100)}%</title></rect>` : ''}
+      ${isBest ? `<text class="bv" x="${f1(x + w / 2)}" y="${f1(mbase - hgt - 4)}">${Math.round(v * 100)}%</text>` : ''}
+      <text class="xl" x="${f1(x + w / 2)}" y="${MH - 3}">${esc(fmt(new Date(y, i, 1), { month: 'narrow' }))}</text>`;
+  }).join('');
+  const months = `<svg class="chart" viewBox="0 0 ${CW} ${MH}" role="img" aria-label="${t('st2.months')}">${mbars}</svg>`;
+  const nav = `<div class="ynav"><button class="icon-btn sm" data-a="statsYear" data-v="-1" ${y <= minY ? 'disabled' : ''} aria-label="${y - 1}">${icon('back', 'dir')}</button>
+    <b class="num">${y}</b><button class="icon-btn sm" data-a="statsYear" data-v="1" ${y >= maxY ? 'disabled' : ''} aria-label="${y + 1}">${icon('chev', 'dir')}</button></div>`;
+  return `<section class="card year">
+    <div class="hd">${icon('cal')}<h2 class="grow">${t('st2.yearTitle')}</h2>${nav}</div>
+    ${heat}
+    <div class="ygrid">${tiles}</div>
+    <h3 class="sub-h">${t('st2.months')}${avg[best] > 0 ? `<span>${esc(t('st2.bestMonth', { m: fmt(new Date(y, best, 1), { month: 'long' }) }))}</span>` : ''}</h3>
+    ${months}
+    ${deeds ? `<p class="y-foot">${t('st2.yDeeds', { n: deeds })}</p>` : ''}
+  </section>`;
+}
+
 function viewStats() {
-  const n = ui.statsDays, today = todayDate();
-  const D = [...Array(n)].map((_, i) => addDays(today, i - n + 1));
+  DAYC = new Map();
+  const isY = ui.statsDays === 'year', today = todayDate();
+  let D, Dprev;
+  if (isY) {
+    const { y } = yearSel(), e0 = new Date(y, 11, 31) < today ? new Date(y, 11, 31) : today;
+    D = [];
+    for (let d = new Date(y, 0, 1); d <= e0; d = addDays(d, 1)) D.push(d);
+    Dprev = D.map((_, i) => addDays(new Date(y - 1, 0, 1), i));
+  } else {
+    const k = ui.statsDays === 30 ? 30 : 7;
+    D = [...Array(k)].map((_, i) => addDays(today, i - k + 1));
+    Dprev = [...Array(k)].map((_, i) => addDays(today, i - 2 * k + 1));
+  }
+  const n = D.length;
   const okDays = D.filter(d => !isExcused(d));
   const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
-  const count = (ids, val) => okDays.reduce((s, d) => s + ids.filter(id => val(peek(d)[id])).length, 0);
-  const fardOn = count(FARD, v => v === 'ontime' || v === 'jamaat');
-  const jam = count(FARD, v => v === 'jamaat');
-  const late = count(FARD, v => v === 'late');
-  const ratib = count(RATIB, v => v === true);
-  const quran = D.map(d => iv(peek(d).quran));
-  const books = D.map(d => Object.entries(peek(d)).reduce((s, [k, v]) => s + (k.startsWith('book_') ? iv(v) : 0), 0));
   const sum = a => a.reduce((x, y) => x + y, 0);
-  const qGoal = S.settings.khatmActive ? khatmTodayGoal() : S.settings.quranGoal;
-  const qMet = quran.filter(v => v >= qGoal).length;
-  const azM = D.filter(d => peek(d).azkar_m === true).length, azE = D.filter(d => peek(d).azkar_e === true).length;
-  const night = ['tahajjud', 'duha', 'witr'].map(id => okDays.filter(d => peek(d)[id] === true).length);
-  const heat = heatmap(), corr = correlations();
+  const avgP = days => { const ok = days.filter(d => !isExcused(d) && dayInfo(d).has); return ok.length ? sum(ok.map(d => dayInfo(d).p)) / ok.length : null; };
+  const B = isY ? monthBuckets(D) : buckets(D);
+  const blabs = isY ? B.map(b => b.label) : null;
 
-  const card = (ic, title, metrics, body, legend = '') => `<section class="card">
-    <div class="hd">${icon(ic)}<h2 class="grow">${title}</h2></div>
-    ${metrics.length ? `<div class="chips-row">${metrics.map(([l, v]) => `<span>${l}: <b>${v}</b></span>`).join('')}</div>` : ''}
-    ${body}${legend}</section>`;
+  // ----- итог периода
+  const cur = avgP(D), prev = avgP(Dprev);
+  const vals = B.map(b => { const ok = b.days.filter(d => !isExcused(d)); return ok.length ? sum(ok.map(d => dayInfo(d).p)) / ok.length : 0; });
+  const perfect = okDays.filter(d => dayInfo(d).p === 1).length;
+  const delta = cur != null && prev != null ? Math.round((cur - prev) * 100) : null;
+  const deltaHtml = delta == null ? '' : `<span class="delta ${delta > 0 ? 'up' : delta < 0 ? 'down' : ''}">${delta > 0 ? '↑' : delta < 0 ? '↓' : '·'} ${delta === 0 ? t('st2.same') : t('st2.vsPrev', { n: Math.abs(delta) })}</span>`;
+  const overview = `<section class="card ov">
+    <div class="ov-top"><div><p class="ov-big num">${cur == null ? '—' : Math.round(cur * 100)}<small>%</small></p><p class="ov-cap">${t('st2.avgDay')}</p></div>${deltaHtml}</div>
+    ${chartArea(B, vals)}
+    <div class="kpis">
+      <div><b class="num">${fardStreak()}</b><span>${t('stats.streak')}</span></div>
+      <div><b class="num">${bestFardStreak(firstLogDay(), today)}</b><span>${t('st2.bestStreak')}</span></div>
+      <div><b class="num">${perfect}</b><span>${t('st2.perfect')}</span></div>
+    </div></section>`;
+
+  // ----- намазы
+  const cnt = { jamaat: 0, ontime: 0, late: 0, none: 0 };
+  const per = Object.fromEntries(FARD.map(id => [id, { jamaat: 0, ontime: 0, late: 0, none: 0 }]));
+  okDays.forEach(d => { const l = peek(d); FARD.forEach(id => { const v = STATUS[l[id]] ? l[id] : 'none'; cnt[v]++; per[id][v]++; }); });
+  const slots = okDays.length * 5, onT = cnt.jamaat + cnt.ontime;
+  const ratib = okDays.reduce((s, d) => s + RATIB.filter(id => peek(d)[id] === true).length, 0);
+  const segs = [['jamaat', 'var(--st-jamaat)'], ['ontime', 'var(--st-ontime)'], ['late', 'var(--st-late)']];
+  const perRows = FARD.map(id => {
+    const p = per[id], tot = okDays.length || 1, prayed = p.jamaat + p.ontime + p.late;
+    return `<div class="pr-row"><span class="pr-n">${esc(t('task.' + id))}</span>
+      <span class="pr-bar">${segs.map(([k, c]) => p[k] ? `<i style="flex:${p[k]};background:${c}" title="${t('st.' + k)}: ${p[k]}"></i>` : '').join('')}${p.none ? `<i class="none" style="flex:${p.none}"></i>` : ''}</span>
+      <b class="num">${pct(prayed, tot)}%</b></div>`;
+  }).join('');
+  const weakest = FARD.reduce((w, id) => (per[id].jamaat + per[id].ontime) < (per[w].jamaat + per[w].ontime) ? id : w, FARD[0]);
   const lg = items => `<div class="legend">${items.map(([c, l]) => `<span style="--c:${c}"><i></i>${l}</span>`).join('')}</div>`;
-  const reading = S.books.filter(b => b.status === 'reading');
+  const prayers = `<section class="card">
+    <div class="hd">${icon('users')}<h2 class="grow">${t('stats.prayers')}</h2></div>
+    <div class="pr-top">${donut([{ v: cnt.jamaat, color: 'var(--st-jamaat)', label: t('st.jamaat') }, { v: cnt.ontime, color: 'var(--st-ontime)', label: t('st.ontime') }, { v: cnt.late, color: 'var(--st-late)', label: t('st.late') }, { v: cnt.none, color: 'color-mix(in srgb, var(--line) 70%, transparent)', label: t('st2.missed') }], `${pct(onT, slots)}%`, t('st2.onTimeShort'))}
+      <div class="pr-side">
+        <div class="kv"><span>${t('st.jamaat')}</span><b class="num">${cnt.jamaat}</b></div>
+        <div class="kv"><span>${t('st.ontime')}</span><b class="num">${cnt.ontime}</b></div>
+        <div class="kv"><span>${t('st.late')}</span><b class="num">${cnt.late}</b></div>
+        <div class="kv"><span>${t('stats.ratib')}</span><b class="num">${pct(ratib, okDays.length * 6)}%</b></div>
+      </div></div>
+    <h3 class="sub-h">${t('st2.byPrayer')}</h3>
+    ${perRows}
+    ${slots && onT < slots ? `<p class="muted tip">${icon('info')}${esc(t('st2.weakest', { p: t('task.' + weakest) }))}</p>` : ''}
+    ${n <= 30 ? chartPrayers(D) + lg([['var(--st-jamaat)', t('st.jamaat')], ['var(--st-ontime)', t('st.ontime')], ['var(--st-late)', t('st.late')], ['var(--brass)', t('stats.ratib')]]) : ''}
+  </section>`;
 
-  return `<header class="top"><h1 class="grow">${t('stats.title')}</h1>
-      <div class="seg" role="radiogroup">${[7, 30].map(v => `<button role="radio" aria-checked="${n === v}" class="${n === v ? 'on' : ''}" data-a="period" data-v="${v}">${t('stats.days', { n: v })}</button>`).join('')}</div></header>
-    <div class="stat-top">
-      <div class="metric"><b>${nDays(fardStreak())}</b><span>${t('stats.streak')}</span></div>
-      <div class="metric"><b>${pct(fardOn, okDays.length * 5)}%</b><span>${t('stats.onTimePct')}</span></div>
-    </div>
-    ${card('cal', t('stats.year'), [[t('stats.activeDays'), heat.active], [t('stats.perfectDays'), heat.perfect]], heat.svg)}
-    ${card('users', t('stats.prayers'), [[t('st.ontime'), t('n.of', { a: fardOn, b: okDays.length * 5 })], [t('st.jamaat'), jam], [t('st.late'), late], [t('stats.ratib'), `${pct(ratib, okDays.length * 6)}%`],
-      ...(S.settings.postAzkar ? [[t('stats.pa'), t('n.of', { a: okDays.reduce((a, d) => a + FARD.filter(id => peek(d)['pa_' + id] === true).length, 0), b: okDays.reduce((a, d) => a + FARD.filter(id => isPrayed(peek(d)[id])).length, 0) })]] : [])],
-      chartPrayers(D), lg([['var(--st-jamaat)', t('st.jamaat')], ['var(--st-ontime)', t('st.ontime')], ['var(--st-late)', t('st.late')], ['var(--brass)', t('stats.ratib')]]))}
-    ${card('book', t('task.quran'), [[t('stats.total'), `${sum(quran)} ${t('u.p')}`], [t('stats.avg'), t('stats.perDay', { n: (sum(quran) / n).toFixed(1) })], [t('stats.goalMet'), nDays(qMet)]],
-      chartBars(D, quran, qGoal, 'var(--accent)', t('task.quran')),
-      lg([['var(--accent)', t('stats.pages')], ['var(--st-ontime)', t('stats.goalMet')], ['var(--brass)', t('stats.goalLine', { n: qGoal })]]))}
-    ${card('lib', t('stats.books'), [[t('stats.total'), `${sum(books)} ${t('u.p')}`], [t('stats.avg'), t('stats.perDay', { n: (sum(books) / n).toFixed(1) })]],
-      chartBars(D, books, 0, 'var(--n-tahajjud)', t('stats.books')) +
-      (reading.length ? `<div style="margin-top:12px">${reading.map(b => `<div class="kv"><span>${esc(b.title)}</span><b>${b.currentPage} / ${b.totalPages}</b></div>
-        <div class="bar" style="height:5px;margin-bottom:6px"><i style="width:${(b.currentPage / Math.max(1, b.totalPages) * 100).toFixed(0)}%;background:${SPINES[S.books.indexOf(b) % SPINES.length]}"></i></div>`).join('')}</div>`
-        : `<p class="muted" style="margin:10px 0 0;font-size:13.5px">${t('stats.noBooks')}</p>`))}
-    ${card('sunrise', t('stats.azkar'), [[t('stats.morning'), t('n.of', { a: azM, b: n })], [t('stats.evening'), t('n.of', { a: azE, b: n })]],
-      chartDots(D, [{ id: 'azkar_m', label: t('stats.morning'), color: 'var(--brass)' }, { id: 'azkar_e', label: t('stats.evening'), color: 'var(--accent)' }]))}
-    ${card('moon', t('stats.night'), [[t('task.tahajjud'), night[0]], [t('task.duha'), night[1]], [t('task.witr'), night[2]]],
-      chartDots(D, [{ id: 'tahajjud', label: t('task.tahajjud'), color: 'var(--n-tahajjud)', prayer: true }, { id: 'duha', label: t('task.duha'), color: 'var(--n-duha)', prayer: true }, { id: 'witr', label: t('task.witr'), color: 'var(--n-witr)', prayer: true }]))}
-    ${card('arrow', t('stats.corr'), [],
-      corr.need ? `<p class="muted" style="margin:0">${t('stats.corrNeed', { n: nDays(corr.need) })}</p>`
-        : corr.list.length ? corr.list.map(c => `<div class="corr"><span class="tag">${t('corr.' + c.a)}</span>${icon('arrow', 'dir')}<span class="tag">${t('corr.' + c.b)}</span><b>×${c.lift.toFixed(1)}</b></div>`).join('') + `<p class="muted" style="margin:8px 0 0;font-size:13px">${t('stats.corrExplain')}</p>`
-        : `<p class="muted" style="margin:0">${t('stats.corrNone')}</p>`)}
+  // ----- привычки
+  const tracked = id => tasksFor(today).some(x => x.id === id) || D.some(d => peek(d)[id] === true);
+  const H14 = [...Array(14)].map((_, i) => addDays(today, i - 13));
+  const habits = [
+    ['azkar_m', 'var(--brass)', false], ['azkar_e', 'var(--accent)', false],
+    ['duha', 'var(--n-duha)', true], ['tahajjud', 'var(--n-tahajjud)', true], ['witr', 'var(--n-witr)', true],
+  ].filter(([id]) => tracked(id));
+  if (S.settings.postAzkar) habits.push(['pa', 'var(--st-ontime)', true]);
+  const hasDone = (id, d) => id === 'pa' ? FARD.some(f => peek(d)['pa_' + f] === true) : peek(d)[id] === true;
+  const habitRows = habits.map(([id, color, pr]) => {
+    const days = pr ? okDays : D, done = days.filter(d => hasDone(id, d)).length, st = habitStreak(d => hasDone(id, d), pr);
+    return `<div class="hb-row" style="--c:${color}">
+      <span class="hb-n">${esc(t('task.' + id))}${st > 1 ? `<small>${icon('fire')}${st}</small>` : ''}</span>
+      <span class="hb-dots">${H14.map(d => `<i class="${hasDone(id, d) ? 'on' : ''} ${pr && isExcused(d) ? 'exc' : ''}" title="${human(d)}"></i>`).join('')}</span>
+      <b class="num">${pct(done, days.length)}%</b></div>`;
+  }).join('');
+  const habitsCard = habits.length ? `<section class="card">
+    <div class="hd">${icon('sunrise')}<h2 class="grow">${t('st2.habits')}</h2><span class="hd-note">${t('st2.last14')}</span></div>
+    ${habitRows}</section>` : '';
+
+  // ----- Коран и книги
+  const qB = B.map(b => sum(b.days.map(d => iv(peek(d).quran))));
+  const bB = B.map(b => sum(b.days.map(d => Object.entries(peek(d)).reduce((s, [k, v]) => s + (k.startsWith('book_') ? iv(v) : 0), 0))));
+  const qDays = D.map(d => iv(peek(d).quran)), qGoal = S.settings.khatmActive ? khatmTodayGoal() : S.settings.quranGoal;
+  const qMet = D.filter(d => iv(peek(d).quran) >= quranGoalFor(d)).length;
+  const qBest = Math.max(0, ...qDays);
+  const chips = ms => `<div class="chips-row">${ms.map(([l, v]) => `<span>${l}: <b>${v}</b></span>`).join('')}</div>`;
+  const bstarts = B.map(b => b.start);
+  const quranCard = `<section class="card">
+    <div class="hd">${icon('book')}<h2 class="grow">${t('task.quran')}</h2></div>
+    ${chips([[t('stats.total'), `${sum(qDays)} ${t('u.p')}`], [t('stats.avg'), t('stats.perDay', { n: (sum(qDays) / n).toFixed(1) })], [t('st2.bestDay'), `${qBest} ${t('u.p')}`], [t('stats.goalMet'), nDays(qMet)]])}
+    ${chartBars(bstarts, qB, n <= 31 ? qGoal : 0, 'var(--accent)', t('task.quran'), blabs)}
+    ${n <= 31 ? lg([['var(--accent)', t('stats.pages')], ['var(--st-ontime)', t('stats.goalMet')], ['var(--brass)', t('stats.goalLine', { n: qGoal })]]) : `<p class="muted tip">${t('st2.months')}</p>`}
+  </section>`;
+  const reading = S.books.filter(b => b.status === 'reading');
+  const booksCard = `<section class="card">
+    <div class="hd">${icon('lib')}<h2 class="grow">${t('stats.books')}</h2></div>
+    ${chips([[t('stats.total'), `${sum(bB)} ${t('u.p')}`], [t('stats.avg'), t('stats.perDay', { n: (sum(bB) / n).toFixed(1) })]])}
+    ${chartBars(bstarts, bB, 0, 'var(--n-tahajjud)', t('stats.books'), blabs)}
+    ${reading.length ? `<div style="margin-top:12px">${reading.map(b => `<div class="kv"><span>${esc(b.title)}</span><b>${b.currentPage} / ${b.totalPages}</b></div>
+      <div class="bar" style="height:5px;margin-bottom:6px"><i style="width:${(b.currentPage / Math.max(1, b.totalPages) * 100).toFixed(0)}%;background:${SPINES[S.books.indexOf(b) % SPINES.length]}"></i></div>`).join('')}</div>`
+      : `<p class="muted" style="margin:10px 0 0;font-size:13.5px">${t('stats.noBooks')}</p>`}
+  </section>`;
+
+  // ----- план дня
+  let pTot = 0, pDone = 0;
+  const kinds = { deen: [0, 0], life: [0, 0] };
+  D.forEach(d => { const l = peek(d); planOf(d).items.forEach(x => { const on = l['pl_' + x.id] === true, kk = x.kind === 'deen' ? 'deen' : 'life'; pTot++; kinds[kk][1]++; if (on) { pDone++; kinds[kk][0]++; } }); });
+  const kbar = (kk, c) => kinds[kk][1] ? `<div class="pr-row"><span class="pr-n">${t('plan.k.' + kk)}</span><span class="pr-bar"><i style="flex:${kinds[kk][0] || 0.0001};background:${c}"></i><i class="none" style="flex:${kinds[kk][1] - kinds[kk][0] || 0.0001}"></i></span><b class="num">${t('n.of', { a: kinds[kk][0], b: kinds[kk][1] })}</b></div>` : '';
+  const planCard = pTot ? `<section class="card">
+    <div class="hd">${icon('list')}<h2 class="grow">${t('st2.plan')}</h2><span class="hd-note num">${pct(pDone, pTot)}%</span></div>
+    ${chips([[t('st2.planDone'), t('n.of', { a: pDone, b: pTot })]])}
+    ${kbar('deen', 'var(--brass)')}${kbar('life', 'var(--accent)')}</section>` : '';
+
+  // ----- ритм недели (12 недель)
+  const W = [...Array(7)].map(() => ({ s: 0, n: 0 }));
+  for (let i = 0; i < 84; i++) { const d = addDays(today, -i); const info = dayInfo(d); if (info.has && !isExcused(d)) { W[wdi(d)].s += info.p; W[wdi(d)].n++; } }
+  const wav = W.map(w => w.n ? w.s / w.n : 0), wHas = W.reduce((a, w) => a + w.n, 0) >= 14;
+  let rhythm = '';
+  if (wHas) {
+    const bi = wav.indexOf(Math.max(...wav)), wi = wav.indexOf(Math.min(...wav.map((v, i) => W[i].n ? v : 9)));
+    const RH = 112, rtop = 16, rbase = RH - 18, sw = CW / 7;
+    const ref = addDays(today, -wdi(today));
+    const bars = wav.map((v, i) => {
+      const x = i * sw + sw * 0.22, w = sw * 0.56, hgt = Math.max(v ? 3 : 0, (rbase - rtop) * v);
+      return `<rect x="${f1(x)}" y="${rtop}" width="${f1(w)}" height="${rbase - rtop}" rx="5" style="fill:var(--surface-2);opacity:.6"/>
+        ${hgt ? `<rect x="${f1(x)}" y="${f1(rbase - hgt)}" width="${f1(w)}" height="${f1(hgt)}" rx="5" style="fill:${i === bi ? 'var(--accent)' : 'color-mix(in srgb, var(--accent) 42%, var(--surface-2))'}"><title>${esc(wdLong(addDays(ref, i)))}: ${Math.round(v * 100)}%</title></rect>` : ''}
+        <text class="bv" x="${f1(x + w / 2)}" y="${f1(rbase - hgt - 4)}">${Math.round(v * 100)}</text>
+        <text class="xl ${i === bi ? 'on' : ''}" x="${f1(x + w / 2)}" y="${RH - 3}">${esc(wdShort(addDays(ref, i)))}</text>`;
+    }).join('');
+    rhythm = `<section class="card">
+      <div class="hd">${icon('chart')}<h2 class="grow">${t('st2.rhythm')}</h2><span class="hd-note">${t('st2.rhythmSub')}</span></div>
+      <svg class="chart" viewBox="0 0 ${CW} ${RH}" role="img" aria-label="${t('st2.rhythm')}">${bars}</svg>
+      <p class="muted tip">${esc(t('st2.rhythmBest', { a: wdLong(addDays(ref, bi)).toLowerCase(), b: wdLong(addDays(ref, wi)).toLowerCase() }))}</p></section>`;
+  }
+
+  // ----- связи
+  const corr = correlations();
+  const corrCard = `<section class="card"><div class="hd">${icon('arrow')}<h2 class="grow">${t('stats.corr')}</h2></div>
+    ${corr.need ? `<p class="muted" style="margin:0">${t('stats.corrNeed', { n: nDays(corr.need) })}</p>`
+      : corr.list.length ? corr.list.map(c => `<div class="corr"><span class="tag">${t('corr.' + c.a)}</span>${icon('arrow', 'dir')}<span class="tag">${t('corr.' + c.b)}</span><b>×${c.lift.toFixed(1)}</b></div>`).join('') + `<p class="muted" style="margin:8px 0 0;font-size:13px">${t('stats.corrExplain')}</p>`
+      : `<p class="muted" style="margin:0">${t('stats.corrNone')}</p>`}</section>`;
+
+  const out = `<header class="top"><h1 class="grow">${t('stats.title')}</h1></header>
+    <div class="seg full st-period" role="radiogroup">${[7, 30, 'year'].map(v => { const on = ui.statsDays === v || (v === 7 && ![30, 'year'].includes(ui.statsDays));
+      return `<button role="radio" aria-checked="${on}" class="${on ? 'on' : ''}" data-a="period" data-v="${v}">${v === 'year' ? t('stats.year') : t('stats.days', { n: v })}</button>`; }).join('')}</div>
+    ${isY ? yearCard() : overview}${prayers}${habitsCard}${quranCard}${booksCard}${planCard}${rhythm}${corrCard}
     ${S.settings.female ? lg([['var(--pink)', t('chip.excused')]]) : ''}`;
+  DAYC = null;
+  return out;
 }
 
 // =====================================================================
@@ -3002,6 +3714,7 @@ function viewSettings() {
     <h2 class="set-title">${t('set.track')}</h2>
     <div class="list">${OPTIONAL.map(id => track(id)).join('')}</div>
     <div class="list">
+      ${sw('planOn', t('set.planOn'), t('set.planOnHint'))}
       ${sw('smallSunnas', t('sec.small'), t('set.smallHint'))}
       ${s.smallSunnas ? SMALL.map(id => track(id, 'sub')).join('') : ''}
       ${sw('sleepSunnas', t('sec.sleep'), t('set.sleepHint'))}
@@ -3013,6 +3726,7 @@ function viewSettings() {
       <button class="set" data-a="perm">${icon('bell')}<span class="grow">${t('perm.' + perm)}</span></button>
       ${sw('remindFard', t('set.remindFard'), t('set.remindFardHint'))}
       ${s.remindFard ? `<div class="set"><span class="grow">${t('set.remindMin')}</span>${seg('remindMinutes', [[10, '10'], [15, '15'], [20, '20']])}</div>` : ''}
+      ${sw('planRemind', t('set.planRemind'), t('set.planRemindHint'))}
       ${sw('tahajjudAlarm', t('set.tahajjud'), t('set.tahajjudHint'))}
       ${sw('sleepReminder', t('set.sleep'), t('set.sleepRemHint'))}
       ${s.sleepReminder ? `<div class="set"><span class="grow">${t('set.sleepAfter')}</span>${seg('sleepAfterIsha', [[30, '30'], [60, '60'], [90, '90']])}</div>` : ''}
@@ -3099,7 +3813,8 @@ const A = {
   calMove: ds => { ui.cal = new Date(ui.cal.getFullYear(), ui.cal.getMonth() + Number(ds.v), 1); render(); },
   hadith: () => { S.settings.hadithOpen = !S.settings.hadithOpen; save(); render(); },
   foldSec: ds => { const f = S.settings.folded; f[ds.v] = !f[ds.v]; save(); render(); },
-  period: ds => { ui.statsDays = Number(ds.v); render(); },
+  period: ds => { ui.statsDays = ds.v === 'year' ? 'year' : Number(ds.v); render(); window.scrollTo(0, 0); },
+  statsYear: ds => { ui.statsYear = (ui.statsYear || todayDate().getFullYear()) + Number(ds.v); render(); },
   shelf: ds => { ui.shelf = ds.v; render(); },
 
   // ---------- намазы и дела ----------
@@ -3145,7 +3860,7 @@ const A = {
   set: ds => { S.settings[ds.k] = JSON.parse(ds.v); commit(true); },
   async flip(ds) {
     S.settings[ds.k] = !S.settings[ds.k];
-    if (S.settings[ds.k] && ['remindFard', 'tahajjudAlarm', 'sleepReminder'].includes(ds.k)) await askNotify();
+    if (S.settings[ds.k] && ['remindFard', 'tahajjudAlarm', 'sleepReminder', 'planRemind'].includes(ds.k)) await askNotify();
     commit(true);
   },
   step: ds => { S.settings[ds.k] = Math.max(1, S.settings[ds.k] + Number(ds.v)); commit(); },
@@ -4262,6 +4977,7 @@ document.addEventListener('click', e => {
 // =====================================================================
 //  ЗАПУСК
 // =====================================================================
+Object.assign(A, PA);
 let lastDay = dkey(todayDate());
 setInterval(() => {
   const d = dkey(todayDate());
