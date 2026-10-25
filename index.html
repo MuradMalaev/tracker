@@ -240,6 +240,64 @@ main{max-width:540px;margin:0 auto;padding:4px 14px calc(96px + env(safe-area-in
 .book .s{font-size:13px;color:var(--muted);margin-top:4px;display:block}
 .book .side{align-self:center}
 .shelf-note{font-size:13.5px;color:var(--muted);margin:8px 4px 0}
+/* ---- Сейчас ---- */
+.sum-alh{margin:2px 0 6px;text-align:center;font:italic 500 17px/1.3 var(--serif);color:var(--brass);animation:alhIn 3.2s ease-out both}
+@keyframes alhIn{0%{opacity:0;transform:translateY(4px)}15%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+.nw + .sky,.banner + .sky{margin-top:12px}
+.nw{margin-top:10px;background:var(--surface);border:1px solid var(--hair,var(--line));border-radius:var(--r,18px);padding:8px 10px 4px}
+.nw-h{display:flex;justify-content:space-between;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:4px 6px 4px}
+.nw-row{position:relative;display:flex;align-items:center;gap:12px;padding:10px 4px;padding-inline-start:14px}
+.nw-row::before{content:"";position:absolute;inset-inline-start:3px;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--accent)}
+.nw-row.soon::before{background:var(--st-late)}
+.nw-row.plan::before{background:var(--brass)}
+.nw-row.miss::before{background:var(--line)}
+.nw-row + .nw-row{border-top:1px solid var(--hair,var(--line))}
+.nw-b{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.nw-b b{font-size:15.5px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis}
+.nw-b > span{font-size:12.5px;color:var(--muted)}
+.nw-row.soon .nw-b > span{color:var(--st-late)}
+.nw-ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.nw-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:99px;font-size:12.5px;color:var(--ink);box-shadow:0 0 0 1px var(--hair,var(--line)) inset}
+.nw-chip .ic{width:12px;height:12px;color:var(--muted)}
+.nw-c,.nw-go{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;box-shadow:0 0 0 1.5px var(--line) inset;color:transparent}
+.nw-c .ic,.nw-go .ic{width:16px;height:16px;stroke-width:2.6}
+.nw-go{color:var(--muted)}
+.nw-c.on{background:var(--accent);box-shadow:none;color:var(--on-accent)}
+.nw-st{display:flex;gap:6px;flex:none}
+.nw-st button{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 13%,var(--surface));color:var(--c)}
+.nw-st .ic{width:17px;height:17px;stroke-width:2.3}
+.nw-more{display:block;width:100%;padding:9px;font-size:13px;color:var(--muted);border-top:1px solid var(--hair,var(--line))}
+.nw-warn{display:flex;align-items:center;gap:6px;margin:0 6px 4px;font-size:12.5px;color:var(--st-late)}
+.nw-warn .ic{width:14px;height:14px}
+.nw.calm{padding:12px 14px}
+.nw.calm .nw-warn{margin:0 0 8px}
+.nw-calm{display:flex;align-items:center;gap:8px;margin:0;font-size:13.5px;color:var(--muted)}
+.nw-calm .ic{width:16px;height:16px;color:var(--accent);stroke-width:2.6;flex:none}
+/* ---- Пока вас не было ---- */
+.banner.away{padding:2px 6px;padding-inline-start:14px}
+.banner.away > .grow{display:flex;align-items:center;gap:10px;text-align:start;padding:9px 0;font-size:14px}
+.banner.away .icon-btn{background:transparent;box-shadow:none}
+.cu-day{padding:14px}
+.cu-h{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.cu-h b{font:500 18px/1.2 var(--serif)}
+.cu-h span{font-size:13px;color:var(--muted)}
+.cu-fard{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.cu-f{display:flex;flex-direction:column;align-items:center;gap:6px;padding:9px 2px 8px;border-radius:12px;box-shadow:0 0 0 1px var(--hair,var(--line)) inset}
+.cu-f .mk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 1.5px var(--line) inset;color:#fff}
+.cu-f.done .mk{background:var(--c);box-shadow:none}
+.cu-f .mk .ic{width:15px;height:15px;stroke-width:2.4}
+.cu-f .n{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cu-exc{display:flex;align-items:center;gap:6px;margin:0;font-size:13.5px}
+.cu-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cu-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 11px;border-radius:99px;font-size:13px;box-shadow:0 0 0 1px var(--hair,var(--line)) inset}
+.cu-chip.on{background:color-mix(in srgb,var(--accent) 11%,var(--surface));box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent) inset}
+.cu-chip .ic{width:13px;height:13px;color:var(--accent);stroke-width:2.6}
+.cu-flags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cu-flag{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:99px;font-size:12px;color:var(--muted)}
+.cu-flag .ic{width:13px;height:13px}
+.cu-flag.on{background:var(--brass-soft);color:var(--ink)}
+.cu-honest{font-size:13px;text-align:center;margin:14px 12px}
+.cell.empty{outline:1.5px dashed color-mix(in srgb,var(--muted) 45%,transparent);outline-offset:-4px}
 /* ---- План дня ---- */
 .pl-tl{position:relative;padding:2px 4px 4px}
 .pl-tl::before{content:"";position:absolute;inset-inline-start:63px;top:14px;bottom:14px;width:1.5px;background:var(--hair,var(--line));border-radius:1px}
@@ -339,6 +397,10 @@ svg.chart .xl.on{fill:var(--ink);font-weight:600}
 .yt b{font:600 21px/1.1 var(--serif)}
 .yt span{font-size:11.5px;color:var(--muted);line-height:1.25}
 .y-foot{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--hair,var(--line));font:italic 400 15px/1.4 var(--serif);color:var(--ink);text-align:center}
+.file-pick{position:relative;overflow:hidden;cursor:pointer}
+.file-pick input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+.or-sep{display:flex;align-items:center;gap:10px;margin:14px 2px 6px;font-size:12.5px;color:var(--muted)}
+.or-sep::before,.or-sep::after{content:"";flex:1;height:1px;background:var(--hair,var(--line))}
 .fold-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:0 16px 2px}
 .fold-row::-webkit-scrollbar{display:none}
 .fchip{display:inline-flex;align-items:center;gap:5px;flex:none;padding:6px 11px;border-radius:999px;font-size:13px;color:var(--muted);background:transparent;box-shadow:0 0 0 1px var(--line) inset;white-space:nowrap;max-width:70vw}
@@ -1359,12 +1421,12 @@ const DEFAULTS = {
     disabled: [], female: false, safar: false, zuhrAfter: 2, quranGoal: 5, dayStartHour: 3, fridayMode: true,
     cityId: null, cityName: null, lat: null, lng: null, method: 'mwl', hanafiAsr: false,
     offsets: { fajr: 0, sunrise: 0, zuhr: 0, asr: 0, maghrib: 0, isha: 0 },
-    planOn: true, planRemind: false, remindFard: true, remindMinutes: 15, tahajjudAlarm: false, sleepReminder: false, sleepAfterIsha: 60,
+    nowOn: true, lastSeen: null, planOn: true, planRemind: false, remindFard: true, remindMinutes: 15, tahajjudAlarm: false, sleepReminder: false, sleepAfterIsha: 60,
     khatmActive: false, khatmPage: 0, khatmEnd: '', hadithOpen: false, theme: 'auto', folded: {},
     smallSunnas: false, sleepSunnas: true, tipShown: false, tipInfo: false, postAzkar: true,
   },
   quran: { page: null, sura: 1, ayah: 1 },
-  books: [], folders: [], plan: { w: {}, d: {}, clip: null, frozen: null }, customs: [], avoids: [], goals: [], duas: [], milestones: [], logs: {},
+  away: null, books: [], folders: [], plan: { w: {}, d: {}, clip: null, frozen: null }, customs: [], avoids: [], goals: [], duas: [], milestones: [], logs: {},
 };
 
 function normalize(d) {
@@ -1936,6 +1998,11 @@ I18N.ru = {
 
   'cal.title': 'Календарь', 'cal.hint': 'Чем насыщеннее цвет, тем больше сделано. Нажмите на день, чтобы посмотреть или исправить отметки.',
 
+  'now.title': 'Сейчас', 'now.left': 'осталось {t}', 'now.until': 'до {t}', 'now.bestUntil': 'лучше до {t}', 'now.before': 'сунна до · {n}', 'now.after': 'сунна после · {n}', 'now.sunna': 'Сунна · {p}', 'now.notMarked': 'не отмечен',
+  'now.inMin': 'через {n} мин', 'now.pagesLeft': 'осталось {n} стр.', 'now.friday': 'пятница', 'now.third': 'последняя треть ночи · до {t}', 'now.beforeFajr': 'до Фаджра', 'now.allDone': 'Сейчас всё сделано, альхамдулиЛлях', 'now.next': 'дальше {p} в {t}', 'now.more': 'ещё {n}', 'now.less': 'свернуть',
+  'set.nowOn': 'Карточка «Сейчас»', 'set.nowOnHint': 'Дела, актуальные в эту минуту, наверху главного экрана',
+  'away.banner': 'Вас не было {n} · отметить пропущенное?', 'away.title': 'Пока вас не было', 'away.intro': 'Отметьте то, что помните. Нажмите на намаз, чтобы выбрать, как он был совершён.', 'away.modeQuick': 'Фард и азкары', 'away.modeAll': 'Всё',
+  'away.travel': 'В пути', 'away.travelAll': 'Все эти дни в пути', 'away.quranSum': 'Коран за эти дни', 'away.quranQ': 'Сколько страниц Корана прочитано за {n}?', 'away.quranDone': 'Записано страниц: {n}', 'away.honest': 'Отмечайте только то, в чём уверены. Пустой день честнее придуманного.', 'away.none': 'Пропущенных дней нет', 'cal.missed': 'Отметить пропущенные дни · {n}',
   'plan.title': 'План дня', 'plan.add': 'Задача', 'plan.all': 'Весь план', 'plan.empty': 'Распишите день по времени: поклонение и обычные дела. Отмечайте сделанное.', 'plan.byTpl': 'шаблон: {w}',
   'plan.today': 'Сегодня', 'plan.tomorrow': 'Завтра', 'plan.tpls': 'Шаблоны', 'plan.ownDay': 'свой план на этот день', 'plan.fromTpl': 'по шаблону: {w}', 'plan.noPlan': 'плана пока нет',
   'plan.tplHint': 'Шаблон дня недели «{w}» сам появляется в этот день, если у дня нет своего плана. Прошедшие дни не меняются.', 'plan.emptyTpl': 'Шаблон пока пуст. Добавьте задачи, и они будут появляться каждую неделю.',
@@ -2025,7 +2092,7 @@ I18N.ru = {
   'set.notifHint': 'Уведомления приходят, пока приложение открыто или свёрнуто. Если браузер полностью закрыт, напоминания не сработают.',
   'set.theme': 'Оформление', 'theme.auto': 'Авто', 'theme.emerald': 'Изумруд', 'theme.night': 'Ночь', 'theme.sand': 'Песок',
   'set.backup': 'Резервная копия', 'set.backupHint': 'Данные хранятся в браузере. Перед сменой телефона или очисткой браузера сохраните копию.',
-  'set.export': 'Сохранить копию', 'set.import': 'Восстановить из копии', 'set.importHint': 'Вставьте текст резервной копии. Текущие данные будут заменены.', 'set.importBtn': 'Восстановить',
+  'set.importHint2': 'Выберите сохранённый файл копии (.json) или вставьте её текст. Текущие данные будут заменены.', 'set.importFile': 'Выбрать файл копии', 'set.importOr': 'или вставьте текст', 'set.importQ': 'Восстановить данные из «{f}»? Текущие данные будут заменены.', 'set.export': 'Сохранить копию', 'set.import': 'Восстановить из копии', 'set.importHint': 'Вставьте текст резервной копии. Текущие данные будут заменены.', 'set.importBtn': 'Восстановить',
   'set.exported': 'Копия скопирована в буфер обмена и сохранена файлом', 'set.exportedFile': 'Копия сохранена файлом', 'set.imported': 'Данные восстановлены',
   'set.importErr': 'Это не похоже на резервную копию трекера. Проверьте, что текст вставлен полностью', 'set.redoWizard': 'Пройти начальную настройку заново',
 
@@ -2117,6 +2184,11 @@ I18N.en = {
 
   'cal.title': 'Calendar', 'cal.hint': 'The deeper the colour, the more was done. Tap a day to view or correct it.',
 
+  'now.title': 'Now', 'now.left': '{t} left', 'now.until': 'until {t}', 'now.bestUntil': 'best before {t}', 'now.before': 'sunnah before · {n}', 'now.after': 'sunnah after · {n}', 'now.sunna': 'Sunnah · {p}', 'now.notMarked': 'not marked',
+  'now.inMin': 'in {n} min', 'now.pagesLeft': '{n} p. left', 'now.friday': 'Friday', 'now.third': 'last third of the night · until {t}', 'now.beforeFajr': 'before Fajr', 'now.allDone': 'All done for now, alhamdulillah', 'now.next': 'next: {p} at {t}', 'now.more': '{n} more', 'now.less': 'show less',
+  'set.nowOn': '“Now” card', 'set.nowOnHint': 'What matters this minute, at the top of the main screen',
+  'away.banner': 'You were away {n} · mark what you missed?', 'away.title': 'While you were away', 'away.intro': 'Mark what you remember. Tap a prayer to choose how it was prayed.', 'away.modeQuick': 'Fard and adhkar', 'away.modeAll': 'Everything',
+  'away.travel': 'Travelling', 'away.travelAll': 'Travelling all these days', 'away.quranSum': 'Quran for these days', 'away.quranQ': 'How many Quran pages did you read over {n}?', 'away.quranDone': 'Pages recorded: {n}', 'away.honest': 'Mark only what you are sure of. An empty day is more honest than an invented one.', 'away.none': 'No missed days', 'cal.missed': 'Mark missed days · {n}',
   'plan.title': 'Day plan', 'plan.add': 'Task', 'plan.all': 'Full plan', 'plan.empty': 'Plan your day by the clock: worship and everyday tasks. Tick off what is done.', 'plan.byTpl': 'template: {w}',
   'plan.today': 'Today', 'plan.tomorrow': 'Tomorrow', 'plan.tpls': 'Templates', 'plan.ownDay': 'own plan for this day', 'plan.fromTpl': 'from template: {w}', 'plan.noPlan': 'no plan yet',
   'plan.tplHint': 'The {w} template appears on that day automatically unless the day has its own plan. Past days do not change.', 'plan.emptyTpl': 'This template is empty. Add tasks and they will appear every week.',
@@ -2206,7 +2278,7 @@ I18N.en = {
   'set.notifHint': 'Notifications arrive while the app is open or minimised. If the browser is fully closed, reminders will not fire.',
   'set.theme': 'Appearance', 'theme.auto': 'Auto', 'theme.emerald': 'Emerald', 'theme.night': 'Night', 'theme.sand': 'Sand',
   'set.backup': 'Backup', 'set.backupHint': 'Data is stored in the browser. Save a copy before changing phones or clearing the browser.',
-  'set.export': 'Save a copy', 'set.import': 'Restore from copy', 'set.importHint': 'Paste the backup text. Current data will be replaced.', 'set.importBtn': 'Restore',
+  'set.importHint2': 'Choose the saved backup file (.json) or paste its text. Current data will be replaced.', 'set.importFile': 'Choose backup file', 'set.importOr': 'or paste the text', 'set.importQ': 'Restore data from “{f}”? Current data will be replaced.', 'set.export': 'Save a copy', 'set.import': 'Restore from copy', 'set.importHint': 'Paste the backup text. Current data will be replaced.', 'set.importBtn': 'Restore',
   'set.exported': 'Copy placed on the clipboard and saved as a file', 'set.exportedFile': 'Copy saved as a file', 'set.imported': 'Data restored',
   'set.importErr': 'This does not look like a tracker backup. Make sure the whole text was pasted', 'set.redoWizard': 'Run the initial setup again',
 
@@ -2297,6 +2369,11 @@ I18N.ar = {
 
   'cal.title': 'التقويم', 'cal.hint': 'كلما كان اللون أعمق كان الإنجاز أكبر. اضغط على يوم لعرضه أو تصحيحه.',
 
+  'now.title': 'الآن', 'now.left': 'بقي {t}', 'now.until': 'حتى {t}', 'now.bestUntil': 'الأفضل قبل {t}', 'now.before': 'سنة قبلية · {n}', 'now.after': 'سنة بعدية · {n}', 'now.sunna': 'السنة · {p}', 'now.notMarked': 'غير مسجّلة',
+  'now.inMin': 'بعد {n} د', 'now.pagesLeft': 'بقي {n} ص', 'now.friday': 'الجمعة', 'now.third': 'الثلث الأخير من الليل · حتى {t}', 'now.beforeFajr': 'قبل الفجر', 'now.allDone': 'أنجزت كل شيء الآن، الحمد لله', 'now.next': 'التالي: {p} في {t}', 'now.more': '{n} أخرى', 'now.less': 'إخفاء',
+  'set.nowOn': 'بطاقة «الآن»', 'set.nowOnHint': 'ما يهمّ في هذه الدقيقة أعلى الشاشة الرئيسية',
+  'away.banner': 'غبت {n} · تسجيل ما فات؟', 'away.title': 'أثناء غيابك', 'away.intro': 'سجّل ما تتذكره. اضغط على الصلاة لاختيار كيف صلّيتها.', 'away.modeQuick': 'الفرائض والأذكار', 'away.modeAll': 'الكل',
+  'away.travel': 'في سفر', 'away.travelAll': 'كل هذه الأيام في سفر', 'away.quranSum': 'القرآن لهذه الأيام', 'away.quranQ': 'كم صفحة قرأت من القرآن خلال {n}؟', 'away.quranDone': 'سُجّلت {n} ص', 'away.honest': 'سجّل ما أنت متأكد منه فقط. اليوم الفارغ أصدق من يوم مُختلَق.', 'away.none': 'لا أيام فائتة', 'cal.missed': 'تسجيل الأيام الفائتة · {n}',
   'plan.title': 'خطة اليوم', 'plan.add': 'مهمة', 'plan.all': 'الخطة كاملة', 'plan.empty': 'رتّب يومك بالساعة: العبادات والأعمال اليومية، وعلّم ما أنجزته.', 'plan.byTpl': 'القالب: {w}',
   'plan.today': 'اليوم', 'plan.tomorrow': 'غدًا', 'plan.tpls': 'القوالب', 'plan.ownDay': 'خطة خاصة بهذا اليوم', 'plan.fromTpl': 'من قالب: {w}', 'plan.noPlan': 'لا خطة بعد',
   'plan.tplHint': 'قالب «{w}» يظهر تلقائيًا في هذا اليوم ما لم تكن له خطة خاصة. الأيام الماضية لا تتغيّر.', 'plan.emptyTpl': 'القالب فارغ. أضف مهامّ لتظهر كل أسبوع.',
@@ -2386,7 +2463,7 @@ I18N.ar = {
   'set.notifHint': 'تصل التنبيهات ما دام التطبيق مفتوحًا أو مصغّرًا. إذا أُغلق المتصفح كليًا فلن تعمل.',
   'set.theme': 'المظهر', 'theme.auto': 'تلقائي', 'theme.emerald': 'زمرّدي', 'theme.night': 'ليلي', 'theme.sand': 'رملي',
   'set.backup': 'نسخة احتياطية', 'set.backupHint': 'البيانات محفوظة في المتصفح. احفظ نسخة قبل تغيير الهاتف أو مسح المتصفح.',
-  'set.export': 'حفظ نسخة', 'set.import': 'استعادة من نسخة', 'set.importHint': 'الصق نص النسخة الاحتياطية. ستُستبدل البيانات الحالية.', 'set.importBtn': 'استعادة',
+  'set.importHint2': 'اختر ملف النسخة المحفوظ (.json) أو الصق نصّها. ستُستبدل البيانات الحالية.', 'set.importFile': 'اختيار ملف النسخة', 'set.importOr': 'أو الصق النص', 'set.importQ': 'استعادة البيانات من «{f}»؟ ستُستبدل البيانات الحالية.', 'set.export': 'حفظ نسخة', 'set.import': 'استعادة من نسخة', 'set.importHint': 'الصق نص النسخة الاحتياطية. ستُستبدل البيانات الحالية.', 'set.importBtn': 'استعادة',
   'set.exported': 'نُسخت إلى الحافظة وحُفظت كملف', 'set.exportedFile': 'حُفظت النسخة كملف', 'set.imported': 'استُعيدت البيانات',
   'set.importErr': 'لا يبدو هذا نسخة احتياطية للمتابع. تأكد من لصق النص كاملًا', 'set.redoWizard': 'إعادة الإعداد الأولي',
 
@@ -2453,6 +2530,7 @@ function page({ view, param }) {
     case 'book': return viewBook(param);
     case 'folder': return viewFolder(param);
     case 'plan': return viewPlan(param);
+    case 'catchup': return viewCatchup();
     case 'goals': return viewGoals();
     case 'duas': return viewDuas();
     case 'items': return viewItems();
@@ -2476,7 +2554,7 @@ function viewToday() {
       </div>
     </header>
     ${isT ? '' : `<button class="banner back-today" data-a="dayToday">${icon('replay')}<span class="grow">${ui.dayOffset === -1 ? t('day.yesterday') : t('day.past')}</span><b>${t('day.toToday')}</b></button>`}
-    ${isT ? hadithCard() : ''}
+    ${isT ? awayBanner() + nowCard() : ''}
     ${viewDayBody(d)}
     ${isT && d.getDay() === 5 ? `<button class="banner" data-a="tab" data-v="stats">${icon('chart')}<span class="grow">${t('day.fridayStats')}</span>${icon('chev', 'dir')}</button>` : ''}`;
 }
@@ -2602,6 +2680,7 @@ function summary(d) {
       <span class="t">${t(today ? 'sum.today' : 'sum.day', { a: done, b: tasks.length })}</span>
       <span class="sum-pct num">${pct}%</span>
     </div>
+    ${today && Date.now() < ui.glowUntil ? `<p class="sum-alh" role="status">${t('hadith.alh')}</p>` : ''}
     <div class="pline ${p === 1 ? 'full' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="${pct}%"><i style="width:${pct}%"></i></div>
     <div class="sum-row">
       <span class="s">${today ? `${icon('fire')}${t('sum.streak', { n: nDays(fardStreak()) })}` : ''}${safar ? `<span class="sum-safar">${icon('bag')}${t('chip.safar')}</span>` : ''}</span>
@@ -2970,6 +3049,220 @@ const PA = {
 };
 
 // =====================================================================
+//  «СЕЙЧАС»: дела, актуальные в эту минуту
+// =====================================================================
+/** Окно каждого фарда: [начало, конец). */
+function fardWindows(p, d) {
+  const pn = prayerTimes(addDays(d, 1));
+  return [['fajr', p.fajr, p.sunrise], ['zuhr', p.dhuhr, p.asr], ['asr', p.asr, p.maghrib], ['maghrib', p.maghrib, p.isha], ['isha', p.isha, pn ? pn.fajr : addMin(p.isha, 360)]];
+}
+const leftTxt = ms => t('now.left', { t: dur(ms) });
+
+/** Список дел «сейчас» по важности. */
+function nowItems() {
+  const d = todayDate(), k = dkey(d), log = peek(d), now = new Date(), p = prayerTimes(d);   // время намазов дня трекера (до Фаджра — ещё вчерашний день)
+  const tasks = tasksFor(d), has = id => tasks.some(x => x.id === id), done = id => { const x = tasks.find(y => y.id === id); return x ? isDone(x, log) : true; };
+  const title = id => { const x = tasks.find(y => y.id === id); return x ? x.title : t('task.' + id); };
+  const exc = isExcused(d), items = [];
+  const chk = (id, dk = k, l = log, lab = null) => {
+    const on = l[id] === true;
+    return `<button class="nw-c ${on ? 'on' : ''}" data-a="toggle" data-id="${id}" data-d="${dk}" role="checkbox" aria-checked="${on}" aria-label="${esc(lab || title(id))}">${icon('check')}</button>`;
+  };
+  const row = (o) => items.push(o);
+  const minsTo = x => (x - now) / 60000;
+  const H = now.getHours();
+
+  // фард: текущий и последний пропущенный
+  if (p && !exc) {
+    const W = fardWindows(p, d);
+    const curW = W.find(([, a, b]) => now >= a && now < b);
+    const statusBtns = (id) => `<span class="nw-st">${Object.entries(STATUS).map(([s, o]) =>
+      `<button data-a="nowFard" data-id="${id}" data-d="${k}" data-v="${s}" style="--c:${o.color}" aria-label="${t('st.' + s)}" title="${t('st.' + s)}">${icon(o.icon)}</button>`).join('')}</span>`;
+    const ratibChips = (id, when) => RATIB_POS[id][when].filter(r => has(r) && log[r] !== true)
+      .map(r => `<button class="nw-chip" data-a="toggle" data-id="${r}" data-d="${k}">${icon('plus')}${t(when ? 'now.after' : 'now.before', { n: ratibN(r, d) })}</button>`).join('');
+    if (curW) {
+      const [id, , end] = curW, left = minsTo(end);
+      if (!isPrayed(log[id])) {
+        row({ pri: left < 30 ? -1 : 0, urg: left < 30 ? 'soon' : 'ok', title: prayerName(id, d), sub: leftTxt(end - now),
+          extra: ratibChips(id, 0), act: statusBtns(id) });
+      } else {
+        const rc = ratibChips(id, 1) + ratibChips(id, 0);
+        if (rc) row({ pri: 3, urg: 'ok', title: t('now.sunna', { p: prayerName(id, d) }), sub: '', extra: rc, act: '' });
+      }
+      // предыдущий намаз этого дня так и не отмечен
+      const idx = W.indexOf(curW);
+      for (let i = idx - 1; i >= 0; i--) {
+        const pid = W[i][0];
+        if (!isPrayed(log[pid])) { row({ pri: 4, urg: 'miss', title: prayerName(pid, d), sub: t('now.notMarked'), extra: '', act: statusBtns(pid) }); break; }
+      }
+    }
+  }
+  // азкары
+  const inM = p ? now >= p.fajr && now < p.dhuhr : H >= 4 && H < 12;
+  const inE = p ? now >= p.asr && now < p.isha : H >= 15 && H < 20;
+  if (has('azkar_m') && !done('azkar_m') && inM) { const left = p ? minsTo(p.dhuhr) : 99; row({ pri: left < 30 ? 1 : 2, urg: left < 30 ? 'soon' : 'ok', title: title('azkar_m'), sub: p ? t('now.until', { t: hm(p.dhuhr) }) : '', act: chk('azkar_m') }); }
+  if (has('azkar_e') && !done('azkar_e') && inE) { const left = p ? minsTo(p.maghrib) : 99; row({ pri: left > 0 && left < 30 ? 1 : 2, urg: left > 0 && left < 30 ? 'soon' : 'ok', title: title('azkar_e'), sub: p && now < p.maghrib ? t('now.bestUntil', { t: hm(p.maghrib) }) : '', act: chk('azkar_e') }); }
+  // духа
+  if (p && has('duha') && !done('duha')) {
+    const [a, b] = duhaWindow(p);
+    if (now >= a && now < b) { const left = minsTo(b); row({ pri: left < 30 ? 1 : 3, urg: left < 30 ? 'soon' : 'ok', title: title('duha'), sub: t('now.until', { t: hm(b) }), act: chk('duha') }); }
+  }
+  // задача из плана: идёт сейчас или скоро начнётся
+  if (S.settings.planOn !== false) {
+    const nm = H * 60 + now.getMinutes();
+    const items2 = [...planOf(d).items].filter(x => x.time).sort((a, b) => tmin(a.time) - tmin(b.time));
+    items2.forEach((x, i) => {
+      if (log['pl_' + x.id] === true) return;
+      const st = tmin(x.time), nx = items2[i + 1] ? tmin(items2[i + 1].time) : st + 60, end = x.end ? tmin(x.end) : nx;
+      const cur = st <= nm && nm < Math.max(end, st + 1), soon = st > nm && st - nm <= 15;
+      if (cur || soon) row({ pri: 1, urg: 'plan', title: x.title, sub: `\u2066${x.time}${x.end ? `–${x.end}` : ''}\u2069${soon ? ` · ${t('now.inMin', { n: st - nm })}` : ''}`, act: chk('pl_' + x.id, k, log, x.title) });
+    });
+  }
+  // Коран вечером, если норма не выполнена
+  const evening = p ? now >= p.maghrib || now < p.fajr : H >= 18 || H < 4;
+  if (evening && has('quran') && !done('quran')) {
+    const q = tasks.find(x => x.id === 'quran'), left = q.goal - iv(log.quran);
+    row({ pri: 5, urg: 'ok', title: q.title, sub: t('now.pagesLeft', { n: left }), act: `<button class="nw-go" data-a="countInput" data-id="quran" data-d="${k}" aria-label="${esc(q.title)}">${icon('plus')}</button>` });
+  }
+  // пятница
+  if (S.settings.fridayMode) {
+    const fri = d.getDay() === 5 ? d : (d.getDay() === 4 && fridayEveNow() ? addDays(d, 1) : null);
+    if (fri) {
+      const fl = peek(fri), fk = dkey(fri), ft = tasksFor(fri);
+      ['fr_kahf', 'fr_salawat'].forEach(id => { const x = ft.find(y => y.id === id); if (x && fl[id] !== true) row({ pri: 6, urg: 'ok', title: x.title, sub: t('now.friday'), act: chk(id, fk, fl, x.title) }); });
+    }
+  }
+  // ночь: последняя треть — тахаджуд и витр, после Иша — перед сном
+  if (p) {
+    const w = nightWindow(now);
+    if (w && now >= lastThird(w[0], w[1]) && now < w[1] && !exc) {
+      ['tahajjud', 'witr'].forEach(id => { if (has(id) && !done(id)) row({ pri: 2, urg: 'ok', title: title(id), sub: t('now.third', { t: hm(w[1]) }), act: chk(id) }); });
+    } else if (now >= p.isha || now < p.fajr) {
+      if (has('witr') && !done('witr') && isPrayed(log.isha)) row({ pri: 6, urg: 'ok', title: title('witr'), sub: t('now.beforeFajr'), act: chk('witr') });
+    }
+  }
+  const sleepNow = p ? (now >= addMin(p.isha, 30) || now < p.fajr) : H >= 21 || H < 4;
+  const sl = tasks.filter(x => x.group === 'sleep');
+  if (sleepNow && sl.length && sl.some(x => !isDone(x, log))) {
+    const n = sl.filter(x => isDone(x, log)).length;
+    row({ pri: 4, urg: 'ok', title: t('sec.sleep'), sub: t('n.of', { a: n, b: sl.length }), extra: sl.filter(x => !isDone(x, log)).map(x => `<button class="nw-chip" data-a="toggle" data-id="${x.id}" data-d="${k}">${icon('plus')}${esc(x.short || x.title)}</button>`).join(''), act: '' });
+  }
+  return items.sort((a, b) => a.pri - b.pri);
+}
+
+/** Карточка «Сейчас» наверху главного экрана. */
+function nowCard() {
+  if (S.settings.nowOn === false) return '';
+  const now = new Date(), p = prayerTimes(now), items = nowItems();
+  const f = p && forbiddenNow(now);
+  const warn = f ? `<p class="nw-warn">${icon('alert')}${t('info.forbidden', { t: dur(f[1] - now) })}</p>` : '';
+  if (!items.length) {
+    let next = '';
+    if (p) {
+      const d = todayDate(), pd = prayerTimes(d), W = fardWindows(pd, d), nx = W.find(([, a]) => a > now) || ['fajr', prayerTimes(addDays(d, 1)).fajr];
+      next = ` · ${t('now.next', { p: prayerName(nx[0], d), t: hm(nx[1]) })}`;
+    }
+    return `<section class="nw calm">${warn}<p class="nw-calm">${icon('check')}<span>${t('now.allDone')}${next}</span></p></section>`;
+  }
+  const show = ui.nowMore ? items : items.slice(0, 3), more = items.length - show.length;
+  const rowHtml = o => `<div class="nw-row ${o.urg}">
+      <div class="nw-b"><b>${esc(o.title)}</b>${o.sub ? `<span>${esc(o.sub)}</span>` : ''}${o.extra ? `<div class="nw-ex">${o.extra}</div>` : ''}</div>
+      ${o.act || ''}</div>`;
+  return `<section class="nw" aria-label="${t('now.title')}">
+    <div class="nw-h"><span>${t('now.title')}</span><span class="num">${hm(now)}</span></div>
+    ${warn}${show.map(rowHtml).join('')}
+    ${more > 0 ? `<button class="nw-more" data-a="nowMore">${t('now.more', { n: more })}</button>` : ui.nowMore && items.length > 3 ? `<button class="nw-more" data-a="nowMore">${t('now.less')}</button>` : ''}
+  </section>`;
+}
+
+// =====================================================================
+//  «ПОКА ВАС НЕ БЫЛО»: быстрая отметка пропущенных дней
+// =====================================================================
+/** Пропущенные дни: без единого отмеченного фарда (до 30 дней назад, не раньше первого дня в приложении). */
+function missedDays(from, limit = 30) {
+  const td = todayDate(), first = firstLogDay(), out = [];
+  for (let i = 1; i <= limit; i++) {
+    const d = addDays(td, -i);
+    if (d < first || (from && d <= from)) break;
+    const l = peek(d);
+    if (!isExcused(d) && !FARD.some(id => isPrayed(l[id]))) out.push(dkey(d));
+  }
+  return out;
+}
+/** При открытии после перерыва запоминаем пропущенные дни. */
+function checkAway() {
+  const td = todayDate(), last = S.settings.lastSeen ? parseKey(S.settings.lastSeen) : null;
+  if (last && daysBetween(last, td) >= 2) {
+    const m = missedDays(last);
+    if (m.length) S.away = m;
+  }
+  if (S.settings.lastSeen !== dkey(td)) { S.settings.lastSeen = dkey(td); save(); }
+}
+function awayBanner() {
+  const n = (S.away || []).length;
+  if (!n) return '';
+  return `<div class="banner away"><button class="grow" data-a="open" data-v="catchup">${icon('cal')}<span>${t('away.banner', { n: nDays(n) })}</span></button>
+    <button class="icon-btn sm" data-a="awayDismiss" aria-label="${t('b.close')}">${icon('close')}</button></div>`;
+}
+function viewCatchup() {
+  const keys = (S.away && S.away.length ? S.away : missedDays(null, 14));
+  const all = !!ui.awayAll;
+  const day = k => {
+    const d = parseKey(k), l = peek(d), tasks = tasksFor(d), exc = isExcused(d), safar = isSafar(d);
+    const fard = exc ? `<p class="muted cu-exc">${icon('heart')}${t('chip.excused')}</p>` : `<div class="cu-fard">${FARD.map(id => {
+      const v = l[id], st = STATUS[v];
+      return `<button class="cu-f ${st ? 'done' : ''}" style="--c:${st ? st.color : 'transparent'}" data-a="fard" data-id="${id}" data-d="${k}" aria-label="${prayerName(id, d)}">
+        <span class="mk">${st ? icon(st.icon) : ''}</span><span class="n">${esc(prayerName(id, d))}</span></button>`;
+    }).join('')}</div>`;
+    const ids = all ? tasks.filter(x => x.kind !== 'fard') : tasks.filter(x => x.group === 'azkar');
+    const chips = ids.map(x => {
+      if (x.kind === 'counter') { const n = iv(l[x.id]); return `<button class="cu-chip ${isDone(x, l) ? 'on' : ''}" data-a="countInput" data-id="${x.id}" data-d="${k}">${esc(x.short || x.title)} · ${n}</button>`; }
+      const on = l[x.id] === true;
+      return `<button class="cu-chip ${on ? 'on' : ''}" data-a="toggle" data-id="${x.id}" data-d="${k}" role="checkbox" aria-checked="${on}">${on ? icon('check') : ''}${esc(x.short || x.title)}</button>`;
+    }).join('');
+    const flags = `<button class="cu-flag ${safar ? 'on' : ''}" data-a="cuSafar" data-d="${k}">${icon('bag')}${t('away.travel')}</button>
+      ${S.settings.female ? `<button class="cu-flag ${exc ? 'on' : ''}" data-a="excused" data-d="${k}">${icon('heart')}${t('chip.excused')}</button>` : ''}`;
+    return `<section class="card cu-day"><div class="cu-h"><b>${esc(human(d))}</b><span>${esc(wdLong(d))}</span></div>
+      ${fard}${chips ? `<div class="cu-chips">${chips}</div>` : ''}<div class="cu-flags">${flags}</div></section>`;
+  };
+  return pageTop(t('away.title')) + `
+    <p class="prose">${t('away.intro')}</p>
+    <div class="seg full" role="radiogroup">${[[0, t('away.modeQuick')], [1, t('away.modeAll')]].map(([v, l]) => `<button role="radio" aria-checked="${all === !!v}" class="${all === !!v ? 'on' : ''}" data-a="awayMode" data-v="${v}">${l}</button>`).join('')}</div>
+    ${keys.length ? `<div class="btn-row" style="margin:10px 0 0">
+        <button class="btn ghost sm" data-a="cuTravelAll">${icon('bag')}${t('away.travelAll')}</button>
+        <button class="btn ghost sm" data-a="cuQuranSum">${icon('book')}${t('away.quranSum')}</button></div>
+      ${keys.map(day).join('')}` : `<div class="empty-art">${ART.crescent}<p>${t('away.none')}</p></div>`}
+    <p class="muted cu-honest">${t('away.honest')}</p>
+    <button class="btn primary wide" data-a="awayDone">${t('b.done')}</button>`;
+}
+const NA = {
+  nowFard: ds => { setFard(parseKey(ds.d), ds.id, ds.v); if (navigator.vibrate) navigator.vibrate(10); },
+  nowMore: () => { ui.nowMore = !ui.nowMore; render(); },
+  awayDismiss: () => { S.away = null; save(); render(); },
+  awayDone: () => { S.away = null; ui.stack.pop(); commit(); },
+  awayMode: ds => { ui.awayAll = ds.v === '1'; render(); },
+  cuSafar: ds => { const d = parseKey(ds.d), l = logOf(d); l._safar = !isSafar(d); commit(); },
+  cuTravelAll: () => {
+    const keys = S.away && S.away.length ? S.away : missedDays(null, 14);
+    const allOn = keys.every(k => isSafar(parseKey(k)));
+    keys.forEach(k => { logOf(parseKey(k))._safar = !allOn; });
+    commit();
+  },
+  async cuQuranSum() {
+    const keys = S.away && S.away.length ? S.away : missedDays(null, 14);
+    const n = await ask(t('away.quranQ', { n: nDays(keys.length) }), '', t('u.p'));
+    if (!(n > 0)) return;
+    const base = Math.floor(n / keys.length), rest = n % keys.length;
+    // от старого дня к новому: остаток — на первые дни
+    [...keys].reverse().forEach((k, i) => {
+      const d = parseKey(k), x = findTask(d, 'quran'), share = base + (i < rest ? 1 : 0);
+      if (x && share) addCount(d, x, share);
+    });
+    toast(t('away.quranDone', { n }));
+    commit();
+  },
+};
+// =====================================================================
 //  КАЛЕНДАРЬ
 // =====================================================================
 function viewCalendar() {
@@ -2987,14 +3280,15 @@ function viewCalendar() {
     const fg = p > .55 ? 'var(--on-accent)' : 'var(--ink)';
     cells += future
       ? `<span class="cell future">${n}</span>`
-      : `<button class="cell ${isT ? 'today' : ''}" style="background:${bg};color:${fg}" data-a="day" data-d="${dkey(d)}" aria-label="${human(d)}: ${Math.round(p * 100)}%">${n}${isExcused(d) ? '<i class="dot"></i>' : ''}</button>`;
+      : `<button class="cell ${isT ? 'today' : ''} ${!isT && d >= firstLogDay() && !isExcused(d) && !FARD.some(id => isPrayed(peek(d)[id])) ? 'empty' : ''}" style="background:${bg};color:${fg}" data-a="day" data-d="${dkey(d)}" aria-label="${human(d)}: ${Math.round(p * 100)}%">${n}${isExcused(d) ? '<i class="dot"></i>' : ''}</button>`;
   }
   return `<div class="cal-head"><button class="icon-btn" data-a="calMove" data-v="-1" aria-label="${t('a.prevMonth')}">${icon('back', 'dir')}</button>
       <h2>${monthYear(m)}</h2>
       <button class="icon-btn" data-a="calMove" data-v="1" ${canNext ? '' : 'disabled'} aria-label="${t('a.nextMonth')}">${icon('chev', 'dir')}</button></div>
     <div class="wd">${[...Array(7)].map((_, i) => `<span>${wdShort(addDays(monday, i))}</span>`).join('')}</div>
     <div class="grid">${cells}</div>
-    <p class="prose">${t('cal.hint')}</p>`;
+    <p class="prose">${t('cal.hint')}</p>
+    ${(() => { const n = missedDays(null, 14).length; return n ? `<button class="btn ghost wide" data-a="open" data-v="catchup">${icon('cal')}${t('cal.missed', { n })}</button>` : ''; })()}`;
 }
 
 // =====================================================================
@@ -3714,6 +4008,7 @@ function viewSettings() {
     <h2 class="set-title">${t('set.track')}</h2>
     <div class="list">${OPTIONAL.map(id => track(id)).join('')}</div>
     <div class="list">
+      ${sw('nowOn', t('set.nowOn'), t('set.nowOnHint'))}
       ${sw('planOn', t('set.planOn'), t('set.planOnHint'))}
       ${sw('smallSunnas', t('sec.small'), t('set.smallHint'))}
       ${s.smallSunnas ? SMALL.map(id => track(id, 'sub')).join('') : ''}
@@ -4198,14 +4493,31 @@ const A = {
     toast(copied ? t('set.exported') : t('set.exportedFile'));
   },
   async importData() {
-    const r = await form({ title: t('set.import'), text: t('set.importHint'), fields: [{ name: 'x', type: 'textarea', placeholder: '{"settings":…}' }], submit: t('set.importBtn'), danger: true });
-    if (!r || !r.x) return;
+    const got = await new Promise(res => {
+      openModal(`<form novalidate><h2>${t('set.import')}</h2><p class="prose">${t('set.importHint2')}</p>
+        <label class="btn primary wide file-pick">${icon('file')}<span>${t('set.importFile')}</span><input type="file" accept=".json,application/json,text/plain"></label>
+        <p class="or-sep"><span>${t('set.importOr')}</span></p>
+        <label class="field"><textarea name="x" placeholder='{"settings":…}'></textarea></label>
+        <div class="actions"><button type="button" class="btn ghost" data-cancel>${t('b.cancel')}</button><button class="btn danger">${t('set.importBtn')}</button></div></form>`);
+      modalResolve = res;
+      const f = root.querySelector('form');
+      root.querySelector('[data-cancel]').onclick = () => closeModal(null);
+      f.querySelector('input[type=file]').onchange = async e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try { closeModal({ text: await file.text(), name: file.name }); } catch (err) { toast(t('set.importErr')); }
+      };
+      f.onsubmit = e => { e.preventDefault(); const x = f.elements.x.value.trim(); closeModal(x ? { text: x } : null); };
+    });
+    if (!got || !got.text) return;
+    let d;
     try {
-      const d = JSON.parse(r.x);
+      d = JSON.parse(got.text.replace(/^\uFEFF/, ''));
       if (!d || typeof d !== 'object' || !d.settings || !d.logs) throw new Error();
-      S = normalize(d); S.settings.onboarded = true;
-      ui.stack = []; ui.tab = 'today'; ui.dayOffset = 0; commit(true); toast(t('set.imported'));
-    } catch (e) { toast(t('set.importErr')); }
+    } catch (e) { return toast(t('set.importErr')); }
+    if (got.name && !(await confirmBox(t('set.importQ', { f: got.name }), t('set.importBtn')))) return;
+    S = normalize(d); S.settings.onboarded = true;
+    ui.stack = []; ui.tab = 'today'; ui.dayOffset = 0; commit(true); toast(t('set.imported'));
   },
   redoWizard: () => { S.settings.onboarded = false; ui.wiz = 0; ui.stack = []; save(); render(); window.scrollTo(0, 0); },
 
@@ -4977,15 +5289,16 @@ document.addEventListener('click', e => {
 // =====================================================================
 //  ЗАПУСК
 // =====================================================================
-Object.assign(A, PA);
+Object.assign(A, PA, NA);
+checkAway();
 let lastDay = dkey(todayDate());
 setInterval(() => {
   const d = dkey(todayDate());
-  if (d !== lastDay) { lastDay = d; scheduleWeb(); }
+  if (d !== lastDay) { lastDay = d; checkAway(); scheduleWeb(); }
   if (!ui.stack.length && ui.tab === 'today' && !root.classList.contains('open') && S.settings.onboarded) render();
 }, 60000);
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && !root.classList.contains('open')) { render(); scheduleWeb(); }
+  if (!document.hidden && !root.classList.contains('open')) { checkAway(); render(); scheduleWeb(); }
 });
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   navigator.serviceWorker.register('sw.js').catch(() => {});

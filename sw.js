@@ -1,5 +1,5 @@
 // Офлайн-кэш: приложение открывается и без интернета
-const CACHE = 'tracker-v12';
+const CACHE = 'tracker-v15';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon.png', './sc-pray.png', './sc-quran.png', './sc-stats.png', './sc-lib.png', './vendor/pdf.mjs', './vendor/pdf.worker.mjs'];
 
 self.addEventListener('install', e => {
